@@ -6,6 +6,7 @@ Review decisions stay local until the reviewer downloads review-only JSON.
 
 from __future__ import annotations
 
+import csv
 import json
 from datetime import datetime, timezone
 from importlib.metadata import version
@@ -20,6 +21,8 @@ from replay import SOURCE_ROOT, capture_decision, digest, quality
 
 RUN_ROOT = Path(__file__).resolve().parent / "runs/local_replay_20261020"
 TRACE_PATH = RUN_ROOT / "replay.json"
+NEW_SCENE_MANIFEST = (Path(__file__).resolve().parents[1]
+                      / "new_product_scanning_20261020/audit/photo_manifest.csv")
 MAX_IMAGE_BYTES = 15 * 1024 * 1024
 ACTION_LABELS = {
     "pending": "Pending",
@@ -55,6 +58,17 @@ def inspect_image(data: bytes) -> tuple[np.ndarray | None, dict, dict, str]:
 
 def match_saved_photo(image_sha256: str, trace: dict) -> dict | None:
     return next((photo for photo in trace["photos"] if photo["sha256"] == image_sha256), None)
+
+
+def match_new_scene(image_sha256: str) -> dict | None:
+    """Identify an audited new scene by bytes, without treating labels as model output."""
+    if not NEW_SCENE_MANIFEST.is_file():
+        return None
+    with NEW_SCENE_MANIFEST.open(newline="", encoding="utf-8-sig") as handle:
+        return next(({"filename": row["filename"], "group": row["group"]}
+                     for row in csv.DictReader(handle)
+                     if row["group"] in {"employee", "customer"}
+                     and row["sha256"] == image_sha256), None)
 
 
 def frozen_sample_bytes(photo: dict) -> bytes:
@@ -180,6 +194,8 @@ def run_app() -> None:
     except ValueError as exc:
         st.error(str(exc))
         st.stop()
+    photo = match_saved_photo(image_sha256, trace)
+    new_scene = match_new_scene(image_sha256) if photo is None else None
 
     st.subheader("1. Capture guidance")
     cols = st.columns(4)
@@ -193,6 +209,13 @@ def run_app() -> None:
         st.stop()
     st.image(cv2.cvtColor(image, cv2.COLOR_BGR2RGB),
              caption="Captured photo for the retake decision", width=420)
+    if new_scene:
+        st.info(f"{new_scene['filename']} is an audited {new_scene['group']} photo from the newer 30-scene set. "
+                "AWS checks capture quality here. DINO/SigLIP2 scene predictions have not been generated for this set; "
+                "product counting and SKU selection will need human review.")
+    elif photo is None:
+        st.info("AWS checks capture quality for this photo. Live DINO/SigLIP2 recognition is unavailable; "
+                "product counting and SKU selection will need human review.")
     aws_result = None
     use_aws = st.checkbox("Use AWS OpenCV 5 capture check for this photo",
                           key=f"aws-mode-{image_sha256}")
@@ -231,13 +254,16 @@ def run_app() -> None:
         if not use_aws:
             st.success(effective_decision["reason"])
 
-    photo = match_saved_photo(image_sha256, trace)
     st.subheader("2. Product proposals")
     if photo:
         st.info(f"Exact SHA-256 match: {photo['photo_id']}. DINO boxes and SigLIP2 candidates are saved results replayed from the audited archive; no model runs now.")
         st.image(overlay_bytes(image, photo["boxes"]), caption="Green: accepted model suggestion; orange: unknown. All boxes still need human review.")
     else:
-        st.info("This photo does not match a frozen source image. Live DINO/SigLIP2 inference is unavailable; inspect products and add them manually.")
+        if new_scene:
+            st.info(f"{new_scene['filename']} has no imported DINO/SigLIP2 scene predictions yet. "
+                    "Inspect each physical product and add it manually below; leave uncertain SKUs unresolved.")
+        else:
+            st.info("This photo does not match a frozen source image. Live DINO/SigLIP2 inference is unavailable; inspect products and add them manually.")
         st.image(cv2.cvtColor(image, cv2.COLOR_BGR2RGB), caption="Uploaded photo")
 
     st.subheader("3. Human review")
