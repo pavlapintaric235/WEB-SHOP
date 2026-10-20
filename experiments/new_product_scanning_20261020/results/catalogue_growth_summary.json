@@ -1,0 +1,76 @@
+{
+  "queries": 93,
+  "note": "No ground truth. These are rank-stability measurements, not accuracy.",
+  "stages": {
+    "A_01_only": {
+      "gallery_skus": 3,
+      "mean_top1_sim": 0.5594,
+      "mean_margin": 0.1244,
+      "distinct_top1": 2,
+      "top1_distribution": {
+        "TEST-003": 67,
+        "TEST-001": 26
+      }
+    },
+    "B_01_plus_02": {
+      "gallery_skus": 9,
+      "mean_top1_sim": 0.634,
+      "mean_margin": 0.0309,
+      "distinct_top1": 5,
+      "top1_distribution": {
+        "ILX-005": 54,
+        "ILX-003": 18,
+        "TEST-001": 12,
+        "ILX-004": 6,
+        "ILX-006": 3
+      }
+    },
+    "C_01_02_03": {
+      "gallery_skus": 19,
+      "mean_top1_sim": 0.8308,
+      "mean_margin": 0.1558,
+      "distinct_top1": 11,
+      "top1_distribution": {
+        "IL-NEW-009": 24,
+        "IL-NEW-007": 18,
+        "IL-NEW-004": 15,
+        "IL-NEW-003": 11,
+        "IL-NEW-001": 8,
+        "IL-NEW-005": 5,
+        "IL-NEW-006": 5,
+        "IL-NEW-010": 3,
+        "IL-NEW-008": 2,
+        "IL-NEW-002": 1,
+        "ILX-005": 1
+      }
+    },
+    "D_03_only_published": {
+      "gallery_skus": 10,
+      "mean_top1_sim": 0.8307,
+      "mean_margin": 0.1762,
+      "distinct_top1": 10,
+      "top1_distribution": {
+        "IL-NEW-009": 24,
+        "IL-NEW-007": 18,
+        "IL-NEW-004": 15,
+        "IL-NEW-003": 11,
+        "IL-NEW-001": 9,
+        "IL-NEW-005": 5,
+        "IL-NEW-006": 5,
+        "IL-NEW-010": 3,
+        "IL-NEW-008": 2,
+        "IL-NEW-002": 1
+      }
+    }
+  },
+  "C_vs_D_top1_agreement": {
+    "agreed": 92,
+    "of": 93,
+    "pct": 98.9
+  },
+  "C_top1_from_03_catalogue": {
+    "count": 92,
+    "of": 93,
+    "pct": 98.9
+  }
+}
