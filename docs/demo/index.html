@@ -79,6 +79,11 @@
   th{color:var(--faint);font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase}
   td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   .boxrow{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:10px}
+  .objcrops{display:flex;gap:10px;margin:10px 0 2px}
+  .objcrops figure{margin:0;flex:0 0 108px}
+  .objcrops img{width:108px;height:108px;object-fit:contain;background:#05070a;
+    border:1px solid var(--line);border-radius:9px;display:block}
+  .objcrops figcaption{color:var(--faint);font-size:11px;margin-top:4px}
   .boxhead{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between}
   .boxhead .id{font-weight:700}
   .top1{color:var(--accent);font-weight:600}
@@ -146,15 +151,17 @@
 
 <section><div class="wrap">
   <div class="step"><div class="num">3</div><h2>Find the products, then propose a SKU</h2></div>
-  <p class="sub">NVIDIA Retail DINO proposes one box per physical item; SigLIP2 ranks every registered
-  reference against each box crop. Pick a scene and step through the stages. The three galleries use
-  identical detector proposals and query embeddings, so the comparison is fair.</p>
+  <p class="sub">NVIDIA Retail DINO proposes one box per physical item; MobileSAM cuts each detected
+  object out of its background; SigLIP2 ranks every registered reference against each box crop. Pick a
+  scene and step through the stages. The three galleries use identical detector proposals and query
+  embeddings, so the comparison is fair.</p>
 
   <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
     <select id="sceneSel" aria-label="Choose a scene"></select>
     <span class="toggle" id="stageToggle">
       <button data-k="original">Original</button>
       <button data-k="detector" class="on">Detector boxes</button>
+      <button data-k="masks">Object masks</button>
       <button data-k="recognition">SKU proposals</button>
     </span>
     <span class="toggle" id="galToggle">
@@ -163,6 +170,8 @@
       <button data-k="combined">combined</button>
     </span>
   </div>
+
+  <p class="sub" id="maskNote" style="margin:-4px 0 16px"></p>
 
   <div class="split">
     <div class="shot"><img id="sceneImg" alt="Scene"><div class="cap" id="sceneCap"></div></div>
@@ -268,9 +277,17 @@
       ' detected box'+(s.boxes.length===1?'':'es')+' · showing: '+stage;
     $('boxList').innerHTML = s.boxes.map(function(b){
       var list=b[gal]||[];
+      var crop = b.crop ? '<div class="objcrops">'+
+        (b.crop.box?'<figure><img loading="lazy" src="'+esc(b.crop.box)+'" alt="detected crop">'+
+          '<figcaption>crop</figcaption></figure>':'')+
+        (b.crop.masked?'<figure><img loading="lazy" src="'+esc(b.crop.masked)+'" alt="masked crop">'+
+          '<figcaption>masked · '+esc(Math.round(b.mask_area*1000)/10)+'% of frame</figcaption></figure>':'')+
+        '</div>' : '';
       return '<div class="boxrow"><div class="boxhead">'+
         '<span class="id">'+esc(b.id)+'</span>'+
-        '<span class="mono" style="color:var(--faint)">detector '+esc(b.conf)+' · crop '+esc(b.crop_sha)+'…</span></div>'+
+        '<span class="mono" style="color:var(--faint)">detector '+esc(b.conf)+' · crop '+esc(b.crop_sha)+'…'+
+        (b.mask_sha?' · mask '+esc(b.mask_sha)+'…':'')+'</span></div>'+
+        crop+
         '<table><tr><th>rank</th><th>proposed SKU</th><th>similarity</th></tr>'+
         list.map(function(t,i){
           var pct=Math.max(0,Math.min(100,t.sim*100));
@@ -282,6 +299,16 @@
         '<div style="color:var(--faint);font-size:11.5px;margin-top:7px">status: <span class="mono">'+
         esc(b.status)+'</span></div></div>';
     }).join('');
+  }
+  var sm=D.scene_masks||{};
+  if(sm.count){
+    $('maskNote').innerHTML = '<b style="color:var(--warn)">About the masks.</b> The '+esc(sm.count)+
+      ' scene masks were produced by '+esc(sm.backend)+', prompted with the detector boxes above, and are '+
+      '<b>'+esc(String(sm.review_status).replace(/_/g,' ')+'s')+'</b> — unlike the 34 registration masks in '+
+      '<span class="mono">mask_index.csv</span>, which a person inspected and approved. They were '+
+      '<b>not used in the ranking run</b>: the gallery toggle varies the registered reference crops, '+
+      'while every query embedding stays identical, so switching it changes the similarity figures and '+
+      'never the photograph.';
   }
   $('sceneSel').addEventListener('change',function(){idx=+this.value;drawScene();});
   $('stageToggle').addEventListener('click',function(e){
