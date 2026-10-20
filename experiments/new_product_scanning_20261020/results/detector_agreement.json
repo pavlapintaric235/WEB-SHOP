@@ -1,0 +1,291 @@
+{
+  "status": "detector_agreement_only_not_accuracy",
+  "generated_utc": "2026-10-20T22:10:48Z",
+  "iou_threshold": 0.5,
+  "run_a": "results\\imported_runpod_scene_results_20261020_v5_flat\\predictions.csv",
+  "run_b": "results\\local_owlv2_sam21_20261021\\predictions.csv",
+  "photographs_in_both": 30,
+  "boxes_a": 93,
+  "boxes_b": 358,
+  "matched_pairs": 80,
+  "mean_iou_of_matched": 0.885,
+  "share_of_a_matched": 0.8602,
+  "share_of_b_matched": 0.2235,
+  "limitations": [
+    "This is agreement between two models, not accuracy. Neither run is ground truth.",
+    "An unmatched box is not necessarily wrong; it may be an item the other run missed.",
+    "Only box geometry is compared. Masks and SKU identities are not scored here."
+  ],
+  "per_photo": [
+    {
+      "photo_filename": "IMG_4857.jpeg",
+      "boxes_a": 1,
+      "boxes_b": 1,
+      "matched": 1,
+      "mean_iou": 0.9791,
+      "only_in_a": 0,
+      "only_in_b": 0
+    },
+    {
+      "photo_filename": "IMG_4858.jpeg",
+      "boxes_a": 1,
+      "boxes_b": 3,
+      "matched": 1,
+      "mean_iou": 0.9324,
+      "only_in_a": 0,
+      "only_in_b": 2
+    },
+    {
+      "photo_filename": "IMG_4859.jpeg",
+      "boxes_a": 1,
+      "boxes_b": 5,
+      "matched": 0,
+      "mean_iou": 0.0,
+      "only_in_a": 1,
+      "only_in_b": 5
+    },
+    {
+      "photo_filename": "IMG_4860.jpeg",
+      "boxes_a": 2,
+      "boxes_b": 2,
+      "matched": 2,
+      "mean_iou": 0.9608,
+      "only_in_a": 0,
+      "only_in_b": 0
+    },
+    {
+      "photo_filename": "IMG_4861.jpeg",
+      "boxes_a": 1,
+      "boxes_b": 8,
+      "matched": 0,
+      "mean_iou": 0.0,
+      "only_in_a": 1,
+      "only_in_b": 8
+    },
+    {
+      "photo_filename": "IMG_4862.jpeg",
+      "boxes_a": 1,
+      "boxes_b": 4,
+      "matched": 0,
+      "mean_iou": 0.0,
+      "only_in_a": 1,
+      "only_in_b": 4
+    },
+    {
+      "photo_filename": "IMG_4863.jpeg",
+      "boxes_a": 2,
+      "boxes_b": 2,
+      "matched": 2,
+      "mean_iou": 0.9577,
+      "only_in_a": 0,
+      "only_in_b": 0
+    },
+    {
+      "photo_filename": "IMG_4864.jpeg",
+      "boxes_a": 3,
+      "boxes_b": 4,
+      "matched": 3,
+      "mean_iou": 0.953,
+      "only_in_a": 0,
+      "only_in_b": 1
+    },
+    {
+      "photo_filename": "IMG_4865.jpeg",
+      "boxes_a": 2,
+      "boxes_b": 5,
+      "matched": 2,
+      "mean_iou": 0.6075,
+      "only_in_a": 0,
+      "only_in_b": 3
+    },
+    {
+      "photo_filename": "IMG_4866.jpeg",
+      "boxes_a": 1,
+      "boxes_b": 9,
+      "matched": 1,
+      "mean_iou": 0.913,
+      "only_in_a": 0,
+      "only_in_b": 8
+    },
+    {
+      "photo_filename": "IMG_4867.jpeg",
+      "boxes_a": 2,
+      "boxes_b": 7,
+      "matched": 1,
+      "mean_iou": 0.9335,
+      "only_in_a": 1,
+      "only_in_b": 6
+    },
+    {
+      "photo_filename": "IMG_4868.jpeg",
+      "boxes_a": 4,
+      "boxes_b": 5,
+      "matched": 4,
+      "mean_iou": 0.8977,
+      "only_in_a": 0,
+      "only_in_b": 1
+    },
+    {
+      "photo_filename": "IMG_4869.jpeg",
+      "boxes_a": 2,
+      "boxes_b": 10,
+      "matched": 2,
+      "mean_iou": 0.8723,
+      "only_in_a": 0,
+      "only_in_b": 8
+    },
+    {
+      "photo_filename": "IMG_4870.jpeg",
+      "boxes_a": 1,
+      "boxes_b": 11,
+      "matched": 1,
+      "mean_iou": 0.9414,
+      "only_in_a": 0,
+      "only_in_b": 10
+    },
+    {
+      "photo_filename": "IMG_4874.jpeg",
+      "boxes_a": 3,
+      "boxes_b": 20,
+      "matched": 3,
+      "mean_iou": 0.9545,
+      "only_in_a": 0,
+      "only_in_b": 17
+    },
+    {
+      "photo_filename": "IMG_4876.jpeg",
+      "boxes_a": 4,
+      "boxes_b": 19,
+      "matched": 3,
+      "mean_iou": 0.7628,
+      "only_in_a": 1,
+      "only_in_b": 16
+    },
+    {
+      "photo_filename": "IMG_4878.jpeg",
+      "boxes_a": 3,
+      "boxes_b": 16,
+      "matched": 3,
+      "mean_iou": 0.881,
+      "only_in_a": 0,
+      "only_in_b": 13
+    },
+    {
+      "photo_filename": "IMG_4880.jpeg",
+      "boxes_a": 3,
+      "boxes_b": 4,
+      "matched": 3,
+      "mean_iou": 0.9627,
+      "only_in_a": 0,
+      "only_in_b": 1
+    },
+    {
+      "photo_filename": "IMG_4882.jpeg",
+      "boxes_a": 2,
+      "boxes_b": 5,
+      "matched": 1,
+      "mean_iou": 0.9656,
+      "only_in_a": 1,
+      "only_in_b": 4
+    },
+    {
+      "photo_filename": "IMG_4884.jpeg",
+      "boxes_a": 6,
+      "boxes_b": 9,
+      "matched": 6,
+      "mean_iou": 0.9449,
+      "only_in_a": 0,
+      "only_in_b": 3
+    },
+    {
+      "photo_filename": "IMG_4887.jpeg",
+      "boxes_a": 2,
+      "boxes_b": 4,
+      "matched": 1,
+      "mean_iou": 0.5411,
+      "only_in_a": 1,
+      "only_in_b": 3
+    },
+    {
+      "photo_filename": "IMG_4889.jpeg",
+      "boxes_a": 1,
+      "boxes_b": 4,
+      "matched": 1,
+      "mean_iou": 0.9193,
+      "only_in_a": 0,
+      "only_in_b": 3
+    },
+    {
+      "photo_filename": "IMG_4892.jpeg",
+      "boxes_a": 7,
+      "boxes_b": 18,
+      "matched": 7,
+      "mean_iou": 0.8937,
+      "only_in_a": 0,
+      "only_in_b": 11
+    },
+    {
+      "photo_filename": "IMG_4893.jpeg",
+      "boxes_a": 4,
+      "boxes_b": 17,
+      "matched": 4,
+      "mean_iou": 0.9537,
+      "only_in_a": 0,
+      "only_in_b": 13
+    },
+    {
+      "photo_filename": "IMG_4895.jpeg",
+      "boxes_a": 9,
+      "boxes_b": 16,
+      "matched": 9,
+      "mean_iou": 0.9025,
+      "only_in_a": 0,
+      "only_in_b": 7
+    },
+    {
+      "photo_filename": "IMG_4897.jpeg",
+      "boxes_a": 4,
+      "boxes_b": 21,
+      "matched": 2,
+      "mean_iou": 0.7566,
+      "only_in_a": 2,
+      "only_in_b": 19
+    },
+    {
+      "photo_filename": "IMG_4898.jpeg",
+      "boxes_a": 6,
+      "boxes_b": 22,
+      "matched": 5,
+      "mean_iou": 0.8956,
+      "only_in_a": 1,
+      "only_in_b": 17
+    },
+    {
+      "photo_filename": "IMG_4900.jpeg",
+      "boxes_a": 8,
+      "boxes_b": 27,
+      "matched": 6,
+      "mean_iou": 0.8,
+      "only_in_a": 2,
+      "only_in_b": 21
+    },
+    {
+      "photo_filename": "IMG_4902.jpeg",
+      "boxes_a": 2,
+      "boxes_b": 36,
+      "matched": 2,
+      "mean_iou": 0.71,
+      "only_in_a": 0,
+      "only_in_b": 34
+    },
+    {
+      "photo_filename": "IMG_4903.jpeg",
+      "boxes_a": 5,
+      "boxes_b": 44,
+      "matched": 4,
+      "mean_iou": 0.9174,
+      "only_in_a": 1,
+      "only_in_b": 40
+    }
+  ]
+}

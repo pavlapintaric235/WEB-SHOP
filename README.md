@@ -21,6 +21,7 @@ OpenCV 5 currently provides live photo-quality guidance: it decodes the image, m
 | Earlier detector and recognizer work | NVIDIA Retail DINO found 27 of 33 physical instances on a separate five-image holdout at its tested settings, with six misses. Earlier SigLIP2 outputs and the recovered GPU benchmark are preserved as experimental evidence. | The detector result is a small, differently configured comparison. Archived model predictions are not live AWS inference or verified SKU accuracy on the newest scenes. |
 | New-product dataset | **42 owner reference photos, 25 employee scenes, five customer scenes and ten provisional product groups** are audited. Thirty-four owner photos have paired original/masked crops. Owner-photo SigLIP2 top choice changed from **24/34 to 25/34** with masks, against provisional groupings. The hash-verified 30-scene AWS input bundle and isolated runner are ready locally. | No owner identity approvals or corrected `IMG_4857` boxes have been saved. Eight owner photos lack approved paired masks. The 30 employee/customer scenes now have imported GPU predictions from the completed 2026-10-20 RunPod run (30 scenes, 93 boxes) but **no scored recognition results**: those predictions are provisional SigLIP2 ranks awaiting SKU approval and scene-label review. The owner-photo result is not scene accuracy. |
 | 30-scene GPU run | One temporary `g6.xlarge` evaluation was approved within the existing **$10 maximum new AWS spend**, but the AWS route never ran. The user then authorized the evaluation elsewhere, and on 2026-10-20 it completed on a rented RunPod B300 GPU — outside AWS and outside that $10 ceiling — producing [30 scenes and 93 detected boxes](experiments/new_product_scanning_20261020/results/imported_runpod_scene_results_20261020_v5_flat/report.json) ranked against original, masked and combined galleries on identical detector proposals and query embeddings, with the previously validated detector remap (`c6185e3b…c36f41`) and a preflight gate on which every node ran on TensorRT with no CPU fallback. | AWS Support denied the 4-vCPU G/VT quota request on 2026-10-20 at 17:42 Europe/Zagreb and invited a detailed appeal (case `179250925200910`). A later Service Quotas API read still showed `CASE_OPENED`, so the Support correspondence is the operative result. The attempted Support API appeal failed with `SubscriptionRequiredException`; no appeal was submitted. The applied quota was last checked at **0 vCPUs**. No experiment assets were uploaded to AWS and no AWS GPU instance was launched. The RunPod result carries `accuracy_metrics` **null by design**: the ten SKU identities are unapproved and the scene labels unreviewed, so it is provisional SigLIP2 ranks and no accuracy, recall or count-error figure exists yet. The separate `7abf51f6` TensorRT-plugin DINO candidate was not used in that run and still needs its own one-image GPU preflight. |
+| Local CPU recognition (new, 2026-10-21) | `shape_recognition.py` proposes one box **and** one instance mask per physical item on CPU, using OWLv2 and SAM 2.1 Hiera-tiny — both Apache-2.0, both loaded through `transformers`, no GPU and no AGPL dependency. `scan_photo.py` scans any photograph; `run_local_shape_detector.py` regenerates all 30 scenes into a directory both `review_app.py` and `evaluate_scene_predictions.py` can read. Measured: 30 scenes, 358 boxes, 7.3 s per photograph, and **80 of 93 GPU DINO boxes reproduced at IoU ≥ 0.50, mean IoU 0.885**. 25 new tests cover the box-suppression geometry. | This is detector **agreement**, not accuracy; no run here produces an accuracy figure, and Steps 1 to 3 are still required. It over-proposes (358 boxes against DINO's 93). Two identical items stacked and touching are still returned as one box. The detector finds only what `PROMPTS` names — two scenes returned nothing until ornament words were added. |
 | Competition delivery | The [submission narrative and architecture](docs/webshop_opencv_2026_submission_20261020.md), [storyboard](docs/webshop_opencv_2026_demo_storyboard_20261020.md), [technical report](docs/webshop_opencv_2026_technical_report_20261020.md), and [176-image pilot audit](docs/opencv5_aws_capture_pilot_result_20261020.md) are prepared. | A judge-accessible demo video, code delivery and full Web&Shop role/inventory integration remain to be completed. The current demonstration must label DINO/SigLIP2 suggestions as archived replay data. |
 
 ## Problems and potential solutions
@@ -55,16 +56,77 @@ twelve of the workflow tests for that reason alone, which looks alarming and mea
 ```powershell
 & .\.venv\Scripts\python.exe model_assets.py
 & .\.venv\Scripts\python.exe -m unittest tests.test_local_features tests.test_matching_replay `
-    tests.test_oct17_benchmark_eval tests.test_recognition tests.test_segmentation_dataset tests.test_workflow
+    tests.test_oct17_benchmark_eval tests.test_recognition tests.test_segmentation_dataset `
+    tests.test_shape_recognition tests.test_workflow
 ```
 
-Expected: 106 tests, all `OK` (15 + 3 + 11 + 33 + 8 + 36). Anything else is a real regression —
+Expected: 131 tests, all `OK` (15 + 3 + 11 + 33 + 8 + 25 + 36). Anything else is a real regression —
 fix it before going further. `model_assets.py` downloads MobileSAM and ResNet18 into
 `data/models/` and verifies their checksums; it is safe to re-run.
 
 A public checkout is a **source release, not a runnable copy**. Photographs, crops, model
 weights, the SQLite database and GPU archives are excluded from Git by design. Steps 1 to 3
 need the private workspace. Steps 4 and 6 do not.
+
+### Step 0b — recognize objects in a photograph locally, on CPU
+
+Until now the recognition pipeline could not run on this machine at all. NVIDIA Retail DINO
+needs TensorRT/CUDA, so scene proposals were frozen archived GPU output and no new photograph
+could be processed. `shape_recognition.py` closes that gap with two permissively licensed
+Hugging Face checkpoints that run on CPU through `transformers`:
+
+| Stage | Model | Licence | Repository |
+| --- | --- | --- | --- |
+| Boxes | [`google/owlv2-base-patch16-ensemble`](https://huggingface.co/google/owlv2-base-patch16-ensemble) | Apache-2.0 | [google-research/scenic](https://github.com/google-research/scenic/tree/main/scenic/projects/owl_vit) |
+| Masks | [`facebook/sam2.1-hiera-tiny`](https://huggingface.co/facebook/sam2.1-hiera-tiny) | Apache-2.0 | [facebookresearch/sam2](https://github.com/facebookresearch/sam2) |
+
+Scan any picture — no registry, no reference photographs, no GPU:
+
+```powershell
+& .\.venv\Scripts\python.exe scan_photo.py path\to\photo.jpg
+```
+
+It writes `<name>_shapes.jpg` (one colour per item) and `<name>_shapes.json` (boxes, mask
+outlines, and the word the detector used for each shape). Add `--prompt "a screw"` to look
+for something the built-in vocabulary does not name.
+
+Regenerate proposals for all 30 evaluated scenes, in the format both the review app and the
+evaluator read:
+
+```powershell
+& .\.venv\Scripts\python.exe experiments\new_product_scanning_20261020\run_local_shape_detector.py
+```
+
+**What this is and is not.** Boxes and masks are model proposals: every row is written
+`review_status=unreviewed_proposal` and `acceptance_status=abstained` with an empty `sku_id`,
+because none of the ten identities is approved. It produces no accuracy figure, and Steps 1
+to 3 below remain exactly as necessary as before.
+
+**Measured on the 30 evaluated scenes, 2026-10-21** (run `local_owlv2_sam21_20261021`).
+30 photographs, 358 proposed boxes, 368 s total on a 6-core CPU — 7.3 s per photograph on
+average, 12.8 s at worst. Against the committed GPU DINO run, `compare_detector_runs.py`
+matched **80 of 93 DINO boxes at IoU ≥ 0.50, mean IoU 0.885**:
+
+```powershell
+& .\.venv\Scripts\python.exe experiments\new_product_scanning_20261020\compare_detector_runs.py `
+    --a results\imported_runpod_scene_results_20261020_v5_flat\predictions.csv `
+    --b results\local_owlv2_sam21_20261021\predictions.csv
+```
+
+That is agreement between two detectors, not accuracy — neither run is ground truth, and a
+box found by only one of them may well be the correct one.
+
+Three honest limitations, all observed rather than assumed:
+
+* It **over-proposes**: 358 boxes where DINO drew 93, so only 22% of its boxes correspond to
+  a DINO box. A tall item can attract several boxes. Over-proposal is recoverable by a
+  reviewer rejecting a box; a missed item is not, which is why the thresholds lean this way.
+* Two identical items **stacked vertically and touching** are returned as one box. `IMG_4857`
+  is exactly this case and the detector does not separate it at any usable threshold, so the
+  reviewer must still split that box by hand.
+* It finds only what it has a **word** for. The first full run returned nothing at all on
+  `IMG_4887` and `IMG_4889`, whose subject is the gold crown, until four ornament words were
+  added to `PROMPTS`. Extending that tuple needs no retraining, no labelled data and no GPU.
 
 ### Step 1 — approve the ten SKU identities (blocks everything downstream)
 

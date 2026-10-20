@@ -1,4 +1,9 @@
 streamlit>=1.45,<2
+# OWLv2 box proposals and SAM 2.1 instance masks for shape_recognition.py. Both checkpoints
+# are Apache-2.0 and run on CPU, so this path needs no GPU and adds no AGPL dependency.
+transformers>=5.0,<6
+# AGPL-3.0, unlike this project's MIT licence. Used by the older MobileSAM/YOLOE paths in
+# sam_vision.py and vision.py, not by shape_recognition.py.
 ultralytics>=8.4.0
 Pillow>=10.1
 numpy>=1.26

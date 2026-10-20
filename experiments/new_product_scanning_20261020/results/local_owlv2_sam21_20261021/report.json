@@ -1,0 +1,297 @@
+{
+  "status": "PASS",
+  "experiment": "new_product_scanning_20261020",
+  "scope": "local CPU open-vocabulary detection and instance segmentation",
+  "generated_utc": "2026-10-20T22:10:16Z",
+  "device": "cpu",
+  "backend": "google/owlv2-base-patch16-ensemble+facebook/sam2.1-hiera-tiny:cpu",
+  "detector": {
+    "name": "google/owlv2-base-patch16-ensemble",
+    "license": "Apache-2.0",
+    "prompts": [
+      "a single product package",
+      "a tin can",
+      "a plastic bottle",
+      "a cardboard box",
+      "a cosmetic tube",
+      "a jar",
+      "a sachet",
+      "a cup",
+      "a battery",
+      "a candle",
+      "a crown",
+      "a figurine",
+      "a small ornament",
+      "a decorative object"
+    ],
+    "threshold": 0.1,
+    "nms_iou": 0.55,
+    "working_side": 1536
+  },
+  "segmenter": {
+    "name": "facebook/sam2.1-hiera-tiny",
+    "license": "Apache-2.0",
+    "prompt": "detected box"
+  },
+  "recognizer": {
+    "name": "resnet18 reference encoder (in-repo)",
+    "gallery_images": 34,
+    "gallery_skus": 10,
+    "similarities_are_calibrated_confidence": false,
+    "unknown_rejection_threshold": null
+  },
+  "scene_images": 30,
+  "detected_boxes": 358,
+  "total_seconds": 368.3,
+  "accuracy_metrics": null,
+  "review_status": "unreviewed_proposal",
+  "limitations": [
+    "Every row is written acceptance_status=abstained with an empty sku_id because none of the ten SKU identities has been approved. The top1..top3 columns are provisional ranks from the in-repo ResNet18 encoder, not identities.",
+    "accuracy_metrics is null by design. Scene labels do not exist, so no precision, recall, count-error or accuracy figure may be quoted from this run.",
+    "Masks are box-prompted model output. No human has reviewed them; every row is review_status=unreviewed_proposal.",
+    "Two identical items stacked vertically and touching are reported as one box. The detector does not separate them at any usable threshold, so a reviewer must split such a box by hand.",
+    "A tall item can still attract more than one box when its parts score separately."
+  ],
+  "scenes": [
+    {
+      "photo_filename": "IMG_4857.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 1,
+      "detector_seconds": 12.85,
+      "overlay": "artifacts/overlays/IMG_4857_shapes.jpg",
+      "working_width": 1284
+    },
+    {
+      "photo_filename": "IMG_4858.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 3,
+      "detector_seconds": 7.45,
+      "overlay": "artifacts/overlays/IMG_4858_shapes.jpg",
+      "working_width": 1152
+    },
+    {
+      "photo_filename": "IMG_4859.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 5,
+      "detector_seconds": 5.92,
+      "overlay": "artifacts/overlays/IMG_4859_shapes.jpg",
+      "working_width": 1093
+    },
+    {
+      "photo_filename": "IMG_4860.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 2,
+      "detector_seconds": 7.05,
+      "overlay": "artifacts/overlays/IMG_4860_shapes.jpg",
+      "working_width": 1152
+    },
+    {
+      "photo_filename": "IMG_4861.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 8,
+      "detector_seconds": 6.9,
+      "overlay": "artifacts/overlays/IMG_4861_shapes.jpg",
+      "working_width": 1152
+    },
+    {
+      "photo_filename": "IMG_4862.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 4,
+      "detector_seconds": 4.33,
+      "overlay": "artifacts/overlays/IMG_4862_shapes.jpg",
+      "working_width": 1280
+    },
+    {
+      "photo_filename": "IMG_4863.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 2,
+      "detector_seconds": 5.2,
+      "overlay": "artifacts/overlays/IMG_4863_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4864.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 4,
+      "detector_seconds": 6.89,
+      "overlay": "artifacts/overlays/IMG_4864_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4865.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 5,
+      "detector_seconds": 4.66,
+      "overlay": "artifacts/overlays/IMG_4865_shapes.jpg",
+      "working_width": 1296
+    },
+    {
+      "photo_filename": "IMG_4866.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 9,
+      "detector_seconds": 6.85,
+      "overlay": "artifacts/overlays/IMG_4866_shapes.jpg",
+      "working_width": 1152
+    },
+    {
+      "photo_filename": "IMG_4867.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 7,
+      "detector_seconds": 7.52,
+      "overlay": "artifacts/overlays/IMG_4867_shapes.jpg",
+      "working_width": 1152
+    },
+    {
+      "photo_filename": "IMG_4868.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 5,
+      "detector_seconds": 7.46,
+      "overlay": "artifacts/overlays/IMG_4868_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4869.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 10,
+      "detector_seconds": 5.47,
+      "overlay": "artifacts/overlays/IMG_4869_shapes.jpg",
+      "working_width": 1152
+    },
+    {
+      "photo_filename": "IMG_4870.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 11,
+      "detector_seconds": 7.45,
+      "overlay": "artifacts/overlays/IMG_4870_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4874.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 20,
+      "detector_seconds": 10.13,
+      "overlay": "artifacts/overlays/IMG_4874_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4876.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 19,
+      "detector_seconds": 7.69,
+      "overlay": "artifacts/overlays/IMG_4876_shapes.jpg",
+      "working_width": 1348
+    },
+    {
+      "photo_filename": "IMG_4878.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 16,
+      "detector_seconds": 5.86,
+      "overlay": "artifacts/overlays/IMG_4878_shapes.jpg",
+      "working_width": 1155
+    },
+    {
+      "photo_filename": "IMG_4880.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 4,
+      "detector_seconds": 7.43,
+      "overlay": "artifacts/overlays/IMG_4880_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4882.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 5,
+      "detector_seconds": 6.8,
+      "overlay": "artifacts/overlays/IMG_4882_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4884.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 9,
+      "detector_seconds": 6.81,
+      "overlay": "artifacts/overlays/IMG_4884_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4887.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 4,
+      "detector_seconds": 6.23,
+      "overlay": "artifacts/overlays/IMG_4887_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4889.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 4,
+      "detector_seconds": 7.01,
+      "overlay": "artifacts/overlays/IMG_4889_shapes.jpg",
+      "working_width": 1413
+    },
+    {
+      "photo_filename": "IMG_4892.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 18,
+      "detector_seconds": 7.09,
+      "overlay": "artifacts/overlays/IMG_4892_shapes.jpg",
+      "working_width": 1410
+    },
+    {
+      "photo_filename": "IMG_4893.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 17,
+      "detector_seconds": 6.03,
+      "overlay": "artifacts/overlays/IMG_4893_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4895.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 16,
+      "detector_seconds": 10.98,
+      "overlay": "artifacts/overlays/IMG_4895_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4897.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 21,
+      "detector_seconds": 8.07,
+      "overlay": "artifacts/overlays/IMG_4897_shapes.jpg",
+      "working_width": 1343
+    },
+    {
+      "photo_filename": "IMG_4898.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 22,
+      "detector_seconds": 7.49,
+      "overlay": "artifacts/overlays/IMG_4898_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4900.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 27,
+      "detector_seconds": 7.84,
+      "overlay": "artifacts/overlays/IMG_4900_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4902.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 36,
+      "detector_seconds": 8.04,
+      "overlay": "artifacts/overlays/IMG_4902_shapes.jpg",
+      "working_width": 1536
+    },
+    {
+      "photo_filename": "IMG_4903.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 44,
+      "detector_seconds": 8.41,
+      "overlay": "artifacts/overlays/IMG_4903_shapes.jpg",
+      "working_width": 1536
+    }
+  ]
+}
