@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web&amp;Shop · InventoryLens — the workflow on real shop photographs</title>
+<style>
+  :root{
+    --bg:#0a0c10; --panel:rgba(255,255,255,.04); --line:rgba(255,255,255,.11);
+    --fg:#eef4fa; --dim:rgba(238,244,250,.72); --faint:rgba(238,244,250,.5);
+    --accent:#4de3ff; --ok:#3ddc97; --warn:#ffc857; --plan:#9d7bff;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--fg);
+    font:15px/1.6 ui-sans-serif,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  h1,h2,h3{line-height:1.2;margin:0}
+  h1{font-size:clamp(26px,4vw,40px);letter-spacing:-.02em}
+  h2{font-size:clamp(20px,2.6vw,27px);letter-spacing:-.01em}
+  h3{font-size:16px}
+  p{margin:.6em 0}
+  a{color:var(--accent)}
+  .mono{font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-variant-numeric:tabular-nums}
+
+  header.hero{padding:56px 0 28px;border-bottom:1px solid var(--line)}
+  .kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  .lede{color:var(--dim);max-width:70ch;font-size:17px}
+
+  .banner{margin:22px 0 0;padding:14px 16px;border:1px solid rgba(255,200,87,.35);
+    background:rgba(255,200,87,.08);border-radius:var(--r);color:#ffe6ad;font-size:14px}
+  .banner b{color:var(--warn)}
+
+  section{padding:44px 0;border-bottom:1px solid var(--line)}
+  .step{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .num{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;
+    border:1px solid var(--line);background:var(--panel);font-size:13px;font-weight:700;color:var(--accent)}
+  .sub{color:var(--faint);font-size:14px;margin:.3em 0 1.4em;max-width:78ch}
+
+  .grid{display:grid;gap:14px}
+  .skus{grid-template-columns:repeat(auto-fill,minmax(186px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .card img{width:100%;display:block;aspect-ratio:1;object-fit:cover;background:#05070a}
+  .card .body{padding:10px 12px 12px}
+  .card .nm{font-weight:650;font-size:14px}
+  .card .meta{color:var(--faint);font-size:12px;margin-top:2px}
+  .pill{display:inline-block;font-size:10.5px;letter-spacing:.04em;padding:2px 7px;border-radius:999px;
+    border:1px solid var(--line);color:var(--dim);margin-top:7px}
+  .pill.warn{color:var(--warn);border-color:rgba(255,200,87,.4);background:rgba(255,200,87,.08)}
+
+  .toggle{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+  .toggle button{appearance:none;background:none;border:0;color:var(--dim);padding:7px 14px;
+    font:inherit;font-size:12.5px;cursor:pointer}
+  .toggle button.on{background:var(--accent);color:#04161c;font-weight:650}
+  .toggle button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+  .stat .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+  .stat .l{color:var(--faint);font-size:12px;margin-top:2px}
+
+  .split{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;align-items:start}
+  @media(max-width:900px){.split{grid-template-columns:1fr}}
+  .shot{background:#05070a;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;position:sticky;top:16px}
+  .shot img{width:100%;display:block}
+  .shot .cap{padding:9px 12px;color:var(--faint);font-size:12px;border-top:1px solid var(--line)}
+
+  select{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:9px;
+    padding:8px 11px;font:inherit;font-size:13.5px;max-width:100%}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--faint);font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase}
+  td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .boxrow{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:10px}
+  .boxhead{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between}
+  .boxhead .id{font-weight:700}
+  .top1{color:var(--accent);font-weight:600}
+  .bar{height:4px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:3px;min-width:70px}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,rgba(77,227,255,.5),var(--accent))}
+
+  .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:8px}
+  .flow div{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px}
+  .flow .t{font-weight:650;font-size:13.5px}
+  .flow .d{color:var(--faint);font-size:12px;margin-top:3px}
+  .flow .live{border-color:rgba(61,220,151,.45)}
+  .flow .live .t{color:var(--ok)}
+  .flow .plan{border-color:rgba(157,123,255,.45);border-style:dashed}
+  .flow .plan .t{color:var(--plan)}
+
+  ul.lim{margin:.5em 0;padding-left:1.1em;color:var(--dim)}
+  ul.lim li{margin:.35em 0}
+  footer{padding:36px 0 60px;color:var(--faint);font-size:13px}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker">Web&amp;Shop · InventoryLens</div>
+  <h1>The workflow, on real shop photographs</h1>
+  <p class="lede">A shop photographs its shelves. Software proposes what it sees. A person decides
+  before any stock number changes. Every image and number on this page comes from a verified run on
+  the project's own dataset — nothing here is a mock-up.</p>
+  <div class="banner">
+    <b>Read this first.</b> The recognition results below are <b>provisional ranks, not accuracy</b>.
+    The ten SKU identities are unapproved and the scene labels unreviewed, so the run deliberately
+    reports <span class="mono">accuracy_metrics: null</span>. No precision, recall or count-error
+    figure may be read from this page.
+  </div>
+</div></header>
+
+<section><div class="wrap">
+  <div class="step"><div class="num">1</div><h2>Register the products</h2></div>
+  <p class="sub">The owner registers each sellable product once, with several clear photographs.
+  Nothing can be recognised that was never registered. Each product keeps two reference
+  representations: the plain box crop, and a masked crop with the background removed.</p>
+  <div style="margin-bottom:14px"><span class="toggle" id="skuToggle">
+    <button data-k="box" class="on">Box crop</button><button data-k="masked">Masked crop</button>
+  </span></div>
+  <div class="grid skus" id="skuGrid"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="step"><div class="num">2</div><h2>Check the photograph — OpenCV 5, deployed on AWS</h2></div>
+  <p class="sub">Before anything is analysed, OpenCV 5 decodes the image and measures resolution,
+  Laplacian focus variance, and dark/bright pixel share. It answers one question: proceed, or retake.
+  The same module runs locally and in an AWS Lambda in <span class="mono">eu-north-1</span>.</p>
+  <div class="stats" id="capStats"></div>
+  <div class="split">
+    <div id="capExamples"></div>
+    <div>
+      <h3>Why a retake was asked for</h3>
+      <table id="capReasons"></table>
+      <p class="sub" style="margin-top:12px">These thresholds were chosen with knowledge of the local
+      examples. They are <b>not calibrated</b> capture-quality thresholds, and the figures above measure
+      <b>agreement between the local baseline and AWS</b>, not whether each decision was correct.</p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="step"><div class="num">3</div><h2>Find the products, then propose a SKU</h2></div>
+  <p class="sub">NVIDIA Retail DINO proposes one box per physical item; SigLIP2 ranks every registered
+  reference against each box crop. Pick a scene and step through the stages. The three galleries use
+  identical detector proposals and query embeddings, so the comparison is fair.</p>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px">
+    <select id="sceneSel" aria-label="Choose a scene"></select>
+    <span class="toggle" id="stageToggle">
+      <button data-k="original">Original</button>
+      <button data-k="detector" class="on">Detector boxes</button>
+      <button data-k="recognition">SKU proposals</button>
+    </span>
+    <span class="toggle" id="galToggle">
+      <button data-k="original" class="on">Gallery: original</button>
+      <button data-k="masked">masked</button>
+      <button data-k="combined">combined</button>
+    </span>
+  </div>
+
+  <div class="split">
+    <div class="shot"><img id="sceneImg" alt="Scene"><div class="cap" id="sceneCap"></div></div>
+    <div id="boxList"></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="step"><div class="num">4</div><h2>A person decides — and only then does stock move</h2></div>
+  <p class="sub">Every proposal above is pending. In the Streamlit application the employee splits a
+  merged box, adds a missed item, corrects the SKU and the quantity, and approves. Re-approving the
+  same scan cannot double-count it, and two photographs of one arrangement are reconciled into a
+  single total rather than summed.</p>
+  <div class="flow">
+    <div class="live"><div class="t">Capture guidance</div><div class="d">OpenCV 5 on AWS Lambda. Deployed and live.</div></div>
+    <div class="live"><div class="t">Detection + ranking</div><div class="d">Retail DINO + SigLIP2 on a rented GPU. Results shown above.</div></div>
+    <div class="live"><div class="t">Human review</div><div class="d">Correct, split, add, reject. Nothing is assumed.</div></div>
+    <div class="live"><div class="t">Approval</div><div class="d">One atomic transaction, replay-protected.</div></div>
+    <div class="plan"><div class="t">ADD / SUBTRACT ledger</div><div class="d">Designed in detail, deliberately not implemented. A photograph cannot know the direction.</div></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>What this run does and does not establish</h2>
+  <div class="stats" id="runStats"></div>
+  <ul class="lim" id="limits"></ul>
+  <p class="sub">The detector still misses items, and one scene is known to carry a duplicate
+  annotation defect. Inspect the original photograph alongside every result.</p>
+</div></section>
+
+<footer><div class="wrap">
+  Generated from <span class="mono">predictions.csv</span>, <span class="mono">report.json</span>,
+  <span class="mono">candidate_skus.csv</span> and the OpenCV 5 capture baseline.
+  Imagery is resized for the web; source bytes are unchanged and hash-verified.
+</div></footer>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  'use strict';
+  var D = window.DEMO;
+  if(!D){document.body.innerHTML='<p style="padding:40px;font-family:sans-serif">data.js is missing — run build_demo.py.</p>';return;}
+  var $ = function(id){return document.getElementById(id);};
+  var esc = function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
+  function stat(v,l){return '<div class="stat"><div class="v">'+esc(v)+'</div><div class="l">'+esc(l)+'</div></div>';}
+
+  /* 1. SKU registry */
+  var skuKind='box';
+  function drawSkus(){
+    $('skuGrid').innerHTML = D.skus.map(function(s){
+      var src = s.img ? (s.img[skuKind]||s.img.box) : null;
+      var needs = /needs_confirmation|confirmation_needed/.test(s.identity_status||'');
+      return '<div class="card">'+
+        (src?'<img loading="lazy" src="'+esc(src)+'" alt="'+esc(s.name)+'">':'<div style="aspect-ratio:1;background:#05070a"></div>')+
+        '<div class="body"><div class="nm">'+esc(s.name||s.id)+'</div>'+
+        '<div class="meta mono">'+esc(s.id)+' · '+esc(s.refs)+' refs</div>'+
+        '<div class="meta">'+esc(s.variant||'')+'</div>'+
+        '<span class="pill '+(needs?'warn':'')+'">'+esc((s.identity_status||'').replace(/_/g,' '))+'</span>'+
+        '</div></div>';
+    }).join('');
+  }
+  $('skuToggle').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    skuKind=b.dataset.k;
+    [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b);});
+    drawSkus();
+  });
+
+  /* 2. capture gate */
+  var c=D.capture;
+  $('capStats').innerHTML = stat(c.total,'photographs checked')+stat(c.proceed,'proceed')+
+    stat(c.retake,'retake')+stat('100%','local vs AWS agreement');
+  function exCard(e,tone){
+    if(!e)return '';
+    return '<div class="boxrow"><div class="boxhead"><span class="id" style="color:'+tone+'">'+
+      esc(String(e.action).toUpperCase())+'</span><span class="mono" style="color:var(--faint)">'+
+      esc(e.width)+'&times;'+esc(e.height)+'</span></div>'+
+      '<div style="color:var(--dim);margin:4px 0 8px">'+esc(e.reason)+'</div>'+
+      '<table><tr><th>focus (lap var)</th><th>dark %</th><th>bright %</th></tr>'+
+      '<tr><td class="n mono">'+esc(e.lap_var_1024)+'</td><td class="n mono">'+esc(e.dark_pct)+
+      '</td><td class="n mono">'+esc(e.bright_pct)+'</td></tr></table></div>';
+  }
+  $('capExamples').innerHTML = '<h3>Two real decisions</h3>'+
+    exCard(c.example_proceed,'var(--ok)')+exCard(c.example_retake,'var(--warn)');
+  $('capReasons').innerHTML = '<tr><th>reason</th><th>count</th></tr>'+
+    Object.keys(c.reasons).map(function(k){
+      return '<tr><td>'+esc(k)+'</td><td class="n mono">'+esc(c.reasons[k])+'</td></tr>';}).join('');
+
+  /* 3. scenes */
+  var stage='detector', gal='original', idx=0;
+  $('sceneSel').innerHTML = D.scenes.map(function(s,i){
+    return '<option value="'+i+'">'+esc(s.photo)+' — '+esc(s.type)+' — '+s.boxes.length+
+      ' box'+(s.boxes.length===1?'':'es')+'</option>';
+  }).join('');
+
+  function drawScene(){
+    var s=D.scenes[idx];
+    var img=s.img[stage]||s.img.original||s.img.detector;
+    var el=$('sceneImg');
+    el.src=img||''; el.alt=s.photo+' — '+stage;
+    $('sceneCap').textContent = s.photo+' · '+s.type+' · '+s.boxes.length+
+      ' detected box'+(s.boxes.length===1?'':'es')+' · showing: '+stage;
+    $('boxList').innerHTML = s.boxes.map(function(b){
+      var list=b[gal]||[];
+      return '<div class="boxrow"><div class="boxhead">'+
+        '<span class="id">'+esc(b.id)+'</span>'+
+        '<span class="mono" style="color:var(--faint)">detector '+esc(b.conf)+' · crop '+esc(b.crop_sha)+'…</span></div>'+
+        '<table><tr><th>rank</th><th>proposed SKU</th><th>similarity</th></tr>'+
+        list.map(function(t,i){
+          var pct=Math.max(0,Math.min(100,t.sim*100));
+          return '<tr><td class="n">'+(i+1)+'</td><td'+(i===0?' class="top1"':'')+'>'+esc(t.name||t.sku)+
+            ' <span class="mono" style="color:var(--faint)">'+esc(t.sku)+'</span></td>'+
+            '<td class="n mono">'+t.sim.toFixed(3)+
+            '<div class="bar"><i style="width:'+pct.toFixed(1)+'%"></i></div></td></tr>';
+        }).join('')+'</table>'+
+        '<div style="color:var(--faint);font-size:11.5px;margin-top:7px">status: <span class="mono">'+
+        esc(b.status)+'</span></div></div>';
+    }).join('');
+  }
+  $('sceneSel').addEventListener('change',function(){idx=+this.value;drawScene();});
+  $('stageToggle').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return; stage=b.dataset.k;
+    [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b);}); drawScene();
+  });
+  $('galToggle').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return; gal=b.dataset.k;
+    [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b);}); drawScene();
+  });
+
+  /* 4. run stats + limits */
+  var m=D.meta;
+  $('runStats').innerHTML = stat(m.scene_images,'scenes')+stat(m.detected_boxes,'detected boxes')+
+    stat(D.skus.length,'registered SKUs')+
+    stat(m.accuracy_metrics===null?'null':String(m.accuracy_metrics),'accuracy_metrics');
+  $('limits').innerHTML = (m.limitations||[]).map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
+
+  drawSkus(); drawScene();
+})();
+</script>
+</body>
+</html>

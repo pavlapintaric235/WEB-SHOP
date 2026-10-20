@@ -225,8 +225,10 @@ def run_app() -> None:
              caption="Captured photo for the retake decision", width=420)
     if new_scene:
         st.info(f"{new_scene['filename']} is an audited {new_scene['group']} photo from the newer 30-scene set. "
-                "AWS checks capture quality here. DINO/SigLIP2 scene predictions have not been generated for this set; "
-                "product counting and SKU selection will need human review.")
+                "AWS checks capture quality here. DINO/SigLIP2 proposals for this set were produced on "
+                "2026-10-20 on a rented GPU and are provisional ranks, not accuracy; they are imported into "
+                "the new-product scene review experiment and are not wired into this page. "
+                "Product counting and SKU selection still need human review.")
     elif photo is None:
         st.info("AWS checks capture quality for this photo. Live DINO/SigLIP2 recognition is unavailable; "
                 "product counting and SKU selection will need human review.")
@@ -274,8 +276,10 @@ def run_app() -> None:
         st.image(overlay_bytes(image, photo["boxes"]), caption="Green: accepted model suggestion; orange: unknown. All boxes still need human review.")
     else:
         if new_scene:
-            st.info(f"{new_scene['filename']} has no imported DINO/SigLIP2 scene predictions yet. "
-                    "Inspect each physical product and add it manually below; leave uncertain SKUs unresolved.")
+            st.info(f"{new_scene['filename']} has no DINO/SigLIP2 proposals available on this page. "
+                    "The 30-scene run's provisional ranks live in the new-product scene review experiment, "
+                    "not here. Inspect each physical product and add it manually below; leave uncertain "
+                    "SKUs unresolved.")
         else:
             st.info("This photo does not match a frozen source image. Live DINO/SigLIP2 inference is unavailable; inspect products and add them manually.")
         st.image(cv2.cvtColor(image, cv2.COLOR_BGR2RGB), caption="Uploaded photo")

@@ -16,7 +16,11 @@
 <section id="intro" class="intro">
   <header class="intro-top">
     <div class="brand">Web&amp;Shop · InventoryLens</div>
-    <button id="skipBtn" class="btn ghost" type="button">Skip intro ›</button>
+    <div class="intro-controls">
+      <button id="backBtn" class="btn ghost" type="button" title="Previous step (Left arrow)">‹ Back</button>
+      <button id="pauseBtn" class="btn ghost" type="button" title="Pause or resume (P)">Pause</button>
+      <button id="skipBtn" class="btn ghost" type="button">Skip intro ›</button>
+    </div>
   </header>
   <div class="caption" id="caption">
     <div class="caption-kicker" id="capKicker"></div>
@@ -25,7 +29,7 @@
   </div>
   <footer class="intro-bottom">
     <div class="progress" id="progress"></div>
-    <div class="hint">Space · next step &nbsp;&nbsp;·&nbsp;&nbsp; Esc · skip</div>
+    <div class="hint">Space · next &nbsp;·&nbsp; ← · back &nbsp;·&nbsp; P · pause &nbsp;·&nbsp; Esc · skip &nbsp;·&nbsp; click a bar to jump</div>
   </footer>
 </section>
 

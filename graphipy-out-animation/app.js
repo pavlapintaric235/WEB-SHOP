@@ -912,6 +912,10 @@
   $('replayBtn').addEventListener('click', function () { startIntro(); });
   $('helpBtn').addEventListener('click', function () { select(null); });
   $('skipBtn').addEventListener('click', function () { enterExplore(true); });
+  (function () {
+    var b = $('backBtn'); if (b) b.addEventListener('click', prevStep);
+    var p = $('pauseBtn'); if (p) p.addEventListener('click', togglePause);
+  })();
 
   function onPanelClick(e) {
     var t = e.target.closest('[data-action],[data-node],[data-link],[data-agg],[data-comm],[data-hyper]');
@@ -1004,6 +1008,8 @@
     if (mode === 'intro') {
       if (e.key === 'Escape') { e.preventDefault(); enterExplore(true); }
       else if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight') { e.preventDefault(); nextStep(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevStep(); }
+      else if (e.key === 'p' || e.key === 'P') { e.preventDefault(); togglePause(); }
       return;
     }
     if (mode !== 'explore') return;
@@ -1109,7 +1115,7 @@
     });
   }
 
-  var introCam = { target: new THREE.Vector3(0, 40, 0), pos: new THREE.Vector3(0, 90, 1200), wantTarget: new THREE.Vector3(0, 40, 0), wantDist: 1200 };
+  var introCam = { target: new THREE.Vector3(0, 40, 0), pos: new THREE.Vector3(0, 90, 880), wantTarget: new THREE.Vector3(0, 40, 0), wantDist: 880 };
   function introCameraUpdate(now) {
     introCam.target.lerp(introCam.wantTarget, 0.035);
     var drift = new THREE.Vector3(Math.sin(now / 5200) * 70, 40 + Math.cos(now / 6100) * 30, 0);
@@ -1129,7 +1135,16 @@
 
   var progressEl = $('progress');
   function buildProgress() {
-    progressEl.innerHTML = S.steps.map(function () { return '<span></span>'; }).join('');
+    progressEl.innerHTML = S.steps.map(function (st, i) {
+      var name = (st.title || ('Step ' + (i + 1))).replace(/"/g, '&quot;');
+      return '<span tabindex="0" role="button" title="' + name + '"></span>';
+    }).join('');
+    Array.prototype.forEach.call(progressEl.children, function (sp, i) {
+      sp.addEventListener('click', function () { goToStep(i); });
+      sp.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goToStep(i); }
+      });
+    });
   }
   function setCaption(st) {
     var cap = $('caption');
@@ -1159,20 +1174,20 @@
       spawnBlock(st.block);
       (st.from || []).forEach(function (f, k) { drawIntroLink(f, st.block, 150 + k * 250); });
       introCam.wantTarget.set(b.pos[0] * 0.28, 40 + b.pos[1] * 0.28, 0);
-      introCam.wantDist = 1090;
+      introCam.wantDist = 820;
     } else if (st.kind === 'link') {
       (st.links || []).forEach(function (pair, k) { drawIntroLink(pair[0], pair[1], 100 + k * 500); });
       introCam.wantTarget.set(0, 40, 0);
-      introCam.wantDist = 1200;
+      introCam.wantDist = 880;
     } else if (st.kind === 'outro') {
       blocks.forEach(function (b) { spawnBlock(b.key); });
       introCam.wantTarget.set(0, 40, 0);
-      introCam.wantDist = 1300;
+      introCam.wantDist = 940;
       var g0 = { s: graphGroup.scale.x };
       tween(st.duration - 300, function (k) { graphGroup.scale.setScalar(lerp(g0.s, 1.05, k)); }, { tag: 'intro', ease: ease.inOutCubic });
     } else {
       introCam.wantTarget.set(0, 40, 0);
-      introCam.wantDist = 1200;
+      introCam.wantDist = 880;
     }
   }
   function nextStep() {
@@ -1180,14 +1195,73 @@
     clearTimeout(intro.timer);
     intro.step++;
     if (intro.step >= S.steps.length) { enterExplore(false); return; }
+    goToStep(intro.step);
+  }
+
+  // Jump to an arbitrary step. Blocks already spawned stay spawned - the tour
+  // is additive by design, so stepping back re-tells the story without
+  // tearing the map down.
+  function goToStep(i) {
+    if (mode !== 'intro') return;
+    clearTimeout(intro.timer);
+    intro.step = Math.max(0, Math.min(i, S.steps.length - 1));
     var st = S.steps[intro.step];
     runStep(st, intro.step);
+    intro.stepStart = performance.now();
+    intro.stepDur = st.duration;
+    intro.elapsed = 0;
+    if (intro.paused) { freezeBar(); return; }
     intro.timer = setTimeout(nextStep, st.duration);
+  }
+
+  function prevStep() {
+    if (mode !== 'intro') return;
+    goToStep(intro.step - 1);
+  }
+
+  function activeBar() { return progressEl.children[intro.step] || null; }
+
+  function freezeBar() {
+    var sp = activeBar();
+    if (!sp) return;
+    var w = '0px';
+    try { w = window.getComputedStyle(sp, '::after').width || '0px'; } catch (e) {}
+    sp.style.setProperty('--frozen', w);
+    sp.classList.add('paused');
+  }
+
+  function togglePause() {
+    if (mode !== 'intro') return;
+    var btn = $('pauseBtn');
+    if (!intro.paused) {
+      intro.paused = true;
+      clearTimeout(intro.timer);
+      intro.elapsed = performance.now() - (intro.stepStart || performance.now());
+      freezeBar();
+      if (btn) { btn.textContent = 'Resume'; btn.classList.add('on'); }
+    } else {
+      intro.paused = false;
+      var rem = Math.max(120, (intro.stepDur || 0) - (intro.elapsed || 0));
+      var sp = activeBar();
+      if (sp) {
+        sp.classList.remove('paused');
+        sp.style.transitionDuration = rem + 'ms';
+      }
+      intro.stepStart = performance.now() - (intro.elapsed || 0);
+      intro.timer = setTimeout(nextStep, rem);
+      if (btn) { btn.textContent = 'Pause'; btn.classList.remove('on'); }
+    }
   }
 
   function startIntro() {
     mode = 'intro';
     clearTimeout(intro.timer);
+    intro.paused = false;
+    intro.elapsed = 0;
+    (function () {
+      var pb = $('pauseBtn');
+      if (pb) { pb.textContent = 'Pause'; pb.classList.remove('on'); }
+    })();
     killTweens();
     sel = null; hi = null; isolateComm = null; hoverNode = hoverLink = hoverAgg = -1;
     ring.visible = false;
@@ -1204,7 +1278,7 @@
     camera.position.copy(introCam.pos);
     introCam.target.set(0, 40, 0);
     introCam.wantTarget.set(0, 40, 0);
-    introCam.wantDist = 1200;
+    introCam.wantDist = 880;
     camera.lookAt(introCam.target);
     var ex = $('explore');
     ex.classList.remove('show');

@@ -392,6 +392,24 @@ button, input { font-family: inherit; color: inherit; }
 }
 .progress span.done::after { width: 100%; }
 .progress span.active::after { width: 100%; transition: width linear; }
+/* Pause freezes the bar at its measured width; app.js sets --frozen.
+   This rule must stay AFTER .active so it wins on equal specificity.     */
+.progress span.paused::after { width: var(--frozen, 0); transition: none; }
+
+/* Progress bars are clickable step targets while the tour is running.    */
+.progress span { cursor: pointer; }
+.progress span:hover { background: rgba(255, 255, 255, 0.28); }
+.progress span:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Intro header control row.                                              */
+.intro-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
 .hint {
   font-family: var(--font-body);
