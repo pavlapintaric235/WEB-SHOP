@@ -157,6 +157,63 @@ completed, say so plainly in the submission — a documented limitation is worth
 than an unsupported number, and the competition asks explicitly for limitations and
 responsible-use considerations.
 
+### Would more photographs help?
+
+Asked often, so here is the measured answer. **Nothing in this project is trained** — there is no
+training code anywhere in it. Retail DINO proposes boxes, SigLIP2 embeds crops, MobileSAM
+segments, ResNet18 matches locally, and all four are used off the shelf. Extra photographs never
+adjust any weights; they enter a **gallery** compared by cosine similarity at inference time. The
+real question is therefore "more reference views per SKU?", and that has been measured on this
+project's own photographs.
+
+**Where more images demonstrably help.** From the
+[reference retrieval report](experiments/new_product_scanning_20261020/results/reference_retrieval_report_20261020.md),
+16 fixed queries over 3 groups, each query excluded from its own gallery:
+
+| Gallery size | Top-1 macro | Top-5 micro |
+|---:|---:|---:|
+| 1 reference | 88.8% | 92.9% |
+| 2 references | 94.4% | 98.3% |
+| 3 references | 98.1% | 100% |
+| 4 references | 100% | 100% |
+
+A real effect, steepest from 1 to 2. But that is a controlled capture over 3 groups with
+unconfirmed identities and no scene queries: the 100% is not a deployment estimate. The catalogue
+currently holds **42 references across 10 SKUs** — five SKUs at 4, two at 3, the rest at 5-6.
+
+**Where more images do not help at all.**
+
+1. *Abstention.* The [catalogue-growth test](experiments/new_product_scanning_20261020/results/catalogue_growth_robustness_20261020.md)
+   ran the scenes against a gallery containing none of the photographed products. The system
+   labelled all 93 boxes anyway, with **79 of 93** below a 0.05 top1-top2 margin. More references
+   make this worse, not better — a larger gallery offers a closer-looking wrong answer. The fix is
+   a calibrated rejection threshold, which needs the `__unknown__` labels from Step 2.
+2. *Detector misses.* DINO found 27 of 33 instances on the five-image holdout. The detector is
+   class-agnostic and never sees the references, so no reference photograph can recover a missed
+   item.
+3. *The dominant confusion.* Of nine wrong top-1 results in the all-available run, **seven were
+   oatmeal (`IL-NEW-005`) versus rice mash (`IL-NEW-006`)** — same brand, both chocolate, nearly
+   identical front faces. More photographs of the same front face cannot separate them;
+   discriminative views of the differing panel, or a barcode, can.
+
+**What to do before the 2026-10-26 deadline.**
+
+1. **Finish Steps 1 to 3 first.** You cannot tell whether more images help scenes, because scene
+   accuracy has never been computed. The GPU run is already paid for; the measurement is free.
+   Photographing before measuring is guessing.
+2. **If you do shoot more, shoot exactly nine.** The report derives this: five groups need one
+   more, two groups need two more, for a uniform four-reference test with one held-out query each.
+   That is an afternoon, not a dataset campaign. Prioritise **angle diversity** (front/side/back
+   where missing) over raw count, and capture the discriminating faces of the oatmeal/rice-mash
+   pair.
+3. **Do not bulk-collect.** At this catalogue size the curve saturates by four references, and
+   unreviewed images only add review burden against the deadline.
+
+On the idea of adding the folders in sequence, `01_` then `02_` then `03_`: that experiment has
+already run, as the cumulative stages A, B and C of the catalogue-growth test. Nearly doubling the
+catalogue to 19 SKUs changed the top-1 proposal on **1 of 93 boxes — 98.9% stable**. Catalogue
+growth is not the risk. Answering confidently about products that were never registered is.
+
 ### Rules that are not negotiable
 
 - **Never** quote an accuracy, recall, precision or count-error figure that Step 3 did not produce.
