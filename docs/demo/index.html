@@ -42,7 +42,11 @@
   .grid{display:grid;gap:14px}
   .skus{grid-template-columns:repeat(auto-fill,minmax(186px,1fr))}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
-  .card img{width:100%;display:block;aspect-ratio:1;object-fit:cover;background:#05070a}
+  /* Reference crops are tall (e.g. 1286x2988). `cover` on a square would crop
+     away the top and bottom - exactly where the masked background is visible -
+     making the box/masked toggle look like it does nothing. `contain` keeps the
+     whole crop, so the gray mask is obvious.                                   */
+  .card img{width:100%;display:block;aspect-ratio:3/4;object-fit:contain;background:#05070a}
   .card .body{padding:10px 12px 12px}
   .card .nm{font-weight:650;font-size:14px}
   .card .meta{color:var(--faint);font-size:12px;margin-top:2px}
