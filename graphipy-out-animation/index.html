@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web&amp;Shop · InventoryLens Living Map</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="gl" tabindex="0"></canvas>
+<div id="labels"></div>
+<div id="tooltip" hidden></div>
+<div id="toast" class="toast"></div>
+
+<section id="intro" class="intro">
+  <header class="intro-top">
+    <div class="brand">Web&amp;Shop · InventoryLens</div>
+    <button id="skipBtn" class="btn ghost" type="button">Skip intro ›</button>
+  </header>
+  <div class="caption" id="caption">
+    <div class="caption-kicker" id="capKicker"></div>
+    <h2 class="caption-title" id="capTitle"></h2>
+    <p class="caption-text" id="capText"></p>
+  </div>
+  <footer class="intro-bottom">
+    <div class="progress" id="progress"></div>
+    <div class="hint">Space · next step &nbsp;&nbsp;·&nbsp;&nbsp; Esc · skip</div>
+  </footer>
+</section>
+
+<section id="explore" class="explore" hidden>
+  <header class="topbar">
+    <div class="brand">Web&amp;Shop <span class="sub">Living map of InventoryLens</span></div>
+    <div class="dock">
+      <div class="search">
+        <input id="search" type="text" placeholder="Search a block, file, function, idea…" autocomplete="off" spellcheck="false">
+        <ul id="searchList" class="search-list" hidden></ul>
+      </div>
+      <div class="controls">
+        <div class="seg" id="detailSeg">
+          <button type="button" data-level="overview">Overview</button>
+          <button type="button" data-level="full" class="on">Everything</button>
+        </div>
+        <button id="labelsBtn" class="btn on" type="button" title="Show or hide names (L)">Labels</button>
+        <button id="spinBtn" class="btn on" type="button" title="Auto-rotate (R)">Rotate</button>
+        <button id="resetBtn" class="btn" type="button" title="Show everything again and fit to view (F)">Reset</button>
+        <button id="replayBtn" class="btn" type="button" title="Play the one-minute tour again">Replay</button>
+        <button id="helpBtn" class="btn" type="button" title="How to explore">Help</button>
+      </div>
+    </div>
+  </header>
+  <aside class="panel" id="panel">
+    <div class="panel-body" id="panelBody"></div>
+  </aside>
+  <div class="legend" id="legend"></div>
+  <div class="statusbar" id="status"></div>
+</section>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="graph-data.js"></script>
+<script src="story.js"></script>
+<script src="app.js"></script>
+<script>/* Project-named alias for the console helpers (app.js exposes them as ZWMAP). */
+window.WSMAP = window.ZWMAP;</script>
+</body>
+</html>
