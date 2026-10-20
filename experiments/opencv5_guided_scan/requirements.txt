@@ -1,0 +1,4 @@
+# Tested local replay environment; install only in an isolated environment.
+opencv-python==5.0.0.93
+numpy==2.5.4
+streamlit==1.65.0

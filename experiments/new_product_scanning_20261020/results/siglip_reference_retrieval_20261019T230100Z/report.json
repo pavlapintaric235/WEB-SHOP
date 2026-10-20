@@ -1,0 +1,142 @@
+{
+  "status": "exploratory_owner_photo_retrieval",
+  "model": "google/siglip2-base-patch16-224",
+  "evaluation": "leave-one-owner-photo-out; query excluded from its SKU gallery; no scene photos or threshold tuning",
+  "rival_gallery_policy": "Rival SKUs retain all available owner references; target SKU gallery size is varied to isolate its reference-count effect.",
+  "mask_coverage": {
+    "photo": 42,
+    "box": 0,
+    "masked": 0
+  },
+  "fixed_query_cohort_skus_by_representation": {
+    "photo": [
+      "IL-NEW-002",
+      "IL-NEW-008",
+      "IL-NEW-009"
+    ],
+    "box": [],
+    "masked": []
+  },
+  "fixed_query_files_by_representation": {
+    "photo": [
+      "IMG_4816.jpeg",
+      "IMG_4817.jpeg",
+      "IMG_4818.jpeg",
+      "IMG_4819.jpeg",
+      "IMG_4820.jpeg",
+      "IMG_4821.jpeg",
+      "IMG_4842.jpeg",
+      "IMG_4843.jpeg",
+      "IMG_4844.jpeg",
+      "IMG_4845.jpeg",
+      "IMG_4846.jpeg",
+      "IMG_4847.jpeg",
+      "IMG_4849.jpeg",
+      "IMG_4850.jpeg",
+      "IMG_4851.jpeg",
+      "IMG_4852.jpeg"
+    ],
+    "box": [],
+    "masked": []
+  },
+  "paired_mask_ablation_query_count": 0,
+  "identity_confirmed": {
+    "IL-NEW-001": false,
+    "IL-NEW-002": false,
+    "IL-NEW-003": false,
+    "IL-NEW-004": false,
+    "IL-NEW-005": false,
+    "IL-NEW-006": false,
+    "IL-NEW-007": false,
+    "IL-NEW-008": false,
+    "IL-NEW-009": false,
+    "IL-NEW-010": false
+  },
+  "limitations": [
+    "Controlled owner-reference retrieval does not establish employee/customer scene accuracy.",
+    "SKU groupings remain provisional until owner-confirmed.",
+    "Unknown-SKU rejection cannot be measured from known-SKU owner references.",
+    "Rival classes have their full galleries; this is a target-reference-count ablation, not an equal total-gallery-budget comparison.",
+    "The fixed 1-4 curve uses only SKUs with at least five reference photos; the all-available evaluation has a broader, different query cohort and must not be compared as a paired curve.",
+    "No confidence-based abstention thresholds are evaluated in this retrieval report."
+  ],
+  "summary": [
+    {
+      "query_cohort": "all_available_per_sku",
+      "representation": "photo",
+      "gallery_size": "all",
+      "query_gallery_trials": 42,
+      "unique_queries": 42,
+      "true_sku_classes": 10,
+      "candidate_sku_count_min": 10,
+      "candidate_sku_count_max": 10,
+      "top1_accuracy_micro": 0.7857142857142857,
+      "top5_accuracy_micro": 1.0,
+      "top1_accuracy_macro_query": 0.7857142857142857,
+      "top5_accuracy_macro_query": 1.0,
+      "identity_confirmed_trial_fraction": 0.0
+    },
+    {
+      "query_cohort": "fixed_queries_1_to_4",
+      "representation": "photo",
+      "gallery_size": "1",
+      "query_gallery_trials": 70,
+      "unique_queries": 16,
+      "true_sku_classes": 3,
+      "candidate_sku_count_min": 10,
+      "candidate_sku_count_max": 10,
+      "top1_accuracy_micro": 0.8714285714285714,
+      "top5_accuracy_micro": 0.9285714285714286,
+      "top1_accuracy_macro_query": 0.8875,
+      "top5_accuracy_macro_query": 0.9375,
+      "identity_confirmed_trial_fraction": 0.0
+    },
+    {
+      "query_cohort": "fixed_queries_1_to_4",
+      "representation": "photo",
+      "gallery_size": "2",
+      "query_gallery_trials": 120,
+      "unique_queries": 16,
+      "true_sku_classes": 3,
+      "candidate_sku_count_min": 10,
+      "candidate_sku_count_max": 10,
+      "top1_accuracy_micro": 0.925,
+      "top5_accuracy_micro": 0.9833333333333333,
+      "top1_accuracy_macro_query": 0.94375,
+      "top5_accuracy_macro_query": 0.9875,
+      "identity_confirmed_trial_fraction": 0.0
+    },
+    {
+      "query_cohort": "fixed_queries_1_to_4",
+      "representation": "photo",
+      "gallery_size": "3",
+      "query_gallery_trials": 100,
+      "unique_queries": 16,
+      "true_sku_classes": 3,
+      "candidate_sku_count_min": 10,
+      "candidate_sku_count_max": 10,
+      "top1_accuracy_micro": 0.97,
+      "top5_accuracy_micro": 1.0,
+      "top1_accuracy_macro_query": 0.98125,
+      "top5_accuracy_macro_query": 1.0,
+      "identity_confirmed_trial_fraction": 0.0
+    },
+    {
+      "query_cohort": "fixed_queries_1_to_4",
+      "representation": "photo",
+      "gallery_size": "4",
+      "query_gallery_trials": 40,
+      "unique_queries": 16,
+      "true_sku_classes": 3,
+      "candidate_sku_count_min": 10,
+      "candidate_sku_count_max": 10,
+      "top1_accuracy_micro": 1.0,
+      "top5_accuracy_micro": 1.0,
+      "top1_accuracy_macro_query": 1.0,
+      "top5_accuracy_macro_query": 1.0,
+      "identity_confirmed_trial_fraction": 0.0
+    }
+  ],
+  "per_query_csv": "per_query.csv",
+  "source_manifest_sha256": "a4f47fb73c4ffd502b08e8cac08e970dbcecf1de5cfffb4ecc586d2ebb88c164"
+}

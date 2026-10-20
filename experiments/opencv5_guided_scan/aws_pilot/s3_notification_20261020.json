@@ -1,0 +1,10 @@
+{
+  "LambdaFunctionConfigurations": [{
+    "Id": "inventorylens-guided-capture-incoming-only",
+    "LambdaFunctionArn": "arn:aws:lambda:eu-north-1:478400396665:function:inventorylens-opencv5-capture-pilot-20261020",
+    "Events": ["s3:ObjectCreated:*"],
+    "Filter": {
+      "Key": {"FilterRules": [{"Name": "prefix", "Value": "incoming/"}]}
+    }
+  }]
+}

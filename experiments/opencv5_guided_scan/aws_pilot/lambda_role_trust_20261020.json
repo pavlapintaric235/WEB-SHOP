@@ -1,0 +1,12 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": {"Service": "lambda.amazonaws.com"},
+    "Action": "sts:AssumeRole",
+    "Condition": {
+      "StringEquals": {"aws:SourceAccount": "478400396665"},
+      "ArnEquals": {"aws:SourceArn": "arn:aws:lambda:eu-north-1:478400396665:function:inventorylens-opencv5-capture-pilot-20261020"}
+    }
+  }]
+}

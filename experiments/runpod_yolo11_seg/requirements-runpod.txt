@@ -1,0 +1,7 @@
+# Use a CUDA-enabled RunPod PyTorch image; do not replace its torch/torchvision wheels.
+ultralytics>=8.4,<9
+PyYAML>=6,<7
+Pillow>=10,<13
+numpy>=1.26,<3
+opencv-python-headless>=4.9,<5
+scipy>=1.11,<2

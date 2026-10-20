@@ -1,0 +1,4 @@
+# Optional only; the base experiment does not need Transformers.
+transformers>=4.53,<5
+huggingface_hub>=0.33,<1
+safetensors>=0.5

@@ -1,0 +1,8 @@
+{
+  "Rules": [{
+    "ID": "expire-pilot-objects-after-one-day",
+    "Status": "Enabled",
+    "Filter": {"Prefix": ""},
+    "Expiration": {"Days": 1}
+  }]
+}

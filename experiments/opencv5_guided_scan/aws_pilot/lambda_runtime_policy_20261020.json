@@ -1,0 +1,23 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ReadPilotPhotos",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::inventorylens-opencv5-pilot-478400396665-20261020/incoming/*"
+    },
+    {
+      "Sid": "WritePilotResults",
+      "Effect": "Allow",
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::inventorylens-opencv5-pilot-478400396665-20261020/results/*"
+    },
+    {
+      "Sid": "WritePilotLogs",
+      "Effect": "Allow",
+      "Action": ["logs:CreateLogStream", "logs:PutLogEvents"],
+      "Resource": "arn:aws:logs:eu-north-1:478400396665:log-group:/aws/lambda/inventorylens-opencv5-capture-pilot-20261020:*"
+    }
+  ]
+}

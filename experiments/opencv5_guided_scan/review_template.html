@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>InventoryLens · Guided scan replay</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, Segoe UI, sans-serif; background: #f4f6f3; color: #172b25; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    header { background: #163e33; color: #fff; padding: 1.2rem max(1.2rem, calc((100vw - 1320px)/2)); }
+    header h1 { margin: 0 0 .35rem; font-size: 1.65rem; }
+    header p { margin: .25rem 0; color: #d7e9df; }
+    main { max-width: 1320px; margin: 0 auto; padding: 1.3rem; }
+    .notice { padding: 1rem; background: #fff2cf; border-left: 5px solid #b77b1b; border-radius: .45rem; margin-bottom: 1rem; }
+    .summary { display: flex; flex-wrap: wrap; gap: .7rem; margin-bottom: 1rem; }
+    .stat { background: #fff; border: 1px solid #dce5dd; border-radius: .5rem; padding: .65rem 1rem; min-width: 125px; }
+    .stat strong { display: block; font-size: 1.35rem; }
+    .stat span { font-size: .85rem; color: #52655b; }
+    .arrangement { background: #e7f1eb; border: 1px solid #bbd5c5; padding: 1rem; border-radius: .55rem; margin: 1rem 0; }
+    .arrangement h2 { margin: 0 0 .4rem; font-size: 1.1rem; }
+    .arrangement p { margin: .3rem 0 .8rem; }
+    .arrangement input[type=number] { width: 7rem; }
+    .card { background: #fff; border: 1px solid #dce5dd; border-radius: .75rem; margin: 1rem 0; overflow: hidden; box-shadow: 0 2px 8px #162b2310; }
+    .card-head { padding: 1rem 1.1rem; border-bottom: 1px solid #e5ece7; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem; }
+    .card-head h2 { margin: 0; font-size: 1.15rem; }
+    .tag { border-radius: 99px; background: #dceee2; color: #18533a; padding: .25rem .6rem; font-size: .78rem; font-weight: 700; }
+    .card-grid { display: grid; grid-template-columns: minmax(310px, 45%) 1fr; gap: 1rem; padding: 1rem; }
+    .preview { width: 100%; border-radius: .45rem; background: #ebeee9; }
+    .caption { font-size: .83rem; color: #52655b; line-height: 1.45; }
+    .evidence { border-left: 4px solid #ab7133; padding: .4rem .7rem; background: #fff9eb; margin: .7rem 0; }
+    .scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    th, td { border-bottom: 1px solid #e8eee9; padding: .45rem; text-align: left; vertical-align: top; }
+    th { color: #4e6257; }
+    input, select, button { font: inherit; }
+    input[type=text], input[type=number], select { border: 1px solid #b7c8bc; border-radius: .3rem; padding: .35rem; background: #fff; color: #172b25; }
+    input[type=text] { width: 9rem; }
+    input[type=number] { width: 4.5rem; }
+    .wide { width: min(100%, 28rem) !important; }
+    button { border: 0; border-radius: .35rem; padding: .55rem .8rem; background: #245b43; color: #fff; cursor: pointer; }
+    button:hover { background: #194632; }
+    .secondary { background: #e4eee8; color: #174b34; }
+    .secondary:hover { background: #cee4d5; }
+    .actions { padding-top: .8rem; display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; }
+    .manual { margin-top: .8rem; }
+    .manual-row { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: .4rem 0; }
+    .manual-row input[type=text] { width: 10rem; }
+    .manual-row input[data-manual-field=note] { width: min(100%, 22rem); }
+    .footer-actions { position: sticky; bottom: 0; background: #f4f6f3ee; padding: .8rem 0; border-top: 1px solid #cddbcf; }
+    .muted { color: #5a6d61; }
+    @media (max-width: 850px) { .card-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>InventoryLens guided scan replay</h1>
+    <p>OpenCV 5 capture guidance → saved NVIDIA Retail DINO boxes → saved SigLIP2 suggestions → human review</p>
+    <p>Local experiment. Nothing here updates inventory or sends images to AWS.</p>
+  </header>
+  <main>
+    <div class="notice"><strong>Review-only evidence.</strong> Recognition status means an experimental threshold accepted a suggestion; it does not establish that the SKU is correct. The capture thresholds are illustrative. Check every visible product, including items without a box.</div>
+    <div class="summary" id="summary"></div>
+    <section class="arrangement">
+      <h2>B10: reconcile two views of one arrangement</h2>
+      <p>The user's latest correction confirms 10 physical products across this unchanged setup. Review both photos, link any repeated instances mentally, and enter one arrangement total. Never add the two photos' box counts.</p>
+      <label>One reviewed arrangement total <input type="number" min="0" step="1" id="b10-total" placeholder="Review first"></label>
+      <label>Reconciliation note <input type="text" class="wide" id="b10-note" placeholder="How did you avoid double counting?"></label>
+    </section>
+    <section id="photos"></section>
+    <div class="footer-actions">
+      <button id="download">Download review-only JSON</button>
+      <span class="muted">Edits live only in this browser until you download the file. No server or database write occurs.</span>
+    </div>
+  </main>
+  <script id="replay-data" type="application/json">__REPLAY_JSON__</script>
+  <script>
+    const replay = JSON.parse(document.getElementById('replay-data').textContent);
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    const stat = (number, label) => `<div class="stat"><strong>${esc(number)}</strong><span>${esc(label)}</span></div>`;
+    document.getElementById('summary').innerHTML = [
+      stat(replay.summary.photos, 'source photos'),
+      stat(replay.summary.arrangements, 'distinct arrangements'),
+      stat(replay.summary.dino_boxes, 'DINO boxes'),
+      stat(replay.summary.siglip2_accepted, 'accepted suggestions'),
+      stat(replay.summary.siglip2_unknown, 'unknown suggestions')
+    ].join('');
+
+    function boxRow(box, index) {
+      const candidates = box.top5.slice(0, 3).map(item => `${esc(item.sku)} (${Number(item.similarity).toFixed(2)})`).join('<br>');
+      return `<tr class="box-row" data-box-index="${index}">
+        <td>#${esc(box.instance_id)}<br><small>${esc(box.recognition_status)}</small></td>
+        <td>${candidates}</td>
+        <td><select data-field="decision"><option value="pending">Pending</option><option value="accept">Confirm item</option><option value="remove">Remove false box</option><option value="split">Split into manual items</option><option value="overlap">Overlap/partial - exclude from count</option></select></td>
+        <td><input type="text" data-field="sku" value="${esc(box.accepted_sku || '')}" placeholder="SKU or unknown"></td>
+        <td><input type="number" data-field="quantity" value="1" min="1" step="1"></td>
+        <td><input type="text" data-field="note" placeholder="Correction reason"></td>
+      </tr>`;
+    }
+
+    function photoCard(photo, index) {
+      const q = photo.quality;
+      const boxes = photo.boxes.length ? photo.boxes.map(boxRow).join('') : '<tr><td colspan="6">No DINO boxes. Inspect the image and add every visible product manually.</td></tr>';
+      const context = photo.arrangement_id === 'B10'
+        ? 'Latest user correction: one 10-unit arrangement across two views; the older saved trace recorded 11.'
+        : photo.human_review_context;
+      return `<article class="card" data-photo-index="${index}">
+        <div class="card-head"><h2>${esc(photo.scene_id)} · ${esc(photo.filename)}</h2><span class="tag">${esc(photo.workflow)} · ${esc(photo.capture_decision.action)}</span></div>
+        <div class="card-grid">
+          <div><img class="preview" src="${esc(photo.preview)}" alt="DINO detection overlay for ${esc(photo.filename)}"><p class="caption">Green = accepted suggestion; orange = unknown. Boxes are proposals, not confirmed physical instances.</p></div>
+          <div>
+            <p><strong>OpenCV 5:</strong> focus ${Number(q.lap_var_1024).toFixed(1)}, dark ${Number(q.dark_pct).toFixed(1)}%, bright ${Number(q.bright_pct).toFixed(1)}%. <strong>Instruction:</strong> ${esc(photo.capture_decision.reason)}</p>
+            <p class="evidence"><strong>Human review context:</strong> ${esc(context)}</p>
+            <div class="scroll"><table><thead><tr><th>Box</th><th>Top candidates</th><th>Review action</th><th>SKU decision</th><th>Units</th><th>Note</th></tr></thead><tbody>${boxes}</tbody></table></div>
+            <div class="actions"><button class="secondary add-item" type="button">Add missed or split item</button><label><input type="checkbox" data-field="reviewed"> I reviewed this photo</label></div>
+            <div class="manual"></div>
+            <p class="caption">All boxes start pending. For a merged or partial box that overlaps confirmed products, choose "Overlap/partial - exclude from count" and add only the distinct products not already confirmed. For a standalone merged box, choose "Split into manual items" and add its distinct products. For B10, enter a single arrangement total above after comparing both views.</p>
+          </div>
+        </div>
+      </article>`;
+    }
+    document.getElementById('photos').innerHTML = replay.photos.map(photoCard).join('');
+
+    document.getElementById('photos').addEventListener('click', event => {
+      if (event.target.matches('.add-item')) {
+        const card = event.target.closest('.card');
+        const container = card.querySelector('.manual');
+        container.insertAdjacentHTML('beforeend', `<div class="manual-row">
+          <strong>Manual item</strong>
+          <input type="text" data-manual-field="sku" placeholder="SKU or unknown">
+          <label>Units <input type="number" data-manual-field="quantity" min="1" step="1" value="1"></label>
+          <input type="text" data-manual-field="note" placeholder="Why added?">
+          <button type="button" class="secondary remove-manual">Remove row</button>
+        </div>`);
+      }
+      if (event.target.matches('.remove-manual')) event.target.closest('.manual-row').remove();
+    });
+
+    document.getElementById('download').addEventListener('click', () => {
+      const photos = [...document.querySelectorAll('.card')].map(card => {
+        const source = replay.photos[Number(card.dataset.photoIndex)];
+        const reviewed = card.querySelector('[data-field=reviewed]').checked;
+        const boxDecisions = [...card.querySelectorAll('.box-row')].map(row => {
+          const model = source.boxes[Number(row.dataset.boxIndex)];
+          return {
+            replay_id: model.replay_id,
+            decision: row.querySelector('[data-field=decision]').value,
+            countable: reviewed && row.querySelector('[data-field=decision]').value === 'accept',
+            sku: row.querySelector('[data-field=sku]').value.trim() || null,
+            quantity: Number(row.querySelector('[data-field=quantity]').value),
+            note: row.querySelector('[data-field=note]').value.trim()
+          };
+        });
+        const manualItems = [...card.querySelectorAll('.manual-row')].map((row, i) => ({
+          manual_id: `${source.photo_id}:manual:${i + 1}`,
+          countable: reviewed,
+          sku: row.querySelector('[data-manual-field=sku]').value.trim() || null,
+          quantity: Number(row.querySelector('[data-manual-field=quantity]').value),
+          note: row.querySelector('[data-manual-field=note]').value.trim()
+        }));
+        return {
+          photo_id: source.photo_id,
+          source_sha256: source.sha256,
+          arrangement_id: source.arrangement_id,
+          reviewed,
+          capture_decision: source.capture_decision,
+          box_decisions: boxDecisions,
+          manual_items: manualItems
+        };
+      });
+      const invalid = photos.some(photo => [...photo.box_decisions, ...photo.manual_items].some(item => !Number.isInteger(item.quantity) || item.quantity < 1));
+      if (invalid) { alert('Every item quantity must be a positive whole number.'); return; }
+      const unresolved = photos.find(photo => photo.reviewed && photo.box_decisions.some(item => item.decision === 'pending'));
+      if (unresolved) { alert(`Resolve every box before marking ${unresolved.photo_id} reviewed.`); return; }
+      const unsplit = photos.find(photo => photo.reviewed && photo.box_decisions.some(item => item.decision === 'split') && photo.manual_items.length === 0);
+      if (unsplit) { alert(`Add the physical items represented by the split box in ${unsplit.photo_id}.`); return; }
+      const b10Raw = document.getElementById('b10-total').value;
+      const b10Total = b10Raw === '' ? null : Number(b10Raw);
+      if (b10Total !== null && (!Number.isInteger(b10Total) || b10Total < 0)) { alert('B10 arrangement total must be a nonnegative whole number.'); return; }
+      if (photos.filter(photo => photo.arrangement_id === 'B10').every(photo => photo.reviewed) && b10Total === null) {
+        alert('Enter one reconciled B10 arrangement total before marking both views reviewed.'); return;
+      }
+      const exportData = {
+        kind: 'inventorylens_guided_scan_human_review',
+        status: 'review_only_no_inventory_commit',
+        generated_at: new Date().toISOString(),
+        source_replay_generated_at: replay.generated_at,
+        model_results_are_accuracy_scores: false,
+        photos,
+        arrangements: {B10: {reviewed_total: b10Total, reconciliation_note: document.getElementById('b10-note').value.trim(), view_count: 2}}
+      };
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'inventorylens_guided_scan_review.json';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    });
+  </script>
+</body>
+</html>

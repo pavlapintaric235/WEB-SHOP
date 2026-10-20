@@ -1,0 +1,6 @@
+representation,gallery_size,query_gallery_trials,unique_queries,top1_accuracy,top5_accuracy,identity_confirmed_trial_fraction
+photo,1,142,42,0.6971830985915493,0.9014084507042254,0.0
+photo,2,186,42,0.7903225806451613,0.978494623655914,0.0
+photo,3,120,36,0.9,1.0,0.0
+photo,4,40,16,1.0,1.0,0.0
+photo,all,42,42,0.7857142857142857,1.0,0.0

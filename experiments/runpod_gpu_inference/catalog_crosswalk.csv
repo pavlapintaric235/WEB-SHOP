@@ -1,0 +1,13 @@
+experiment_sku,product_name,catalog_sku,crosswalk_status,use_catalog_references,scoring_note
+ILX-001,Jana Vitamin Antiox Blackcurrant 500 ml,JANA-ANTIOX-500,verified,YES,Exact product and package size match; temporary ILX label remains the evaluation key.
+ILX-002,Fentimans Classic Ginger Ale 200 ml,FENTIMANS-GINGER-200,verified,YES,Exact product and package size match; temporary ILX label remains the evaluation key.
+ILX-003,7 DAYS Cocoa Cake Bar 30 g,7DAYS-CAKE-30,verified,YES,Exact product and package size match; temporary ILX label remains the evaluation key.
+ILX-004,Vitaminka Stobi Flips Say Cheese 30 g,VITAMINKA-STOBI-30,candidate_review_only,YES,Catalogue name does not specify the flavour; use gallery as candidate evidence only.
+ILX-005,Dukat long-life milk 2.8 percent 1 L,DUKAT-MLIJEKO-1000,verified,YES,Exact product and package size match; temporary ILX label remains the evaluation key.
+ILX-006,dmBio Indische Curry Sauce 325 ml,DM-CURRY-325,candidate_review_only,YES,Experiment metadata says ml while catalogue says g; retain as an unverified mapping candidate.
+ILX-007,Energia Power Drink,ENERGIA-POWER-250,verified,YES,Product identity maps to existing 250 ml registration; scene size remains unverified.
+ILX-008,Croco Crackers salt 100 g,,unmapped_variant_mismatch,NO,Catalogue has Croco Pizza 100 g; do not use it as the salt-variant reference.
+ILX-009,Fripsy Crispy Sticks chicken flavour,MAKS-CRISPY-50,candidate_review_only,YES,Product family appears related but flavour and catalogue mapping are not confirmed.
+ILX-010,Oreo Enrobed snack pack,OREO-ENROBED-41,candidate_review_only,YES,Enrobed name matches but the experiment package size and exact blue-pack variant are unresolved.
+ILX-011,Freshona Borlotti Beans,FRESHONA-BEANS-800,verified,YES,Exact product and package size match; temporary ILX label remains the evaluation key.
+ILX-012,Mivolis individually wrapped cough lozenges,MIVOLIS-BOMBON-3,candidate_review_only,YES,Catalogue product family matches; exact flavour and whether wrapped unit equals registered SKU remain unresolved.

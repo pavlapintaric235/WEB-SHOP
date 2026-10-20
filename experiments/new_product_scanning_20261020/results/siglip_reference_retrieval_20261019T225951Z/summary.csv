@@ -1,0 +1,6 @@
+query_cohort,representation,gallery_size,query_gallery_trials,unique_queries,candidate_skus,top1_accuracy_micro,top5_accuracy_micro,top1_accuracy_macro_query,identity_confirmed_trial_fraction
+all_available_per_sku,photo,all,42,42,10,0.7857142857142857,1.0,0.7857142857142857,0.0
+fixed_queries_1_to_4,photo,1,70,16,3,0.8714285714285714,0.9285714285714286,0.8875,0.0
+fixed_queries_1_to_4,photo,2,120,16,3,0.925,0.9833333333333333,0.94375,0.0
+fixed_queries_1_to_4,photo,3,100,16,3,0.97,1.0,0.98125,0.0
+fixed_queries_1_to_4,photo,4,40,16,3,1.0,1.0,1.0,0.0

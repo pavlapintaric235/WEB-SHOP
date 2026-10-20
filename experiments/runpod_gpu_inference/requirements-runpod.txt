@@ -1,0 +1,12 @@
+# Install into the official CUDA-enabled RunPod PyTorch template.
+# torch and torchvision are intentionally omitted to preserve the template's CUDA build.
+ultralytics==8.4.177
+transformers==4.57.6
+huggingface_hub==0.36.2
+safetensors>=0.5,<1
+numpy>=1.26,<3
+opencv-python-headless>=4.10,<5
+Pillow>=10.1,<13
+PyYAML>=6,<7
+requests>=2.27,<3
+tqdm>=4.66,<5

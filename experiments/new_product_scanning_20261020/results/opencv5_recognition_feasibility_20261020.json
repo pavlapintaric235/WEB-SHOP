@@ -1,0 +1,42 @@
+{
+  "opencv_version": "5.0.0",
+  "owner_photos": 42,
+  "barcode_photos_with_decode": 3,
+  "barcode_decodes": [
+    {
+      "photo": "IMG_4817.jpeg",
+      "provisional_sku": "IL-NEW-002",
+      "barcode_type": "EAN_8",
+      "decoded_value": "59945383"
+    },
+    {
+      "photo": "IMG_4831.jpeg",
+      "provisional_sku": "IL-NEW-005",
+      "barcode_type": "EAN_13",
+      "decoded_value": "8595054904258"
+    },
+    {
+      "photo": "IMG_4835.jpeg",
+      "provisional_sku": "IL-NEW-006",
+      "barcode_type": "EAN_13",
+      "decoded_value": "8595054909086"
+    }
+  ],
+  "orb": {
+    "box": {
+      "correct_top1": 8,
+      "queries": 34
+    },
+    "masked": {
+      "correct_top1": 8,
+      "queries": 34
+    }
+  },
+  "orb_method": "ORB nfeatures=800; longest crop side <=800; BF Hamming 2-nearest ratio <0.75; maximum good-match count per provisional SKU; alphabetical tie break; leave query photo out of its own gallery; box and mask tested separately on the same 34 owner photos",
+  "limitations": [
+    "No employee/customer scene query or DINO boxes were used.",
+    "These provisional visual groups are not confirmed sellable SKU mappings.",
+    "The ORB setup is a minimal baseline, not a tuned or geometrically verified matcher.",
+    "Barcode absence or failed decode does not imply the product lacks a barcode."
+  ]
+}
