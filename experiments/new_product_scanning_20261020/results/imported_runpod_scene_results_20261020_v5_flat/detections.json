@@ -1,0 +1,1290 @@
+{
+  "status": "PASS",
+  "stage": "NVIDIA Retail DINO detection",
+  "images": 30,
+  "total_boxes": 93,
+  "runtime_versions": {
+    "opencv": "4.14.0",
+    "onnxruntime": "1.24.1",
+    "tensorrt": "10.14.1.48.post1"
+  },
+  "confidence_threshold": 0.5,
+  "max_detections": 200,
+  "model_sha256": "c6185e3b1cd01abfe9d83e7f6f13083a8485b6cd0ca409642f237a5c65c36f41",
+  "input_shape": [
+    "batch",
+    3,
+    540,
+    960
+  ],
+  "providers": [
+    "TensorrtExecutionProvider",
+    "CUDAExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "profile_node_provider_counts": {
+    "TensorrtExecutionProvider": 30
+  },
+  "profile_path": "/workspace/webshop_scene_run/out_detect/runtime/dino_profile_2026-10-20_18-20-06.json",
+  "first_image_seconds_including_engine_warmup": 0.6806269260123372,
+  "per_image_inference_seconds_sum": 1.92710515181534,
+  "records": [
+    {
+      "photo_filename": "IMG_4857.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "dbab6b97d4f26f57ffe1124d552cdcfb9d30fc2e3c45f99c2138e35b9e4a4cee",
+      "display_width": 1907,
+      "display_height": 2282,
+      "archive_path": "input/scenes/IMG_4857.jpeg",
+      "width": 1907,
+      "height": 2282,
+      "detections": [
+        {
+          "box_xyxy": [
+            162.4108123779297,
+            414.5137023925781,
+            1816.435791015625,
+            2134.961669921875
+          ],
+          "detector_confidence": 0.9090977907180786
+        }
+      ],
+      "detector_seconds": 0.6806269260123372,
+      "overlay": "overlays/01_IMG_4857_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4858.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "aedd66b948a5c3cc747c5a75713280de258243deadcf5e71c466fa36e2815055",
+      "display_width": 3024,
+      "display_height": 4032,
+      "archive_path": "input/scenes/IMG_4858.jpeg",
+      "width": 3024,
+      "height": 4032,
+      "detections": [
+        {
+          "box_xyxy": [
+            1408.8931884765625,
+            1057.781494140625,
+            2796.552978515625,
+            3798.056396484375
+          ],
+          "detector_confidence": 0.9711539149284363
+        }
+      ],
+      "detector_seconds": 0.04309449397260323,
+      "overlay": "overlays/02_IMG_4858_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4859.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "35347900ba36019cda44db1268cb985ed581af3a2176824b42ce6f4af5376e48",
+      "display_width": 2716,
+      "display_height": 3816,
+      "archive_path": "input/scenes/IMG_4859.jpeg",
+      "width": 2716,
+      "height": 3816,
+      "detections": [
+        {
+          "box_xyxy": [
+            1385.6593017578125,
+            444.6167297363281,
+            2702.5537109375,
+            3435.64111328125
+          ],
+          "detector_confidence": 0.9578118324279785
+        }
+      ],
+      "detector_seconds": 0.043261088023427874,
+      "overlay": "overlays/03_IMG_4859_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4860.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "ff5764755e54317bd805c4e9fd8441c3d449516a520947351a1c4a185d64c984",
+      "display_width": 3024,
+      "display_height": 4032,
+      "archive_path": "input/scenes/IMG_4860.jpeg",
+      "width": 3024,
+      "height": 4032,
+      "detections": [
+        {
+          "box_xyxy": [
+            1763.669189453125,
+            1718.7010498046875,
+            3020.140625,
+            3007.371826171875
+          ],
+          "detector_confidence": 0.9831033945083618
+        },
+        {
+          "box_xyxy": [
+            231.3392333984375,
+            1274.120361328125,
+            1773.35205078125,
+            2969.76611328125
+          ],
+          "detector_confidence": 0.8322322964668274
+        }
+      ],
+      "detector_seconds": 0.04314462299225852,
+      "overlay": "overlays/04_IMG_4860_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4861.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "847de81b589b21a33f260900af424ad551a7cee33e1271ee514448388e6103cf",
+      "display_width": 2598,
+      "display_height": 3465,
+      "archive_path": "input/scenes/IMG_4861.jpeg",
+      "width": 2598,
+      "height": 3465,
+      "detections": [
+        {
+          "box_xyxy": [
+            1273.5347900390625,
+            243.72152709960938,
+            2598.0,
+            3197.87158203125
+          ],
+          "detector_confidence": 0.9487468600273132
+        }
+      ],
+      "detector_seconds": 0.04304423200665042,
+      "overlay": "overlays/05_IMG_4861_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4862.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "0b9d8ca7480d2947c91d4a803722979312872ed9f66cae7b2a8cd34dfa762729",
+      "display_width": 2395,
+      "display_height": 2873,
+      "archive_path": "input/scenes/IMG_4862.jpeg",
+      "width": 2395,
+      "height": 2873,
+      "detections": [
+        {
+          "box_xyxy": [
+            296.51934814453125,
+            539.1710815429688,
+            2174.603759765625,
+            2263.07568359375
+          ],
+          "detector_confidence": 0.6882895231246948
+        }
+      ],
+      "detector_seconds": 0.04295639897463843,
+      "overlay": "overlays/06_IMG_4862_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4863.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "efb0be2fea09cad93e3fed72a49ff3f390f742c5f0be79f601b4d0e6a8139cbc",
+      "display_width": 2295,
+      "display_height": 1756,
+      "archive_path": "input/scenes/IMG_4863.jpeg",
+      "width": 2295,
+      "height": 1756,
+      "detections": [
+        {
+          "box_xyxy": [
+            1177.9998779296875,
+            514.154296875,
+            1969.9752197265625,
+            1368.352294921875
+          ],
+          "detector_confidence": 0.9710640907287598
+        },
+        {
+          "box_xyxy": [
+            334.2200927734375,
+            472.5479736328125,
+            1134.6431884765625,
+            1320.5982666015625
+          ],
+          "detector_confidence": 0.9080044031143188
+        }
+      ],
+      "detector_seconds": 0.04290909698465839,
+      "overlay": "overlays/07_IMG_4863_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4864.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "6fabb110cac721d6620efa47ad83749bc09ca3bf24703bc8532c281e15ee42d8",
+      "display_width": 2932,
+      "display_height": 2735,
+      "archive_path": "input/scenes/IMG_4864.jpeg",
+      "width": 2932,
+      "height": 2735,
+      "detections": [
+        {
+          "box_xyxy": [
+            1864.9505615234375,
+            587.5672607421875,
+            2383.935791015625,
+            2226.240966796875
+          ],
+          "detector_confidence": 0.844310998916626
+        },
+        {
+          "box_xyxy": [
+            1435.4844970703125,
+            586.149658203125,
+            1888.3076171875,
+            2206.29052734375
+          ],
+          "detector_confidence": 0.6048010587692261
+        },
+        {
+          "box_xyxy": [
+            944.9860229492188,
+            608.7130126953125,
+            1462.1729736328125,
+            2225.656494140625
+          ],
+          "detector_confidence": 0.5636081695556641
+        }
+      ],
+      "detector_seconds": 0.0429768770118244,
+      "overlay": "overlays/08_IMG_4864_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4865.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "3a8a1631364299205fd66b2be5c7f7a8a863e8395b6307976739152d6e7e0794",
+      "display_width": 1961,
+      "display_height": 2324,
+      "archive_path": "input/scenes/IMG_4865.jpeg",
+      "width": 1961,
+      "height": 2324,
+      "detections": [
+        {
+          "box_xyxy": [
+            477.8286437988281,
+            324.5693664550781,
+            1020.3076782226562,
+            2118.49609375
+          ],
+          "detector_confidence": 0.6950780749320984
+        },
+        {
+          "box_xyxy": [
+            1022.921142578125,
+            345.45855712890625,
+            1614.8658447265625,
+            2092.298828125
+          ],
+          "detector_confidence": 0.6119112372398376
+        }
+      ],
+      "detector_seconds": 0.04295272001763806,
+      "overlay": "overlays/09_IMG_4865_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4866.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "58c3fea8d90da4e2f6f988fa2dcafb4beae340126bf32965668f5f62e05a1837",
+      "display_width": 3024,
+      "display_height": 4032,
+      "archive_path": "input/scenes/IMG_4866.jpeg",
+      "width": 3024,
+      "height": 4032,
+      "detections": [
+        {
+          "box_xyxy": [
+            1987.494384765625,
+            1815.6156005859375,
+            2606.658935546875,
+            2872.190673828125
+          ],
+          "detector_confidence": 0.6163244843482971
+        }
+      ],
+      "detector_seconds": 0.042899663967546076,
+      "overlay": "overlays/10_IMG_4866_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4867.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "215b19b8682c105e84aaaeb81657ac311f50b659584ffc5c9a5b8ac96cbc5f68",
+      "display_width": 3024,
+      "display_height": 4032,
+      "archive_path": "input/scenes/IMG_4867.jpeg",
+      "width": 3024,
+      "height": 4032,
+      "detections": [
+        {
+          "box_xyxy": [
+            873.8980712890625,
+            2046.0640869140625,
+            1584.935791015625,
+            3055.265380859375
+          ],
+          "detector_confidence": 0.871883749961853
+        },
+        {
+          "box_xyxy": [
+            1902.4237060546875,
+            2228.4384765625,
+            2657.58251953125,
+            3448.8916015625
+          ],
+          "detector_confidence": 0.5091879963874817
+        }
+      ],
+      "detector_seconds": 0.04298469499917701,
+      "overlay": "overlays/11_IMG_4867_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4868.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "d496f27ca87987cb08f2d86dda2d8af2fd0f95fd4476261440736b4130a00956",
+      "display_width": 3773,
+      "display_height": 2829,
+      "archive_path": "input/scenes/IMG_4868.jpeg",
+      "width": 3773,
+      "height": 2829,
+      "detections": [
+        {
+          "box_xyxy": [
+            1763.5587158203125,
+            948.0252075195312,
+            2727.359375,
+            2276.483154296875
+          ],
+          "detector_confidence": 0.9879107475280762
+        },
+        {
+          "box_xyxy": [
+            2758.467041015625,
+            989.6817626953125,
+            3740.05029296875,
+            2381.994873046875
+          ],
+          "detector_confidence": 0.9451523423194885
+        },
+        {
+          "box_xyxy": [
+            121.93230438232422,
+            51.81942367553711,
+            1001.5899658203125,
+            2352.546630859375
+          ],
+          "detector_confidence": 0.8055484890937805
+        },
+        {
+          "box_xyxy": [
+            905.7836303710938,
+            1810.4478759765625,
+            1819.8968505859375,
+            2602.09521484375
+          ],
+          "detector_confidence": 0.643883466720581
+        }
+      ],
+      "detector_seconds": 0.04297039401717484,
+      "overlay": "overlays/12_IMG_4868_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4869.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "edf0ff2d370022c215e0af587db4a1872ea3a7fe523df8fd2ca74b8e05cbf04d",
+      "display_width": 3024,
+      "display_height": 4032,
+      "archive_path": "input/scenes/IMG_4869.jpeg",
+      "width": 3024,
+      "height": 4032,
+      "detections": [
+        {
+          "box_xyxy": [
+            2299.43505859375,
+            1886.263916015625,
+            3019.662353515625,
+            2776.157470703125
+          ],
+          "detector_confidence": 0.7744595408439636
+        },
+        {
+          "box_xyxy": [
+            1617.94677734375,
+            1913.1802978515625,
+            2320.933349609375,
+            2805.395751953125
+          ],
+          "detector_confidence": 0.6080150604248047
+        }
+      ],
+      "detector_seconds": 0.043027374951634556,
+      "overlay": "overlays/13_IMG_4869_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4870.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "2458770931a6c7cf52830b53e553616c274a58fa4fcb399a5a64539e00ec0b5b",
+      "display_width": 4032,
+      "display_height": 3024,
+      "archive_path": "input/scenes/IMG_4870.jpeg",
+      "width": 4032,
+      "height": 3024,
+      "detections": [
+        {
+          "box_xyxy": [
+            2085.569580078125,
+            1083.5972900390625,
+            3132.6181640625,
+            2444.03466796875
+          ],
+          "detector_confidence": 0.952995777130127
+        }
+      ],
+      "detector_seconds": 0.04296980798244476,
+      "overlay": "overlays/14_IMG_4870_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4874.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "995b171da131ccd9fd97fae541bd8bbfaf9e269a534b49c81ddd96492af82136",
+      "display_width": 3706,
+      "display_height": 2074,
+      "archive_path": "input/scenes/IMG_4874.jpeg",
+      "width": 3706,
+      "height": 2074,
+      "detections": [
+        {
+          "box_xyxy": [
+            2141.739501953125,
+            302.6741943359375,
+            2382.20654296875,
+            1189.3128662109375
+          ],
+          "detector_confidence": 0.6368895769119263
+        },
+        {
+          "box_xyxy": [
+            1939.1507568359375,
+            321.8031005859375,
+            2177.423828125,
+            1212.5770263671875
+          ],
+          "detector_confidence": 0.6156129240989685
+        },
+        {
+          "box_xyxy": [
+            1524.899658203125,
+            358.4450378417969,
+            1762.50634765625,
+            1263.3592529296875
+          ],
+          "detector_confidence": 0.5362931489944458
+        }
+      ],
+      "detector_seconds": 0.042947564041242,
+      "overlay": "overlays/15_IMG_4874_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4876.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "39c763674d022e76c2f496632dccbbb14316fa0dbb587e51295cd3d7ad20016d",
+      "display_width": 2241,
+      "display_height": 2553,
+      "archive_path": "input/scenes/IMG_4876.jpeg",
+      "width": 2241,
+      "height": 2553,
+      "detections": [
+        {
+          "box_xyxy": [
+            675.7658081054688,
+            1914.4886474609375,
+            1131.6968994140625,
+            2467.73583984375
+          ],
+          "detector_confidence": 0.6264808773994446
+        },
+        {
+          "box_xyxy": [
+            1467.42578125,
+            1935.0400390625,
+            1713.7772216796875,
+            2363.7236328125
+          ],
+          "detector_confidence": 0.6228356957435608
+        },
+        {
+          "box_xyxy": [
+            1079.2542724609375,
+            431.05987548828125,
+            1331.0687255859375,
+            1644.5118408203125
+          ],
+          "detector_confidence": 0.5227506756782532
+        },
+        {
+          "box_xyxy": [
+            1418.6181640625,
+            1670.77880859375,
+            1651.725830078125,
+            2088.552978515625
+          ],
+          "detector_confidence": 0.5126630663871765
+        }
+      ],
+      "detector_seconds": 0.04290986497653648,
+      "overlay": "overlays/16_IMG_4876_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4878.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "7343c131ffc6797bb0584128d05a0d979701e0b7872fb6b210581a2d0c084547",
+      "display_width": 2104,
+      "display_height": 2799,
+      "archive_path": "input/scenes/IMG_4878.jpeg",
+      "width": 2104,
+      "height": 2799,
+      "detections": [
+        {
+          "box_xyxy": [
+            545.59423828125,
+            2051.14501953125,
+            985.1263427734375,
+            2536.08935546875
+          ],
+          "detector_confidence": 0.5540958642959595
+        },
+        {
+          "box_xyxy": [
+            541.1668090820312,
+            1557.7994384765625,
+            963.1355590820312,
+            2007.9287109375
+          ],
+          "detector_confidence": 0.5484731197357178
+        },
+        {
+          "box_xyxy": [
+            959.9417724609375,
+            1148.381103515625,
+            1218.367919921875,
+            1687.9913330078125
+          ],
+          "detector_confidence": 0.5228930711746216
+        }
+      ],
+      "detector_seconds": 0.042963101994246244,
+      "overlay": "overlays/17_IMG_4878_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4880.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "06c447db454b1cb7c312137d03216f8afe87fecd9765a38cea559b564b685a94",
+      "display_width": 4032,
+      "display_height": 3024,
+      "archive_path": "input/scenes/IMG_4880.jpeg",
+      "width": 4032,
+      "height": 3024,
+      "detections": [
+        {
+          "box_xyxy": [
+            2809.114990234375,
+            834.5591430664062,
+            3749.779296875,
+            1860.7030029296875
+          ],
+          "detector_confidence": 0.8510565161705017
+        },
+        {
+          "box_xyxy": [
+            1869.8641357421875,
+            813.5098876953125,
+            2682.623046875,
+            1769.35595703125
+          ],
+          "detector_confidence": 0.8136879205703735
+        },
+        {
+          "box_xyxy": [
+            991.31591796875,
+            809.1512451171875,
+            1776.334716796875,
+            1718.1890869140625
+          ],
+          "detector_confidence": 0.593214213848114
+        }
+      ],
+      "detector_seconds": 0.04290726798353717,
+      "overlay": "overlays/18_IMG_4880_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4882.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "f9f04b25a3482382a438bd791f859af1caae8afcbada4bcb0d5566ddbacff885",
+      "display_width": 4032,
+      "display_height": 3024,
+      "archive_path": "input/scenes/IMG_4882.jpeg",
+      "width": 4032,
+      "height": 3024,
+      "detections": [
+        {
+          "box_xyxy": [
+            2245.171875,
+            1584.8382568359375,
+            3093.75244140625,
+            2548.0673828125
+          ],
+          "detector_confidence": 0.9210591316223145
+        },
+        {
+          "box_xyxy": [
+            2172.455078125,
+            1082.6710205078125,
+            2862.716552734375,
+            1769.83203125
+          ],
+          "detector_confidence": 0.7113415002822876
+        }
+      ],
+      "detector_seconds": 0.0429160829517059,
+      "overlay": "overlays/19_IMG_4882_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4884.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "9b08b8ce0b60c54bc4c2bf1cd3afb54b58204d39b1ed666c7a1b696c9e0bb8cd",
+      "display_width": 4032,
+      "display_height": 3024,
+      "archive_path": "input/scenes/IMG_4884.jpeg",
+      "width": 4032,
+      "height": 3024,
+      "detections": [
+        {
+          "box_xyxy": [
+            2666.31396484375,
+            1703.65576171875,
+            3423.486572265625,
+            2565.435791015625
+          ],
+          "detector_confidence": 0.9552971720695496
+        },
+        {
+          "box_xyxy": [
+            1886.45263671875,
+            1719.90283203125,
+            2622.568603515625,
+            2607.505859375
+          ],
+          "detector_confidence": 0.952592670917511
+        },
+        {
+          "box_xyxy": [
+            1085.114501953125,
+            1728.712890625,
+            1830.896484375,
+            2609.0791015625
+          ],
+          "detector_confidence": 0.9364631175994873
+        },
+        {
+          "box_xyxy": [
+            2451.615966796875,
+            1256.9466552734375,
+            3072.916259765625,
+            1976.155517578125
+          ],
+          "detector_confidence": 0.9275287389755249
+        },
+        {
+          "box_xyxy": [
+            1214.495849609375,
+            1287.35205078125,
+            1828.669921875,
+            1809.7996826171875
+          ],
+          "detector_confidence": 0.8454784154891968
+        },
+        {
+          "box_xyxy": [
+            1840.6658935546875,
+            1256.7376708984375,
+            2435.755126953125,
+            1821.15869140625
+          ],
+          "detector_confidence": 0.8225908279418945
+        }
+      ],
+      "detector_seconds": 0.04295140196336433,
+      "overlay": "overlays/20_IMG_4884_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4887.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "b91b2c876f97923dd1465344a0174e543886c1cc81261c379b1bc2e32bbd8591",
+      "display_width": 2134,
+      "display_height": 1909,
+      "archive_path": "input/scenes/IMG_4887.jpeg",
+      "width": 2134,
+      "height": 1909,
+      "detections": [
+        {
+          "box_xyxy": [
+            1023.926513671875,
+            370.8381042480469,
+            1503.8924560546875,
+            1279.4932861328125
+          ],
+          "detector_confidence": 0.5820117592811584
+        },
+        {
+          "box_xyxy": [
+            555.97802734375,
+            375.2720031738281,
+            995.83935546875,
+            1327.5472412109375
+          ],
+          "detector_confidence": 0.5202968716621399
+        }
+      ],
+      "detector_seconds": 0.04293241602135822,
+      "overlay": "overlays/21_IMG_4887_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4889.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "3b6370dcb9d02b70cfe357c5f80755440d6508e9e94e9591d5e5b793f09f9c69",
+      "display_width": 2764,
+      "display_height": 3004,
+      "archive_path": "input/scenes/IMG_4889.jpeg",
+      "width": 2764,
+      "height": 3004,
+      "detections": [
+        {
+          "box_xyxy": [
+            1434.40966796875,
+            1836.3629150390625,
+            1931.4329833984375,
+            2358.0947265625
+          ],
+          "detector_confidence": 0.6047781705856323
+        }
+      ],
+      "detector_seconds": 0.042938438011333346,
+      "overlay": "overlays/22_IMG_4889_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4892.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "a1520e09c5f5ee34955b284b75addb7cdb442b2189938b8013efa49cb24b0c02",
+      "display_width": 3024,
+      "display_height": 3295,
+      "archive_path": "input/scenes/IMG_4892.jpeg",
+      "width": 3024,
+      "height": 3295,
+      "detections": [
+        {
+          "box_xyxy": [
+            1491.11474609375,
+            1782.543701171875,
+            1868.4154052734375,
+            2563.776611328125
+          ],
+          "detector_confidence": 0.7439891695976257
+        },
+        {
+          "box_xyxy": [
+            2046.89892578125,
+            2492.333984375,
+            2592.236572265625,
+            3062.2109375
+          ],
+          "detector_confidence": 0.6611881852149963
+        },
+        {
+          "box_xyxy": [
+            2094.680419921875,
+            1690.169189453125,
+            2536.049560546875,
+            2093.67578125
+          ],
+          "detector_confidence": 0.6228240132331848
+        },
+        {
+          "box_xyxy": [
+            2057.57666015625,
+            2070.668701171875,
+            2543.10693359375,
+            2533.664794921875
+          ],
+          "detector_confidence": 0.6167451739311218
+        },
+        {
+          "box_xyxy": [
+            2086.61767578125,
+            1393.060791015625,
+            2490.90673828125,
+            1733.74658203125
+          ],
+          "detector_confidence": 0.5667676329612732
+        },
+        {
+          "box_xyxy": [
+            510.9551086425781,
+            1287.4085693359375,
+            1070.7568359375,
+            1884.007568359375
+          ],
+          "detector_confidence": 0.5554202795028687
+        },
+        {
+          "box_xyxy": [
+            329.53399658203125,
+            1656.88818359375,
+            961.8065795898438,
+            2332.010986328125
+          ],
+          "detector_confidence": 0.5057334899902344
+        }
+      ],
+      "detector_seconds": 0.042975834978278726,
+      "overlay": "overlays/23_IMG_4892_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4893.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "5fa2b05e6dc247e4b6b8b9a41a233b7299f7440bdc6ef0df09a30a49a0893946",
+      "display_width": 2905,
+      "display_height": 2643,
+      "archive_path": "input/scenes/IMG_4893.jpeg",
+      "width": 2905,
+      "height": 2643,
+      "detections": [
+        {
+          "box_xyxy": [
+            389.9875793457031,
+            1761.0821533203125,
+            978.8336181640625,
+            2382.89794921875
+          ],
+          "detector_confidence": 0.7616350650787354
+        },
+        {
+          "box_xyxy": [
+            611.6383666992188,
+            274.5362548828125,
+            1122.090087890625,
+            812.950439453125
+          ],
+          "detector_confidence": 0.7192192673683167
+        },
+        {
+          "box_xyxy": [
+            518.5187377929688,
+            692.3927001953125,
+            1059.301025390625,
+            1201.7684326171875
+          ],
+          "detector_confidence": 0.6950781941413879
+        },
+        {
+          "box_xyxy": [
+            475.74395751953125,
+            1188.1856689453125,
+            1040.784912109375,
+            1746.241455078125
+          ],
+          "detector_confidence": 0.6695036888122559
+        }
+      ],
+      "detector_seconds": 0.04294422396924347,
+      "overlay": "overlays/24_IMG_4893_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4895.jpeg",
+      "dataset_type": "employee",
+      "source_sha256": "84d2690271fa75862ac6a3ed7674cf5b8f3d54a51e3c9c5b3328db5356732107",
+      "display_width": 2775,
+      "display_height": 2302,
+      "archive_path": "input/scenes/IMG_4895.jpeg",
+      "width": 2775,
+      "height": 2302,
+      "detections": [
+        {
+          "box_xyxy": [
+            440.15435791015625,
+            902.4598999023438,
+            927.1813354492188,
+            1465.00830078125
+          ],
+          "detector_confidence": 0.8871625661849976
+        },
+        {
+          "box_xyxy": [
+            1880.8470458984375,
+            1545.5440673828125,
+            2304.63623046875,
+            1994.296875
+          ],
+          "detector_confidence": 0.8659366369247437
+        },
+        {
+          "box_xyxy": [
+            1833.9271240234375,
+            743.145263671875,
+            2158.77490234375,
+            1007.2472534179688
+          ],
+          "detector_confidence": 0.7910851836204529
+        },
+        {
+          "box_xyxy": [
+            1862.2972412109375,
+            966.3577880859375,
+            2212.538330078125,
+            1271.549072265625
+          ],
+          "detector_confidence": 0.7628195285797119
+        },
+        {
+          "box_xyxy": [
+            1859.6689453125,
+            1245.66796875,
+            2240.5283203125,
+            1590.9742431640625
+          ],
+          "detector_confidence": 0.7272266745567322
+        },
+        {
+          "box_xyxy": [
+            269.2159118652344,
+            1284.6766357421875,
+            829.135986328125,
+            1935.14208984375
+          ],
+          "detector_confidence": 0.7119961977005005
+        },
+        {
+          "box_xyxy": [
+            543.2918701171875,
+            607.3495483398438,
+            981.9122314453125,
+            1115.7384033203125
+          ],
+          "detector_confidence": 0.6183220744132996
+        },
+        {
+          "box_xyxy": [
+            665.300048828125,
+            400.0744323730469,
+            1065.4439697265625,
+            875.7319946289062
+          ],
+          "detector_confidence": 0.5311066508293152
+        },
+        {
+          "box_xyxy": [
+            1510.9664306640625,
+            755.678955078125,
+            1725.5899658203125,
+            1633.007568359375
+          ],
+          "detector_confidence": 0.5203347206115723
+        }
+      ],
+      "detector_seconds": 0.042926007008645684,
+      "overlay": "overlays/25_IMG_4895_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4897.jpeg",
+      "dataset_type": "customer",
+      "source_sha256": "fde1c511b872bdfc2ebc5ee2c62427ae074abeed2f150faf09a2cafb1981942c",
+      "display_width": 3024,
+      "display_height": 3458,
+      "archive_path": "input/scenes/IMG_4897.jpeg",
+      "width": 3024,
+      "height": 3458,
+      "detections": [
+        {
+          "box_xyxy": [
+            2135.374267578125,
+            487.6514892578125,
+            3024.0,
+            2808.614013671875
+          ],
+          "detector_confidence": 0.9730730652809143
+        },
+        {
+          "box_xyxy": [
+            2.9923007488250732,
+            2329.188720703125,
+            2370.18017578125,
+            3137.4228515625
+          ],
+          "detector_confidence": 0.9311078786849976
+        },
+        {
+          "box_xyxy": [
+            1145.5411376953125,
+            540.8072509765625,
+            2135.714111328125,
+            1923.1981201171875
+          ],
+          "detector_confidence": 0.8075741529464722
+        },
+        {
+          "box_xyxy": [
+            196.07275390625,
+            646.6354370117188,
+            1193.037353515625,
+            2083.55859375
+          ],
+          "detector_confidence": 0.6155518889427185
+        }
+      ],
+      "detector_seconds": 0.042963045998476446,
+      "overlay": "overlays/26_IMG_4897_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4898.jpeg",
+      "dataset_type": "customer",
+      "source_sha256": "6b37bdca6e8127358164f8c3d95490ccd43b8f15b2333c0eac22d05cd5009fb8",
+      "display_width": 3600,
+      "display_height": 2814,
+      "archive_path": "input/scenes/IMG_4898.jpeg",
+      "width": 3600,
+      "height": 2814,
+      "detections": [
+        {
+          "box_xyxy": [
+            2327.3466796875,
+            0.0,
+            3511.473388671875,
+            1858.75732421875
+          ],
+          "detector_confidence": 0.9697691798210144
+        },
+        {
+          "box_xyxy": [
+            27.807052612304688,
+            461.9158020019531,
+            1954.072509765625,
+            1901.7264404296875
+          ],
+          "detector_confidence": 0.8929052948951721
+        },
+        {
+          "box_xyxy": [
+            2282.096923828125,
+            1823.890625,
+            2962.6142578125,
+            2569.172119140625
+          ],
+          "detector_confidence": 0.8084065914154053
+        },
+        {
+          "box_xyxy": [
+            1566.9403076171875,
+            301.5908508300781,
+            2562.549560546875,
+            1328.6126708984375
+          ],
+          "detector_confidence": 0.7759439945220947
+        },
+        {
+          "box_xyxy": [
+            1142.8172607421875,
+            1840.111083984375,
+            1757.6640625,
+            2556.47802734375
+          ],
+          "detector_confidence": 0.6675549149513245
+        },
+        {
+          "box_xyxy": [
+            1712.43212890625,
+            1832.88916015625,
+            2357.20849609375,
+            2577.046630859375
+          ],
+          "detector_confidence": 0.641194760799408
+        }
+      ],
+      "detector_seconds": 0.04293435899307951,
+      "overlay": "overlays/27_IMG_4898_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4900.jpeg",
+      "dataset_type": "customer",
+      "source_sha256": "b67d46c0bdfd6ac03641832a33496aa707b775fe83bdd41d97a6fee195078bad",
+      "display_width": 3319,
+      "display_height": 2895,
+      "archive_path": "input/scenes/IMG_4900.jpeg",
+      "width": 3319,
+      "height": 2895,
+      "detections": [
+        {
+          "box_xyxy": [
+            1962.9921875,
+            1614.0078125,
+            2676.668212890625,
+            2382.876220703125
+          ],
+          "detector_confidence": 0.959857702255249
+        },
+        {
+          "box_xyxy": [
+            1371.851806640625,
+            1624.0316162109375,
+            2037.2872314453125,
+            2389.923828125
+          ],
+          "detector_confidence": 0.8875455856323242
+        },
+        {
+          "box_xyxy": [
+            793.806884765625,
+            1634.0966796875,
+            1418.634765625,
+            2361.868408203125
+          ],
+          "detector_confidence": 0.8427190184593201
+        },
+        {
+          "box_xyxy": [
+            1815.847900390625,
+            69.36551666259766,
+            3046.1298828125,
+            1252.0130615234375
+          ],
+          "detector_confidence": 0.7983220219612122
+        },
+        {
+          "box_xyxy": [
+            1166.724609375,
+            55.519325256347656,
+            2116.8662109375,
+            1125.50927734375
+          ],
+          "detector_confidence": 0.6362347602844238
+        },
+        {
+          "box_xyxy": [
+            2341.081787109375,
+            1278.18408203125,
+            2821.384033203125,
+            1676.757080078125
+          ],
+          "detector_confidence": 0.6155900955200195
+        },
+        {
+          "box_xyxy": [
+            1289.8316650390625,
+            1052.2451171875,
+            1901.2080078125,
+            1530.60693359375
+          ],
+          "detector_confidence": 0.5865589380264282
+        },
+        {
+          "box_xyxy": [
+            398.1639099121094,
+            734.33935546875,
+            664.7095947265625,
+            1721.4527587890625
+          ],
+          "detector_confidence": 0.5764907002449036
+        }
+      ],
+      "detector_seconds": 0.04294675204437226,
+      "overlay": "overlays/28_IMG_4900_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4902.jpeg",
+      "dataset_type": "customer",
+      "source_sha256": "865ddf133cbff45f99e20fc68898e9a82088c6250ed6dd3c59b3786ce6cb6344",
+      "display_width": 3446,
+      "display_height": 2685,
+      "archive_path": "input/scenes/IMG_4902.jpeg",
+      "width": 3446,
+      "height": 2685,
+      "detections": [
+        {
+          "box_xyxy": [
+            1042.76611328125,
+            1672.946044921875,
+            2753.517822265625,
+            2502.666259765625
+          ],
+          "detector_confidence": 0.8539280295372009
+        },
+        {
+          "box_xyxy": [
+            2013.41259765625,
+            954.7650756835938,
+            2944.7734375,
+            1740.1522216796875
+          ],
+          "detector_confidence": 0.7518590688705444
+        }
+      ],
+      "detector_seconds": 0.04316569498041645,
+      "overlay": "overlays/29_IMG_4902_dino.jpg"
+    },
+    {
+      "photo_filename": "IMG_4903.jpeg",
+      "dataset_type": "customer",
+      "source_sha256": "1d2d265f68f7f751b15dd033e95a6874a7e865bd999672b86caa16221adf305c",
+      "display_width": 3689,
+      "display_height": 3024,
+      "archive_path": "input/scenes/IMG_4903.jpeg",
+      "width": 3689,
+      "height": 3024,
+      "detections": [
+        {
+          "box_xyxy": [
+            2862.622314453125,
+            816.2192993164062,
+            3624.21630859375,
+            1705.1439208984375
+          ],
+          "detector_confidence": 0.7886074781417847
+        },
+        {
+          "box_xyxy": [
+            1908.0791015625,
+            1592.818115234375,
+            2698.295166015625,
+            2282.4404296875
+          ],
+          "detector_confidence": 0.6364973187446594
+        },
+        {
+          "box_xyxy": [
+            2508.667236328125,
+            1317.91845703125,
+            3418.168701171875,
+            2031.376220703125
+          ],
+          "detector_confidence": 0.5955458879470825
+        },
+        {
+          "box_xyxy": [
+            2523.188232421875,
+            776.5537719726562,
+            3297.90869140625,
+            1649.99169921875
+          ],
+          "detector_confidence": 0.544098436832428
+        },
+        {
+          "box_xyxy": [
+            2452.010986328125,
+            1917.4810791015625,
+            3331.2900390625,
+            2683.292236328125
+          ],
+          "detector_confidence": 0.5113258957862854
+        }
+      ],
+      "detector_seconds": 0.042964703985489905,
+      "overlay": "overlays/30_IMG_4903_dino.jpg"
+    }
+  ]
+}

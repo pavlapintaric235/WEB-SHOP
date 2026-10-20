@@ -1,0 +1,277 @@
+{
+  "status": "PASS",
+  "experiment": "new_product_scanning_20261020",
+  "scope": "30 held-out employee/customer scenes; inference only; human review pending",
+  "gpu": "NVIDIA B300 SXM6 AC MIG 1g.34gb",
+  "torch": "2.8.0+cu128",
+  "cuda_runtime": "12.8",
+  "detector": {
+    "name": "NVIDIA Retail DINO",
+    "model_sha256": "c6185e3b1cd01abfe9d83e7f6f13083a8485b6cd0ca409642f237a5c65c36f41",
+    "threshold": 0.5,
+    "provider_nodes": {
+      "TensorrtExecutionProvider": 30
+    }
+  },
+  "recognizer": {
+    "name": "SigLIP2 base patch16 224",
+    "revision": "75de2d55ec2d0b4efc50b3e9ad70dba96a7b2fa2",
+    "gallery_images": 34,
+    "gallery_skus": 10,
+    "gallery_ids": {
+      "IL-NEW-001": 4,
+      "IL-NEW-002": 4,
+      "IL-NEW-003": 3,
+      "IL-NEW-004": 3,
+      "IL-NEW-005": 4,
+      "IL-NEW-006": 3,
+      "IL-NEW-007": 4,
+      "IL-NEW-008": 3,
+      "IL-NEW-009": 3,
+      "IL-NEW-010": 3
+    },
+    "gallery_conditions": [
+      "original",
+      "masked",
+      "combined"
+    ],
+    "original_definition": "unmasked approved owner box crops",
+    "masked_definition": "same owner photos and crop windows, background replaced by gray",
+    "combined_definition": "mean of original and masked per-SKU scores",
+    "per_sku_score": "mean of the two highest cosine similarities per SKU in each representation",
+    "same_detector_proposals_and_query_embeddings_across_galleries": true,
+    "similarities_are_calibrated_confidence": false,
+    "unknown_rejection_threshold": null
+  },
+  "scene_images": 30,
+  "detected_boxes": 93,
+  "embeddings_file": "embeddings.npz",
+  "engine_build_and_first_detector_warmup_seconds": 0.6806269260123372,
+  "detector_inference_seconds_sum": 1.92710515181534,
+  "siglip_model_load_seconds": 1.1933099640300497,
+  "reference_embedding_gpu_seconds": {
+    "box": 25.520595123291013,
+    "masked": 0.21922415924072267
+  },
+  "scene_embedding_gpu_seconds": 1.1971104135513306,
+  "accuracy_metrics": null,
+  "limitations": [
+    "Scene predictions are provisional ranks, not verified labels or accuracy scores.",
+    "No unknown rejection is applied because no acceptance threshold was calibrated.",
+    "The current IMG_4857 human annotation has duplicate boxes and is not used for scoring.",
+    "Approved MobileSAM masks change registration crops only; displayed scene regions are DINO boxes.",
+    "Counts are per photograph only; do not add counts across views of one arrangement."
+  ],
+  "scenes": [
+    {
+      "photo_filename": "IMG_4857.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 1,
+      "overlay": "overlays/01_IMG_4857_dino_siglip2.jpg",
+      "detector_seconds": 0.6806269260123372
+    },
+    {
+      "photo_filename": "IMG_4858.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 1,
+      "overlay": "overlays/02_IMG_4858_dino_siglip2.jpg",
+      "detector_seconds": 0.04309449397260323
+    },
+    {
+      "photo_filename": "IMG_4859.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 1,
+      "overlay": "overlays/03_IMG_4859_dino_siglip2.jpg",
+      "detector_seconds": 0.043261088023427874
+    },
+    {
+      "photo_filename": "IMG_4860.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 2,
+      "overlay": "overlays/04_IMG_4860_dino_siglip2.jpg",
+      "detector_seconds": 0.04314462299225852
+    },
+    {
+      "photo_filename": "IMG_4861.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 1,
+      "overlay": "overlays/05_IMG_4861_dino_siglip2.jpg",
+      "detector_seconds": 0.04304423200665042
+    },
+    {
+      "photo_filename": "IMG_4862.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 1,
+      "overlay": "overlays/06_IMG_4862_dino_siglip2.jpg",
+      "detector_seconds": 0.04295639897463843
+    },
+    {
+      "photo_filename": "IMG_4863.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 2,
+      "overlay": "overlays/07_IMG_4863_dino_siglip2.jpg",
+      "detector_seconds": 0.04290909698465839
+    },
+    {
+      "photo_filename": "IMG_4864.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 3,
+      "overlay": "overlays/08_IMG_4864_dino_siglip2.jpg",
+      "detector_seconds": 0.0429768770118244
+    },
+    {
+      "photo_filename": "IMG_4865.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 2,
+      "overlay": "overlays/09_IMG_4865_dino_siglip2.jpg",
+      "detector_seconds": 0.04295272001763806
+    },
+    {
+      "photo_filename": "IMG_4866.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 1,
+      "overlay": "overlays/10_IMG_4866_dino_siglip2.jpg",
+      "detector_seconds": 0.042899663967546076
+    },
+    {
+      "photo_filename": "IMG_4867.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 2,
+      "overlay": "overlays/11_IMG_4867_dino_siglip2.jpg",
+      "detector_seconds": 0.04298469499917701
+    },
+    {
+      "photo_filename": "IMG_4868.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 4,
+      "overlay": "overlays/12_IMG_4868_dino_siglip2.jpg",
+      "detector_seconds": 0.04297039401717484
+    },
+    {
+      "photo_filename": "IMG_4869.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 2,
+      "overlay": "overlays/13_IMG_4869_dino_siglip2.jpg",
+      "detector_seconds": 0.043027374951634556
+    },
+    {
+      "photo_filename": "IMG_4870.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 1,
+      "overlay": "overlays/14_IMG_4870_dino_siglip2.jpg",
+      "detector_seconds": 0.04296980798244476
+    },
+    {
+      "photo_filename": "IMG_4874.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 3,
+      "overlay": "overlays/15_IMG_4874_dino_siglip2.jpg",
+      "detector_seconds": 0.042947564041242
+    },
+    {
+      "photo_filename": "IMG_4876.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 4,
+      "overlay": "overlays/16_IMG_4876_dino_siglip2.jpg",
+      "detector_seconds": 0.04290986497653648
+    },
+    {
+      "photo_filename": "IMG_4878.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 3,
+      "overlay": "overlays/17_IMG_4878_dino_siglip2.jpg",
+      "detector_seconds": 0.042963101994246244
+    },
+    {
+      "photo_filename": "IMG_4880.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 3,
+      "overlay": "overlays/18_IMG_4880_dino_siglip2.jpg",
+      "detector_seconds": 0.04290726798353717
+    },
+    {
+      "photo_filename": "IMG_4882.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 2,
+      "overlay": "overlays/19_IMG_4882_dino_siglip2.jpg",
+      "detector_seconds": 0.0429160829517059
+    },
+    {
+      "photo_filename": "IMG_4884.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 6,
+      "overlay": "overlays/20_IMG_4884_dino_siglip2.jpg",
+      "detector_seconds": 0.04295140196336433
+    },
+    {
+      "photo_filename": "IMG_4887.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 2,
+      "overlay": "overlays/21_IMG_4887_dino_siglip2.jpg",
+      "detector_seconds": 0.04293241602135822
+    },
+    {
+      "photo_filename": "IMG_4889.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 1,
+      "overlay": "overlays/22_IMG_4889_dino_siglip2.jpg",
+      "detector_seconds": 0.042938438011333346
+    },
+    {
+      "photo_filename": "IMG_4892.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 7,
+      "overlay": "overlays/23_IMG_4892_dino_siglip2.jpg",
+      "detector_seconds": 0.042975834978278726
+    },
+    {
+      "photo_filename": "IMG_4893.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 4,
+      "overlay": "overlays/24_IMG_4893_dino_siglip2.jpg",
+      "detector_seconds": 0.04294422396924347
+    },
+    {
+      "photo_filename": "IMG_4895.jpeg",
+      "dataset_type": "employee",
+      "detection_count": 9,
+      "overlay": "overlays/25_IMG_4895_dino_siglip2.jpg",
+      "detector_seconds": 0.042926007008645684
+    },
+    {
+      "photo_filename": "IMG_4897.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 4,
+      "overlay": "overlays/26_IMG_4897_dino_siglip2.jpg",
+      "detector_seconds": 0.042963045998476446
+    },
+    {
+      "photo_filename": "IMG_4898.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 6,
+      "overlay": "overlays/27_IMG_4898_dino_siglip2.jpg",
+      "detector_seconds": 0.04293435899307951
+    },
+    {
+      "photo_filename": "IMG_4900.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 8,
+      "overlay": "overlays/28_IMG_4900_dino_siglip2.jpg",
+      "detector_seconds": 0.04294675204437226
+    },
+    {
+      "photo_filename": "IMG_4902.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 2,
+      "overlay": "overlays/29_IMG_4902_dino_siglip2.jpg",
+      "detector_seconds": 0.04316569498041645
+    },
+    {
+      "photo_filename": "IMG_4903.jpeg",
+      "dataset_type": "customer",
+      "detection_count": 5,
+      "overlay": "overlays/30_IMG_4903_dino_siglip2.jpg",
+      "detector_seconds": 0.042964703985489905
+    }
+  ]
+}

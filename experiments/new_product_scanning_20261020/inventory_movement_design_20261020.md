@@ -1,4 +1,4 @@
-# Isolated stock movement design for WEB&SHOP
+# Isolated stock movement design for Web&Shop
 
 Design only, 2026-10-20. The existing app saves approved **snapshot replacement** counts. This document specifies a separate future **ADD/SUBTRACT** movement path after photo counts are matched to confirmed registered SKUs and approved by an authorized user. No production tables, inventory balances, or purchase records are changed here.
 

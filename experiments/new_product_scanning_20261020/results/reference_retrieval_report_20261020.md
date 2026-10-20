@@ -1,6 +1,6 @@
 # New Product Reference Retrieval Pilot
 
-> **Historical run.** This report records the earlier `20261019T230100Z` full-photo evaluation, before owner masks were approved. For the newest paired box-versus-mask result on 34 owner photos, open [the review page](latest_recognition_review_20261020.html) or the frozen [summary CSV](siglip_reference_retrieval_20261019T233831Z/summary.csv). On that same 34-photo cohort, box top-1 was 24/34 and masked top-1 was 25/34; one oatmeal query changed from a wrong rice-mash suggestion to the correct provisional group. The 42-photo full-image result below uses a different cohort and must not be compared directly with those 34-photo figures. No new employee/customer scene recognition results have been imported.
+> **Historical run.** This report records the earlier `20261019T230100Z` full-photo evaluation, before owner masks were approved. For the newest paired box-versus-mask result on 34 owner photos, open the generated review page `latest_recognition_review_20261020.html`, held locally and available on request, or the frozen [summary CSV](siglip_reference_retrieval_20261019T233831Z/summary.csv). On that same 34-photo cohort, box top-1 was 24/34 and masked top-1 was 25/34; one oatmeal query changed from a wrong rice-mash suggestion to the correct provisional group. The 42-photo full-image result below uses a different cohort and must not be compared directly with those 34-photo figures. No new employee/customer scene recognition results have been imported.
 
 Run: `siglip_reference_retrieval_20261019T230100Z`  
 Model: cached `google/siglip2-base-patch16-224`, CPU  
@@ -22,7 +22,7 @@ No reference masks had been approved. The evaluation used 42 original owner phot
 
 ## Results
 
-![SigLIP2 owner-photo retrieval accuracy by gallery size](reference_gallery_curve_20261020.png)
+*Plot of SigLIP2 owner-photo retrieval accuracy by gallery size, `reference_gallery_curve_20261020.png`, held locally and available on request. The same figures are tabulated below.*
 
 | Target gallery | Fixed query photos | Candidate groups | Top-1 macro by query | Top-1 micro by trial | Top-5 micro |
 |---:|---:|---:|---:|---:|---:|
