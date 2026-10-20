@@ -35,12 +35,137 @@ The [new-scene recognition handoff](docs/agent_handoff_new_scene_recognition_202
 | The **AWS** GPU route is blocked by a denied quota request and zero applied G/VT vCPUs, and local Windows PyTorch/ONNX Runtime cannot run the required TensorRT/CUDA path. | The rented RunPod route was separately authorized and used instead: its runtime passed the one-image preflight and the 30-scene comparison ran there on 2026-10-20, yielding provisional ranks rather than accuracy. If the evaluation is ever repeated inside AWS, appeal through the AWS Management Console with the documented one-instance, four-hour, $10-limited use case and recheck price, quota and runtime before any launch. Neither route changed the already working AWS OpenCV pilot. [AWS execution plan](docs/webshop_aws_30_scene_gpu_evaluation_plan_20261020.md). |
 | The local application's snapshot write path does not meet the intended live stock-movement behavior. | After the recognition review, implement the [isolated movement design](experiments/new_product_scanning_20261020/inventory_movement_design_20261020.md): confirmed SKU, location, quantity, `ADD`/`SUBTRACT`, actor, time, source scan, unique approval ID, atomic balance update and reversal. Do not post unconfirmed detections or change production inventory during this evaluation. |
 
-## Next steps
+## Finishing the project — exact steps
 
-1. Review the ten provisional product registrations and correct `IMG_4857` in the [local review app](experiments/new_product_scanning_20261020/README.md).
-2. The 30-scene comparison no longer needs compute: it ran on the user-authorized rented RunPod B300 GPU on 2026-10-20 after its one-image preflight passed on TensorRT with no CPU fallback. Only if it is to be repeated inside AWS, reopen AWS Support case `179250925200910` with the detailed use case and proceed only after the applied G/VT quota reaches at least four vCPUs. Stay within the $10 AWS ceiling and preserve the existing 176-image pilot evidence.
-3. Review the 30 imported scenes — whose model output is provisional ranks only — before calculating any detection, counting or SKU accuracy. Use those findings to decide whether detector changes, more reference photos or masks are justified.
-4. Keep the stock-movement implementation separate until reviewed counts and the approval contract are ready; record the competition video from the already working OpenCV 5 AWS guidance, including the new B07 live check and clearly identified archived proposals.
+Written for someone taking this over who has not worked on it before. Work top to bottom:
+each step depends on the one above it. Where a step says a claim is not yet earned, that is
+deliberate — this entry's credibility rests on never stating more than the evidence supports.
+
+**The submission deadline is 2026-10-26, 23:59 Pacific** ([competition page](https://opencv26.devpost.com/)).
+The Devpost header has been seen showing 23:45 PDT, so treat **23:45 Pacific on 2026-10-26**
+as the real cutoff. Judging runs 2026-10-27 to 2026-11-09. Verify this on Devpost yourself
+before planning around it, and confirm the mandatory midpoint check-in
+(2026-09-21 to 2026-10-02) was filed — nothing in this repository records that it was.
+
+### Step 0 — set up and confirm the repository is sound (about 15 minutes)
+
+Use `.\.venv\Scripts\python.exe` for everything. A system Python without `streamlit` fails
+twelve of the workflow tests for that reason alone, which looks alarming and means nothing.
+
+```powershell
+& .\.venv\Scripts\python.exe model_assets.py
+& .\.venv\Scripts\python.exe -m unittest tests.test_local_features tests.test_matching_replay `
+    tests.test_oct17_benchmark_eval tests.test_recognition tests.test_segmentation_dataset tests.test_workflow
+```
+
+Expected: 106 tests, all `OK` (15 + 3 + 11 + 33 + 8 + 36). Anything else is a real regression —
+fix it before going further. `model_assets.py` downloads MobileSAM and ResNet18 into
+`data/models/` and verifies their checksums; it is safe to re-run.
+
+A public checkout is a **source release, not a runnable copy**. Photographs, crops, model
+weights, the SQLite database and GPU archives are excluded from Git by design. Steps 1 to 3
+need the private workspace. Steps 4 and 6 do not.
+
+### Step 1 — approve the ten SKU identities (blocks everything downstream)
+
+Nothing can be scored until a person confirms what each product actually is. The run reports
+`accuracy_metrics: null` precisely because this step has not been done.
+
+```powershell
+& .\.venv\Scripts\python.exe -m streamlit run experiments\new_product_scanning_20261020\review_app.py
+```
+
+Pick **Product registration** in the sidebar's `Workspace` selector (the four workspaces are
+Product registration, Reference masks, Scene review and Evaluation) and work through all ten
+groups. The overview deliberately puts
+the five hard identities first: tealight, battery, cup, crown, glue stick. For each, read the
+source photograph and confirm the exact name, brand, variant and package size. **Leave anything
+you cannot positively identify unresolved** — an unconfirmed SKU is a usable result, a guessed
+one silently corrupts every metric computed afterwards.
+
+Done when `experiments/new_product_scanning_20261020/annotations/sku_registry_review.json`
+exists. It does not exist today: **zero identities are currently approved.**
+
+### Step 2 — review the scene labels, and fix the known IMG_4857 defect
+
+In the **Scene review** workspace, go through all 30 scenes and mark one box per physical item,
+including items the detector missed entirely and single boxes covering two products.
+
+`IMG_4857` carries **two identical annotation boxes for two visible cans** and must be redrawn
+as two distinct boxes. Label genuinely unrecognisable objects `__unknown__` — that is the only
+way unknown-rejection becomes measurable at all.
+
+Done when `annotations/scene_labels.json` exists. It does not exist today: **no scenes are
+reviewed.**
+
+### Step 3 — only now, compute accuracy
+
+With Steps 1 and 2 complete:
+
+```powershell
+& .\.venv\Scripts\python.exe experiments\new_product_scanning_20261020\evaluate_scene_predictions.py `
+    --predictions experiments\new_product_scanning_20261020\results\imported_runpod_scene_results_20261020_v5_flat\predictions.csv
+```
+
+`--predictions` is required; `--iou` defaults to 0.50. This matches boxes one-to-one at that
+threshold, excludes unconfirmed identities, and reports
+employee and customer figures separately. It scores boxes, not mask IoU. Until it runs,
+the honest and correct description of the 30-scene run remains "provisional SigLIP2 ranks",
+and **no precision, recall, count-error or accuracy number may be quoted anywhere.**
+
+This is the single highest-value remaining task: it converts the existing GPU run from
+"we ran something" into the measurable evaluation evidence the competition explicitly requires.
+
+### Step 4 — record the video (hard requirement, under five minutes)
+
+Follow [the storyboard](docs/webshop_opencv_2026_demo_storyboard_20261020.md) shot by shot; it is
+already timed to fit. No video file exists in this repository yet.
+
+Show the live AWS OpenCV 5 capture gate in `eu-north-1` actually returning `retake` or `proceed`
+— that is the deployed component, and it genuinely works. Label archived DINO/SigLIP2 output
+**on screen** as replayed archived data. The visual walkthrough at `docs/demo/index.html`
+(rebuild with `& .\.venv\Scripts\python.exe docs\demo\build_demo.py`) is a good screen-recording
+source for the recognition section.
+
+Do not state an accuracy figure in the video unless Step 3 produced one.
+
+### Step 5 — optional, only with time left over
+
+- **Approve the 8 owner photos still lacking masks** (34 of 42 are approved) in the review app's
+  **Reference masks** tab.
+- **Review the 93 scene masks.** They are MobileSAM proposals prompted with the committed
+  detector boxes, every row marked `review_status=unreviewed_proposal` in
+  `03_newest_10_products_owner_employee_customer/scene_masks/scene_mask_index.csv`. They were
+  not part of the ranking run. Regenerate with
+  `& .\.venv\Scripts\python.exe experiments\new_product_scanning_20261020\build_scene_masks.py`.
+- **Re-rank with masked scene crops as queries.** This needs a GPU and costs money; the AWS G/VT
+  quota is still 0 vCPUs, so it would mean renting again. Get explicit approval first.
+- **The ADD/SUBTRACT movement ledger** is specified in
+  [the movement design](experiments/new_product_scanning_20261020/inventory_movement_design_20261020.md)
+  and is **not implemented** — the app still replaces SKU totals on approval. This is a known,
+  documented gap, not a defect to hide. Do not start it before Steps 1 to 4 are finished.
+
+### Step 6 — submit
+
+Assemble on Devpost: the [submission narrative and architecture diagram](docs/webshop_opencv_2026_submission_20261020.md),
+the [technical report](docs/webshop_opencv_2026_technical_report_20261020.md), the
+[176-image pilot audit](docs/opencv5_aws_capture_pilot_result_20261020.md), this repository, and
+the Step 4 video. Re-read the requirements on Devpost directly rather than trusting this list.
+
+Before submitting, check every claim once more against what actually shipped. If Step 3 was not
+completed, say so plainly in the submission — a documented limitation is worth more to judges
+than an unsupported number, and the competition asks explicitly for limitations and
+responsible-use considerations.
+
+### Rules that are not negotiable
+
+- **Never** quote an accuracy, recall, precision or count-error figure that Step 3 did not produce.
+- **Never** present the AWS pilot as running DINO/SigLIP2. It performs capture guidance only.
+- **Never** present replayed archived model output as live inference.
+- Do not create billable AWS resources, deploy, or touch production inventory without explicit
+  approval. All Regional resources belong in `eu-north-1`.
+- Original photographs and pre-correction annotations are never edited. Review decisions are
+  append-only.
 
 The [complete GPU benchmark audit](data/recognition_checks/final_comparative_gpu_benchmark_20261018/complete_final_gpu_benchmark_audit_20261019.md) and the `Owner_test`, `employee_test`, `customer_test`, product-registration and new-product experiment files remain traceable supporting evidence. Production inventory and source datasets were not changed for this competition work. Training custom weights and video tracking are not implemented. AMD inference remains unverified.
 
