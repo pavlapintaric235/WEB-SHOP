@@ -23,8 +23,6 @@ RUN_ROOT = Path(__file__).resolve().parent / "runs/local_replay_20261020"
 TRACE_PATH = RUN_ROOT / "replay.json"
 NEW_SCENE_MANIFEST = (Path(__file__).resolve().parents[1]
                       / "new_product_scanning_20261020/audit/photo_manifest.csv")
-NEW_SCENE_PHOTO_ROOT = (Path(__file__).resolve().parents[2]
-                        / "03_newest_10_products_owner_employee_customer/photos")
 MAX_IMAGE_BYTES = 15 * 1024 * 1024
 ACTION_LABELS = {
     "pending": "Pending",
@@ -147,28 +145,16 @@ def run_app() -> None:
     if cv2.__version__.split(".")[0] != "5":
         st.error(f"This demo requires OpenCV 5; found {cv2.__version__}.")
         st.stop()
-    trace: dict | None = None
-    trace_notice = ""
     try:
         trace = load_trace()
-    except FileNotFoundError:
-        trace_notice = ("Frozen sample mode is unavailable: the archived replay trace and its audited "
-                        "source images are held locally and are not part of the public checkout. "
-                        "Upload, Camera, the local OpenCV 5 capture check and the AWS capture check all "
-                        "work without them; archived DINO/SigLIP2 proposals cannot be shown without the archive.")
     except (OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
-        trace_notice = (f"Frozen sample mode is unavailable: the replay trace could not be read ({exc}). "
-                        "Upload and Camera modes are unaffected.")
+        st.error(f"Could not load the frozen replay: {exc}")
+        st.stop()
 
-    modes = ["Upload", "Camera"] + (["Frozen sample"] if trace else [])
-    input_mode = st.radio("Photo source", modes, horizontal=True)
-    if trace_notice:
-        st.info(trace_notice)
+    input_mode = st.radio("Photo source", ["Upload", "Camera", "Frozen sample"], horizontal=True)
     raw: bytes | None = None
     source_name = ""
     if input_mode == "Upload":
-        if NEW_SCENE_PHOTO_ROOT.is_dir():
-            st.caption(f"Audited employee and customer scenes for this demo: {NEW_SCENE_PHOTO_ROOT}")
         upload = st.file_uploader("Upload a JPEG or PNG", type=["jpg", "jpeg", "png"])
         if upload is not None:
             raw, source_name = upload.getvalue(), upload.name
@@ -176,7 +162,7 @@ def run_app() -> None:
         capture = st.camera_input("Take a product photo")
         if capture is not None:
             raw, source_name = capture.getvalue(), capture.name
-    elif trace:
+    else:
         labels = {photo["photo_id"]: photo for photo in trace["photos"]}
         selected = st.selectbox("Frozen replay photo", list(labels))
         try:
@@ -208,7 +194,7 @@ def run_app() -> None:
     except ValueError as exc:
         st.error(str(exc))
         st.stop()
-    photo = match_saved_photo(image_sha256, trace) if trace else None
+    photo = match_saved_photo(image_sha256, trace)
     new_scene = match_new_scene(image_sha256) if photo is None else None
 
     st.subheader("1. Capture guidance")
@@ -225,10 +211,8 @@ def run_app() -> None:
              caption="Captured photo for the retake decision", width=420)
     if new_scene:
         st.info(f"{new_scene['filename']} is an audited {new_scene['group']} photo from the newer 30-scene set. "
-                "AWS checks capture quality here. DINO/SigLIP2 proposals for this set were produced on "
-                "2026-10-20 on a rented GPU and are provisional ranks, not accuracy; they are imported into "
-                "the new-product scene review experiment and are not wired into this page. "
-                "Product counting and SKU selection still need human review.")
+                "AWS checks capture quality here. DINO/SigLIP2 scene predictions have not been generated for this set; "
+                "product counting and SKU selection will need human review.")
     elif photo is None:
         st.info("AWS checks capture quality for this photo. Live DINO/SigLIP2 recognition is unavailable; "
                 "product counting and SKU selection will need human review.")
@@ -236,7 +220,7 @@ def run_app() -> None:
     use_aws = st.checkbox("Use AWS OpenCV 5 capture check for this photo",
                           key=f"aws-mode-{image_sha256}")
     if use_aws:
-        st.caption("Click below to send these exact photo bytes to the private Web&Shop pilot in eu-north-1. A one-day S3 lifecycle rule schedules the photo and result for deletion.")
+        st.caption("Click below to send these exact photo bytes to the private WEB&SHOP pilot in eu-north-1. A one-day S3 lifecycle rule schedules the photo and result for deletion.")
         aws_state_key = f"aws-result-{image_sha256}"
         if st.button("Run AWS capture check", key=f"aws-run-{image_sha256}"):
             try:
@@ -276,10 +260,8 @@ def run_app() -> None:
         st.image(overlay_bytes(image, photo["boxes"]), caption="Green: accepted model suggestion; orange: unknown. All boxes still need human review.")
     else:
         if new_scene:
-            st.info(f"{new_scene['filename']} has no DINO/SigLIP2 proposals available on this page. "
-                    "The 30-scene run's provisional ranks live in the new-product scene review experiment, "
-                    "not here. Inspect each physical product and add it manually below; leave uncertain "
-                    "SKUs unresolved.")
+            st.info(f"{new_scene['filename']} has no imported DINO/SigLIP2 scene predictions yet. "
+                    "Inspect each physical product and add it manually below; leave uncertain SKUs unresolved.")
         else:
             st.info("This photo does not match a frozen source image. Live DINO/SigLIP2 inference is unavailable; inspect products and add them manually.")
         st.image(cv2.cvtColor(image, cv2.COLOR_BGR2RGB), caption="Uploaded photo")

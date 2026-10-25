@@ -1,6 +1,6 @@
-# Web&Shop live inventory tracking — InventoryLens visual scanning module
+# WEB&SHOP live inventory tracking — InventoryLens visual scanning module
 
-**Web&Shop is the application and OpenCV AI Competition 2026 entry. InventoryLens is the product-registration, visual scanning, SKU recognition, and inventory-intelligence module being integrated into it.** This workspace contains the existing local prototype and its supporting datasets and benchmarks. The AWS guided-scan pilot is part of the same Web&Shop demonstration, not a second project.
+**WEB&SHOP is the application and OpenCV AI Competition 2026 entry. InventoryLens is the product-registration, visual scanning, SKU recognition, and inventory-intelligence module being integrated into it.** This workspace contains the existing local prototype and its supporting datasets and benchmarks. The AWS guided-scan pilot is part of the same WEB&SHOP demonstration, not a second project.
 
 ## What the project should do
 
@@ -17,11 +17,11 @@ OpenCV 5 currently provides live photo-quality guidance: it decodes the image, m
 | Area | What is working or prepared | What remains |
 | --- | --- | --- |
 | Local InventoryLens MVP | Streamlit owner/employee views, SQLite SKU registry, MobileSAM/ResNet18 photo recognition, selective OpenCV SIFT/RANSAC label verification, reviewed count approval and scan history. | Approval currently **replaces** selected SKU totals at a location. The requested `ADD`/`SUBTRACT` movement ledger and customer-specific flow are designed but not implemented. |
-| Live AWS OpenCV 5 pilot | The existing private S3 bucket and active Lambda in the Web&Shop project, selected Region `eu-north-1`, process explicitly submitted photos. The frozen audit verified matching hashes, actions and metrics for **176 distinct originals**. A later B07 guided-review check returned live OpenCV **5.0.0**, `proceed`, and the exact selected-photo SHA-256; the interface displayed the result alongside clearly labelled archived proposals. [Pilot evidence](docs/opencv5_aws_capture_pilot_result_20261020.md). | This pilot performs capture guidance only. Its one-day S3 lifecycle expires uploaded objects; it does not delete the retained pilot resources. It neither runs DINO/SigLIP2 nor changes inventory. |
+| Live AWS OpenCV 5 pilot | The existing private S3 bucket and active Lambda in the WEB&SHOP project, selected Region `eu-north-1`, process explicitly submitted photos. The frozen audit verified matching hashes, actions and metrics for **176 distinct originals**. A later B07 guided-review check returned live OpenCV **5.0.0**, `proceed`, and the exact selected-photo SHA-256; the interface displayed the result alongside clearly labelled archived proposals. [Pilot evidence](docs/opencv5_aws_capture_pilot_result_20261020.md). | This pilot performs capture guidance only. Its one-day S3 lifecycle expires uploaded objects; it does not delete the retained pilot resources. It neither runs DINO/SigLIP2 nor changes inventory. |
 | Earlier detector and recognizer work | NVIDIA Retail DINO found 27 of 33 physical instances on a separate five-image holdout at its tested settings, with six misses. Earlier SigLIP2 outputs and the recovered GPU benchmark are preserved as experimental evidence. | The detector result is a small, differently configured comparison. Archived model predictions are not live AWS inference or verified SKU accuracy on the newest scenes. |
-| New-product dataset | **42 owner reference photos, 25 employee scenes, five customer scenes and ten provisional product groups** are audited. Thirty-four owner photos have paired original/masked crops. Owner-photo SigLIP2 top choice changed from **24/34 to 25/34** with masks, against provisional groupings. The hash-verified 30-scene AWS input bundle and isolated runner are ready locally. | No owner identity approvals or corrected `IMG_4857` boxes have been saved. Eight owner photos lack approved paired masks. The 30 employee/customer scenes now have imported GPU predictions from the completed 2026-10-20 RunPod run (30 scenes, 93 boxes) but **no scored recognition results**: those predictions are provisional SigLIP2 ranks awaiting SKU approval and scene-label review. The owner-photo result is not scene accuracy. |
-| 30-scene GPU run | One temporary `g6.xlarge` evaluation was approved within the existing **$10 maximum new AWS spend**, but the AWS route never ran. The user then authorized the evaluation elsewhere, and on 2026-10-20 it completed on a rented RunPod B300 GPU — outside AWS and outside that $10 ceiling — producing [30 scenes and 93 detected boxes](experiments/new_product_scanning_20261020/results/imported_runpod_scene_results_20261020_v5_flat/report.json) ranked against original, masked and combined galleries on identical detector proposals and query embeddings, with the previously validated detector remap (`c6185e3b…c36f41`) and a preflight gate on which every node ran on TensorRT with no CPU fallback. | AWS Support denied the 4-vCPU G/VT quota request on 2026-10-20 at 17:42 Europe/Zagreb and invited a detailed appeal (case `179250925200910`). A later Service Quotas API read still showed `CASE_OPENED`, so the Support correspondence is the operative result. The attempted Support API appeal failed with `SubscriptionRequiredException`; no appeal was submitted. The applied quota was last checked at **0 vCPUs**. No experiment assets were uploaded to AWS and no AWS GPU instance was launched. The RunPod result carries `accuracy_metrics` **null by design**: the ten SKU identities are unapproved and the scene labels unreviewed, so it is provisional SigLIP2 ranks and no accuracy, recall or count-error figure exists yet. The separate `7abf51f6` TensorRT-plugin DINO candidate was not used in that run and still needs its own one-image GPU preflight. |
-| Competition delivery | The [submission narrative and architecture](docs/webshop_opencv_2026_submission_20261020.md), [storyboard](docs/webshop_opencv_2026_demo_storyboard_20261020.md), [technical report](docs/webshop_opencv_2026_technical_report_20261020.md), and [176-image pilot audit](docs/opencv5_aws_capture_pilot_result_20261020.md) are prepared. | A judge-accessible demo video, code delivery and full Web&Shop role/inventory integration remain to be completed. The current demonstration must label DINO/SigLIP2 suggestions as archived replay data. |
+| New-product dataset | **42 owner reference photos, 25 employee scenes, five customer scenes and ten provisional product groups** are audited. Thirty-four owner photos have paired original/masked crops. Owner-photo SigLIP2 top choice changed from **24/34 to 25/34** with masks, against provisional groupings. The hash-verified 30-scene AWS input bundle and isolated runner are ready locally. | No owner identity approvals or corrected `IMG_4857` boxes have been saved. Eight owner photos lack approved paired masks. The 30 employee/customer scenes have **no imported GPU predictions or scored recognition results**. The owner-photo result is not scene accuracy. |
+| AWS 30-scene GPU run | One temporary `g6.xlarge` evaluation was approved within the existing **$10 maximum new AWS spend**. | AWS Support denied the 4-vCPU G/VT quota request on 2026-10-20 at 17:42 Europe/Zagreb and invited a detailed appeal (case `179250925200910`). A later Service Quotas API read still showed `CASE_OPENED`, so the Support correspondence is the operative result. The attempted Support API appeal failed with `SubscriptionRequiredException`; no appeal was submitted. The applied quota was last checked at **0 vCPUs**. No experiment assets were uploaded, no GPU instance was launched, and no 30-scene inference ran. The candidate DINO TensorRT model still needs a one-image GPU preflight. |
+| Competition delivery | The [submission narrative and architecture](docs/webshop_opencv_2026_submission_20261020.md), [storyboard](docs/webshop_opencv_2026_demo_storyboard_20261020.md), [technical report](docs/webshop_opencv_2026_technical_report_20261020.md), and [176-image pilot audit](docs/opencv5_aws_capture_pilot_result_20261020.md) are prepared. | A judge-accessible demo video, code delivery and full WEB&SHOP role/inventory integration remain to be completed. The current demonstration must label DINO/SigLIP2 suggestions as archived replay data. |
 
 ## Problems and potential solutions
 
@@ -29,200 +29,18 @@ The [new-scene recognition handoff](docs/agent_handoff_new_scene_recognition_202
 
 | Problem | Next practical solution |
 | --- | --- |
-| Crowded shelves can yield missed items, one box around two products, or a mask that spills onto a neighbor. | The fixed 30-scene DINO/SigLIP2 experiment has run (2026-10-20, rented RunPod B300 GPU: 30 scenes, 93 boxes, provisional ranks only, no accuracy). Next, review **one box per physical item** in those scenes, including misses and merges, and only then measure detector recall, count error and SKU results separately before changing the detector. Keep manual split/add controls. |
+| Crowded shelves can yield missed items, one box around two products, or a mask that spills onto a neighbor. | Run the fixed 30-scene DINO/SigLIP2 experiment when compute is available, then review **one box per physical item**, including misses and merges. Measure detector recall, count error and SKU results separately before changing the detector. Keep manual split/add controls. |
 | Ten new SKU identities are provisional; the tealight, battery, cup, crown and glue stick need particular care. `IMG_4857` has two identical annotation boxes for two visible cans. | Use the [local registration and scene review app](experiments/new_product_scanning_20261020/README.md) to inspect photos, approve or correct exact SKU names/variants/sizes, and redraw two distinct can boxes. Leave uncertain identities unresolved. Original photos and pre-correction annotations remain preserved. |
-| Reference masks increased correct provisional owner-photo top choices by one out of 34 queries and may remove useful packaging detail. | That comparison has now run: the 2026-10-20 scene run ranked original, masked and combined galleries on **identical detector proposals and query embeddings**. Its output is provisional ranks, so score only after identities and physical instances are reviewed; measure reference-photo count and angle effects on a fixed query set. |
-| The **AWS** GPU route is blocked by a denied quota request and zero applied G/VT vCPUs, and local Windows PyTorch/ONNX Runtime cannot run the required TensorRT/CUDA path. | The rented RunPod route was separately authorized and used instead: its runtime passed the one-image preflight and the 30-scene comparison ran there on 2026-10-20, yielding provisional ranks rather than accuracy. If the evaluation is ever repeated inside AWS, appeal through the AWS Management Console with the documented one-instance, four-hour, $10-limited use case and recheck price, quota and runtime before any launch. Neither route changed the already working AWS OpenCV pilot. [AWS execution plan](docs/webshop_aws_30_scene_gpu_evaluation_plan_20261020.md). |
+| Reference masks increased correct provisional owner-photo top choices by one out of 34 queries and may remove useful packaging detail. | Compare original, masked and combined galleries on **identical detector proposals and query crops** in the pending scene run. Score only after identities and physical instances are reviewed; measure reference-photo count and angle effects on a fixed query set. |
+| AWS GPU evaluation is blocked by a denied quota request and zero applied G/VT vCPUs; local Windows PyTorch/ONNX Runtime cannot run the required TensorRT/CUDA path. | Appeal through the AWS Management Console with the documented one-instance, four-hour, $10-limited use case, or separately choose the existing RunPod Pod after its runtime is verified. Neither route changes the already working AWS OpenCV pilot. Recheck price, quota and runtime before any AWS launch. [Execution plan](docs/webshop_aws_30_scene_gpu_evaluation_plan_20261020.md). |
 | The local application's snapshot write path does not meet the intended live stock-movement behavior. | After the recognition review, implement the [isolated movement design](experiments/new_product_scanning_20261020/inventory_movement_design_20261020.md): confirmed SKU, location, quantity, `ADD`/`SUBTRACT`, actor, time, source scan, unique approval ID, atomic balance update and reversal. Do not post unconfirmed detections or change production inventory during this evaluation. |
 
-## Finishing the project — exact steps
+## Next steps
 
-Written for someone taking this over who has not worked on it before. Work top to bottom:
-each step depends on the one above it. Where a step says a claim is not yet earned, that is
-deliberate — this entry's credibility rests on never stating more than the evidence supports.
-
-**The submission deadline is 2026-10-26, 23:59 Pacific** ([competition page](https://opencv26.devpost.com/)).
-The Devpost header has been seen showing 23:45 PDT, so treat **23:45 Pacific on 2026-10-26**
-as the real cutoff. Judging runs 2026-10-27 to 2026-11-09. Verify this on Devpost yourself
-before planning around it, and confirm the mandatory midpoint check-in
-(2026-09-21 to 2026-10-02) was filed — nothing in this repository records that it was.
-
-### Step 0 — set up and confirm the repository is sound (about 15 minutes)
-
-Use `.\.venv\Scripts\python.exe` for everything. A system Python without `streamlit` fails
-twelve of the workflow tests for that reason alone, which looks alarming and means nothing.
-
-```powershell
-& .\.venv\Scripts\python.exe model_assets.py
-& .\.venv\Scripts\python.exe -m unittest tests.test_local_features tests.test_matching_replay `
-    tests.test_oct17_benchmark_eval tests.test_recognition tests.test_segmentation_dataset tests.test_workflow
-```
-
-Expected: 106 tests, all `OK` (15 + 3 + 11 + 33 + 8 + 36). Anything else is a real regression —
-fix it before going further. `model_assets.py` downloads MobileSAM and ResNet18 into
-`data/models/` and verifies their checksums; it is safe to re-run.
-
-A public checkout is a **source release, not a runnable copy**. Photographs, crops, model
-weights, the SQLite database and GPU archives are excluded from Git by design. Steps 1 to 3
-need the private workspace. Steps 4 and 6 do not.
-
-### Step 1 — approve the ten SKU identities (blocks everything downstream)
-
-Nothing can be scored until a person confirms what each product actually is. The run reports
-`accuracy_metrics: null` precisely because this step has not been done.
-
-```powershell
-& .\.venv\Scripts\python.exe -m streamlit run experiments\new_product_scanning_20261020\review_app.py
-```
-
-Pick **Product registration** in the sidebar's `Workspace` selector (the four workspaces are
-Product registration, Reference masks, Scene review and Evaluation) and work through all ten
-groups. The overview deliberately puts
-the five hard identities first: tealight, battery, cup, crown, glue stick. For each, read the
-source photograph and confirm the exact name, brand, variant and package size. **Leave anything
-you cannot positively identify unresolved** — an unconfirmed SKU is a usable result, a guessed
-one silently corrupts every metric computed afterwards.
-
-Done when `experiments/new_product_scanning_20261020/annotations/sku_registry_review.json`
-exists. It does not exist today: **zero identities are currently approved.**
-
-### Step 2 — review the scene labels, and fix the known IMG_4857 defect
-
-In the **Scene review** workspace, go through all 30 scenes and mark one box per physical item,
-including items the detector missed entirely and single boxes covering two products.
-
-`IMG_4857` carries **two identical annotation boxes for two visible cans** and must be redrawn
-as two distinct boxes. Label genuinely unrecognisable objects `__unknown__` — that is the only
-way unknown-rejection becomes measurable at all.
-
-Done when `annotations/scene_labels.json` exists. It does not exist today: **no scenes are
-reviewed.**
-
-### Step 3 — only now, compute accuracy
-
-With Steps 1 and 2 complete:
-
-```powershell
-& .\.venv\Scripts\python.exe experiments\new_product_scanning_20261020\evaluate_scene_predictions.py `
-    --predictions experiments\new_product_scanning_20261020\results\imported_runpod_scene_results_20261020_v5_flat\predictions.csv
-```
-
-`--predictions` is required; `--iou` defaults to 0.50. This matches boxes one-to-one at that
-threshold, excludes unconfirmed identities, and reports
-employee and customer figures separately. It scores boxes, not mask IoU. Until it runs,
-the honest and correct description of the 30-scene run remains "provisional SigLIP2 ranks",
-and **no precision, recall, count-error or accuracy number may be quoted anywhere.**
-
-This is the single highest-value remaining task: it converts the existing GPU run from
-"we ran something" into the measurable evaluation evidence the competition explicitly requires.
-
-### Step 4 — record the video (hard requirement, under five minutes)
-
-Follow [the storyboard](docs/webshop_opencv_2026_demo_storyboard_20261020.md) shot by shot; it is
-already timed to fit. No video file exists in this repository yet.
-
-Show the live AWS OpenCV 5 capture gate in `eu-north-1` actually returning `retake` or `proceed`
-— that is the deployed component, and it genuinely works. Label archived DINO/SigLIP2 output
-**on screen** as replayed archived data. The visual walkthrough at `docs/demo/index.html`
-(rebuild with `& .\.venv\Scripts\python.exe docs\demo\build_demo.py`) is a good screen-recording
-source for the recognition section.
-
-Do not state an accuracy figure in the video unless Step 3 produced one.
-
-### Step 5 — optional, only with time left over
-
-- **Approve the 8 owner photos still lacking masks** (34 of 42 are approved) in the review app's
-  **Reference masks** tab.
-- **Review the 93 scene masks.** They are MobileSAM proposals prompted with the committed
-  detector boxes, every row marked `review_status=unreviewed_proposal` in
-  `03_newest_10_products_owner_employee_customer/scene_masks/scene_mask_index.csv`. They were
-  not part of the ranking run. Regenerate with
-  `& .\.venv\Scripts\python.exe experiments\new_product_scanning_20261020\build_scene_masks.py`.
-- **Re-rank with masked scene crops as queries.** This needs a GPU and costs money; the AWS G/VT
-  quota is still 0 vCPUs, so it would mean renting again. Get explicit approval first.
-- **The ADD/SUBTRACT movement ledger** is specified in
-  [the movement design](experiments/new_product_scanning_20261020/inventory_movement_design_20261020.md)
-  and is **not implemented** — the app still replaces SKU totals on approval. This is a known,
-  documented gap, not a defect to hide. Do not start it before Steps 1 to 4 are finished.
-
-### Step 6 — submit
-
-Assemble on Devpost: the [submission narrative and architecture diagram](docs/webshop_opencv_2026_submission_20261020.md),
-the [technical report](docs/webshop_opencv_2026_technical_report_20261020.md), the
-[176-image pilot audit](docs/opencv5_aws_capture_pilot_result_20261020.md), this repository, and
-the Step 4 video. Re-read the requirements on Devpost directly rather than trusting this list.
-
-Before submitting, check every claim once more against what actually shipped. If Step 3 was not
-completed, say so plainly in the submission — a documented limitation is worth more to judges
-than an unsupported number, and the competition asks explicitly for limitations and
-responsible-use considerations.
-
-### Would more photographs help?
-
-Asked often, so here is the measured answer. **Nothing in this project is trained** — there is no
-training code anywhere in it. Retail DINO proposes boxes, SigLIP2 embeds crops, MobileSAM
-segments, ResNet18 matches locally, and all four are used off the shelf. Extra photographs never
-adjust any weights; they enter a **gallery** compared by cosine similarity at inference time. The
-real question is therefore "more reference views per SKU?", and that has been measured on this
-project's own photographs.
-
-**Where more images demonstrably help.** From the
-[reference retrieval report](experiments/new_product_scanning_20261020/results/reference_retrieval_report_20261020.md),
-16 fixed queries over 3 groups, each query excluded from its own gallery:
-
-| Gallery size | Top-1 macro | Top-5 micro |
-|---:|---:|---:|
-| 1 reference | 88.8% | 92.9% |
-| 2 references | 94.4% | 98.3% |
-| 3 references | 98.1% | 100% |
-| 4 references | 100% | 100% |
-
-A real effect, steepest from 1 to 2. But that is a controlled capture over 3 groups with
-unconfirmed identities and no scene queries: the 100% is not a deployment estimate. The catalogue
-currently holds **42 references across 10 SKUs** — five SKUs at 4, two at 3, the rest at 5-6.
-
-**Where more images do not help at all.**
-
-1. *Abstention.* The [catalogue-growth test](experiments/new_product_scanning_20261020/results/catalogue_growth_robustness_20261020.md)
-   ran the scenes against a gallery containing none of the photographed products. The system
-   labelled all 93 boxes anyway, with **79 of 93** below a 0.05 top1-top2 margin. More references
-   make this worse, not better — a larger gallery offers a closer-looking wrong answer. The fix is
-   a calibrated rejection threshold, which needs the `__unknown__` labels from Step 2.
-2. *Detector misses.* DINO found 27 of 33 instances on the five-image holdout. The detector is
-   class-agnostic and never sees the references, so no reference photograph can recover a missed
-   item.
-3. *The dominant confusion.* Of nine wrong top-1 results in the all-available run, **seven were
-   oatmeal (`IL-NEW-005`) versus rice mash (`IL-NEW-006`)** — same brand, both chocolate, nearly
-   identical front faces. More photographs of the same front face cannot separate them;
-   discriminative views of the differing panel, or a barcode, can.
-
-**What to do before the 2026-10-26 deadline.**
-
-1. **Finish Steps 1 to 3 first.** You cannot tell whether more images help scenes, because scene
-   accuracy has never been computed. The GPU run is already paid for; the measurement is free.
-   Photographing before measuring is guessing.
-2. **If you do shoot more, shoot exactly nine.** The report derives this: five groups need one
-   more, two groups need two more, for a uniform four-reference test with one held-out query each.
-   That is an afternoon, not a dataset campaign. Prioritise **angle diversity** (front/side/back
-   where missing) over raw count, and capture the discriminating faces of the oatmeal/rice-mash
-   pair.
-3. **Do not bulk-collect.** At this catalogue size the curve saturates by four references, and
-   unreviewed images only add review burden against the deadline.
-
-On the idea of adding the folders in sequence, `01_` then `02_` then `03_`: that experiment has
-already run, as the cumulative stages A, B and C of the catalogue-growth test. Nearly doubling the
-catalogue to 19 SKUs changed the top-1 proposal on **1 of 93 boxes — 98.9% stable**. Catalogue
-growth is not the risk. Answering confidently about products that were never registered is.
-
-### Rules that are not negotiable
-
-- **Never** quote an accuracy, recall, precision or count-error figure that Step 3 did not produce.
-- **Never** present the AWS pilot as running DINO/SigLIP2. It performs capture guidance only.
-- **Never** present replayed archived model output as live inference.
-- Do not create billable AWS resources, deploy, or touch production inventory without explicit
-  approval. All Regional resources belong in `eu-north-1`.
-- Original photographs and pre-correction annotations are never edited. Review decisions are
-  append-only.
+1. Review the ten provisional product registrations and correct `IMG_4857` in the [local review app](experiments/new_product_scanning_20261020/README.md).
+2. Reopen AWS Support case `179250925200910` with the detailed use case, or separately approve reuse of the existing RunPod Pod. For an AWS run, proceed only after the applied G/VT quota reaches at least four vCPUs; then run the one-image GPU preflight and the 30-scene comparison if it passes. Stay within the $10 AWS ceiling and preserve the existing 176-image pilot evidence.
+3. Review the resulting annotated scenes before calculating detection, counting or SKU accuracy. Use those findings to decide whether detector changes, more reference photos or masks are justified.
+4. Keep the stock-movement implementation separate until reviewed counts and the approval contract are ready; record the competition video from the already working OpenCV 5 AWS guidance, including the new B07 live check and clearly identified archived proposals.
 
 The [complete GPU benchmark audit](data/recognition_checks/final_comparative_gpu_benchmark_20261018/complete_final_gpu_benchmark_audit_20261019.md) and the `Owner_test`, `employee_test`, `customer_test`, product-registration and new-product experiment files remain traceable supporting evidence. Production inventory and source datasets were not changed for this competition work. Training custom weights and video tracking are not implemented. AMD inference remains unverified.
 

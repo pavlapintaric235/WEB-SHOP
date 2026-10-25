@@ -11,7 +11,7 @@ Audit date: 2026-10-20. Source folders are outside the project and were read-onl
 | `C:\Users\U938\Downloads\Customer_test` | 5 | JPEG | 3024-3689 x 2685-3458 | all orientation 1 |
 | **Total** | **72** | JPEG | mixed | mixed |
 
-No byte-identical duplicates were found by SHA-256. This is not a near-duplicate test. Full per-file dimensions, byte lengths, EXIF orientation, and SHA-256 are in [photo_manifest.csv](photo_manifest.csv). Generated owner, employee, and customer contact sheets (`contact_owner.jpg`, `contact_employee.jpg`, `contact_customer.jpg`) are held locally and available on request; the 72 original photos behind them are in the repository root dataset folder `03_newest_10_products_owner_employee_customer/photos/`.
+No byte-identical duplicates were found by SHA-256. This is not a near-duplicate test. Full per-file dimensions, byte lengths, EXIF orientation, and SHA-256 are in [photo_manifest.csv](photo_manifest.csv). Contact sheets are [owner](contact_owner.jpg), [employee](contact_employee.jpg), and [customer](contact_customer.jpg).
 
 ## Provisional owner gallery and candidate SKU identities
 

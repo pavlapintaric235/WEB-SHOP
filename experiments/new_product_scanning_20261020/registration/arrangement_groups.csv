@@ -1,6 +1,0 @@
-group_id,folder,images,confidence,notes,eligible_for_multiview_before_confirmation
-EMP-MV-01,employee_test,"IMG_4876.jpeg;IMG_4878.jpeg",high,"Same apparent 4 tealights, 4 glue sticks and about 7 batteries in matching layout; confirm physical instance correspondence.",No
-EMP-MV-02,employee_test,"IMG_4892.jpeg;IMG_4893.jpeg;IMG_4895.jpeg",high,"Same apparent four cups, four crowns, four glue sticks and four tealights; likely camera/view changes with layout mostly retained; confirm.",No
-EMP-SAME-PRODUCT-DIFF-LAYOUT,employee_test,"IMG_4880.jpeg;IMG_4882.jpeg;IMG_4884.jpeg",low,"Cup SKU repeats, but layout/count differs (4, 4, 9); not a confirmed unchanged arrangement.",No
-EMP-SAME-PRODUCT-DIFF-LAYOUT-2,employee_test,"IMG_4887.jpeg;IMG_4889.jpeg",low,"Four crown candidates in different layouts/framing; same objects not established.",No
-CUST-RECONFIGURED-BASKET,customer_test,"IMG_4897.jpeg;IMG_4898.jpeg;IMG_4900.jpeg;IMG_4902.jpeg;IMG_4903.jpeg",low,"Same basket/backdrop and overlapping assortment; products visibly moved/reoriented. Evaluate each photo separately; do not add counts.",No

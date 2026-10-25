@@ -3,7 +3,7 @@
 Date: 2026-10-20  
 Status: historical local replay specification and read-only baseline; the later AWS capture pilot is documented separately.
 
-This contract records the original local replay boundary. Web&Shop is the competition entry and InventoryLens is its guided-scan module. A later, separately approved [OpenCV 5 AWS capture pilot](opencv5_aws_capture_pilot_result_20261020.md) was deployed in `eu-north-1` for the same Web&Shop demonstration; the historical no-AWS statements below describe this offline replay only. The [submission architecture](webshop_opencv_2026_submission_20261020.md) distinguishes that live capture component from archived DINO/SigLIP2 predictions and planned full integration.
+This contract records the original local replay boundary. WEB&SHOP is the competition entry and InventoryLens is its guided-scan module. A later, separately approved [OpenCV 5 AWS capture pilot](opencv5_aws_capture_pilot_result_20261020.md) was deployed in `eu-north-1` for the same WEB&SHOP demonstration; the historical no-AWS statements below describe this offline replay only. The [submission architecture](webshop_opencv_2026_submission_20261020.md) distinguishes that live capture component from archived DINO/SigLIP2 predictions and planned full integration.
 
 ## Purpose and boundary
 

@@ -62,11 +62,3 @@ experiments/opencv5_guided_scan/aws_pilot/photo_upload_manifest_*.csv
 *.jsonl
 Thumbs.db
 .DS_Store
-
-# graphify knowledge-graph build output
-graphify-out/
-
-# Committed documentation images (narrow exception to the *.png rule above).
-# Scoped to docs/ only: photo folders 01_*, 02_*, 03_* and data/ stay ignored.
-!docs/*.png
-!docs/*.svg
