@@ -71,8 +71,17 @@ def dashboard(service, read_image):
             st.dataframe(history, hide_index=True, use_container_width=True)
         else:
             st.info("No approved counts yet.")
+        with st.expander('Edit 2D shop map'):
+            from shop_map import owner_map
+            owner_map(service)
 
     with products_tab:
+        from catalog_import_ui import catalog_import
+        catalog_import(service)
+        requests = service.registration_requests()
+        if requests:
+            with st.expander('Unknown products awaiting owner registration'):
+                st.dataframe(requests, hide_index=True, width='stretch')
         with st.form("register", clear_on_submit=True):
             sku = st.text_input("SKU", placeholder="COLA-330")
             name = st.text_input("Product name")
@@ -134,9 +143,17 @@ def dashboard(service, read_image):
                         st.error(str(error))
             with st.form(f'edit_{selected["id"]}'):
                 updated_name = st.text_input("Product name", value=selected["name"])
+                unit = st.text_input('Quantity unit', value=selected.get('unit') or 'pending')
+                price = st.text_input('Price (blank = pending; demo prices are fictional)', value='' if selected.get('price') is None else str(selected['price']))
+                shelf = st.selectbox('Owner-assigned shelf', [''] + [l['name'] for l in service.locations()],
+                                     index=([''] + [l['name'] for l in service.locations()]).index(selected.get('shelf_id') or ''))
+                status = st.text_input('Registration status', value=selected.get('registration_status') or 'pending')
+                variant = st.text_input('Confirmed brand / variant / size', value=selected.get('brand_variant_size') or '')
                 if st.form_submit_button("Update product"):
                     try:
-                        service.update_product(selected["sku"], updated_name)
+                        service.import_catalog([dict(sku=selected['sku'], name=updated_name, unit=unit,
+                                                     price=price, shelf_id=shelf, registration_status=status,
+                                                     brand_variant_size=variant)], confirmed=True)
                         st.session_state["flash"] = "Product updated."
                         st.rerun()
                     except (ValueError, PermissionError) as error:

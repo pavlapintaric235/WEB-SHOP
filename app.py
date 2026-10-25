@@ -32,7 +32,7 @@ TEST_RUNS_DIR = DATA_DIR / "test_runs"
 TEST_RUNS_FILE = DATA_DIR / "test_runs.jsonl"
 TEST_RUNS_DIR.mkdir(parents=True, exist_ok=True)
 
-st.set_page_config(page_title="InventoryLens", layout="wide")
+st.set_page_config(page_title="WEB&SHOP", layout="wide")
 
 
 def make_csv(products, approved_counts, existing_file=None):
@@ -182,13 +182,19 @@ def inference_lock():
     return Lock()
 
 
-st.title("InventoryLens")
+st.title("WEB&SHOP")
+st.caption('InventoryLens · visual product registration and inventory review')
 db.init_db()
 demo_business = auth.seed_demo_users()
 db.default_location(demo_business["id"])
 db.migrate_catalog_json(demo_business["id"])
 
 if "user_id" not in st.session_state:
+    entry = st.radio('Role view', ['Owner / employee sign in', 'Buyer'])
+    if entry == 'Buyer':
+        from buyer_ui import buyer_view
+        buyer_view()
+        st.stop()
     with st.form("login"):
         username = st.text_input("Username", key="login_username")
         password = st.text_input("Password", type="password", key="login_password")
@@ -215,12 +221,21 @@ with st.sidebar:
     if st.button("Sign out", icon=":material/logout:"):
         st.session_state.clear()
         st.rerun()
-    page = st.radio("Workspace", ["Owner dashboard", "Scanner"]) if is_owner else "Scanner"
+    page = st.radio("Workspace", ["Owner dashboard", "Fresh-photo SKU scan", "Buyer", "Scanner"] if is_owner
+                    else ["Scanner", "Fresh-photo SKU scan", "Buyer"])
 
 if "flash" in st.session_state:
     st.success(st.session_state.pop("flash"))
 if page == "Owner dashboard":
     dashboard(service, read_image)
+    st.stop()
+if page == 'Buyer':
+    from buyer_ui import buyer_view
+    buyer_view()
+    st.stop()
+if page == "Fresh-photo SKU scan":
+    from scanner_ui import fresh_scan
+    fresh_scan(service)
     st.stop()
 
 products = service.products()
