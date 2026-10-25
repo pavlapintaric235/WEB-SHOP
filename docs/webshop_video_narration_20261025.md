@@ -1,6 +1,8 @@
 # WEB&SHOP video narration
 
-Matched to `B0A9FD0E-E2D0-4804-99A4-D8721F5D220F.mov` (03:33). Timestamps refer to the edited video, not the recorder timer visible inside it. Read at approximately 120–130 words per minute, allowing short pauses.
+Recorded with **Loom**, edited with **CapCut**. [Final published video](https://www.loom.com/share/8596593e2eed45c59e453312c88de972).
+
+Timing draft for the earlier 03:33 cut (`B0A9FD0E-E2D0-4804-99A4-D8721F5D220F.mov`). The latest reviewed local cut is approximately 03:05; timestamps below are not exact timings for that final edit. Read at approximately 120?130 words per minute, allowing short pauses.
 
 **00:00–00:12 — Introduction**
 
