@@ -55,6 +55,10 @@ experiments/**/.build_zip/
 experiments/**/.pricing/
 experiments/new_product_scanning_20261020/results/*.html
 experiments/new_product_scanning_20261020/audit/photo_manifest.csv
+experiments/first_two_train_third_test_20261020/proposals/
+experiments/first_two_train_third_test_20261020/draft_early_boxes.json
+experiments/first_two_train_third_test_20261020/early_box_review.html
+experiments/first_two_train_third_test_20261020/training_data/
 experiments/opencv5_guided_scan/aws_pilot/photo_upload_manifest_*.csv
 *.log
 *.err
@@ -62,3 +66,31 @@ experiments/opencv5_guided_scan/aws_pilot/photo_upload_manifest_*.csv
 *.jsonl
 Thumbs.db
 .DS_Store
+
+# graphify knowledge-graph build output
+graphify-out/
+
+# Committed documentation images (narrow exception to the *.png rule above).
+# Scoped to docs/ only: photo folders 01_*, 02_*, 03_* and data/ stay ignored.
+!docs/architecture_20261020.png
+!docs/public/*.png
+!docs/*.svg
+!docs/public/*.svg
+
+# Workstation-only assistant configuration and credentials.
+/.agents/
+/.codex/
+/.claude/
+/.aws/
+/.ssh/
+/skills-lock.json
+*.pem
+*.key
+*.pfx
+id_rsa*
+id_ed25519*
+*.har
+*.mp4
+*.webm
+*.avi
+experiments/opencv5_guided_scan/aws_pilot/deployment_resources_*.json

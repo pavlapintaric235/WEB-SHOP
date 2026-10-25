@@ -1,0 +1,6 @@
+{
+  "project_account_id": "YOUR_AWS_PROJECT_ID",
+  "profile": "YOUR_AWS_PROFILE",
+  "region": "eu-north-1",
+  "bucket": "YOUR_EXISTING_PRIVATE_CAPTURE_BUCKET"
+}
