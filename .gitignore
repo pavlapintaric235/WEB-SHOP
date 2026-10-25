@@ -97,3 +97,7 @@ id_ed25519*
 experiments/**/.build_dino_eval/
 experiments/**/runs_cpu/
 experiments/opencv5_guided_scan/aws_pilot/deployment_resources_*.json
+
+# Local recording preparation; excluded from public releases.
+/docs/webshop_video_narration_20261025.md
+/docs/webshop_video_runbook_20261025.md

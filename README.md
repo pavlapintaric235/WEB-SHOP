@@ -8,7 +8,7 @@ Register a product from reference photos, review what the camera counted, and ap
 
 [Watch demonstration](https://www.loom.com/share/8596593e2eed45c59e453312c88de972) ? [Demo guide](docs/demo.md) · [Architecture](docs/architecture.md) · [Features](docs/features.md) · [Evaluation](docs/evaluation.md) · [Deployment](docs/deployment.md) · [Security & licensing](docs/security.md)
 
-> **Release status — October 25, 2026:** the owner → employee → buyer workflow is demonstrated locally on port **8509**, including registration of a new catalogue SKU, reference embeddings, scene detection, human corrections, approved stock removal and updated Excel exports. AWS runs the OpenCV 5 capture service; RunPod runs DINO; SigLIP2 matching runs locally. The final Loom video link is supplied; recording used Loom and editing used CapCut. Judge access will use a private live screen-share, pending organizer agreement. Signed-out video playback and final submission remain unverified.
+> **Release status — October 25, 2026:** the owner → employee → buyer workflow is demonstrated locally on port **8509**, including registration of a new catalogue SKU, reference embeddings, scene detection, human corrections, approved stock removal and updated Excel exports. AWS runs the OpenCV 5 capture service; RunPod runs DINO; SigLIP2 matching runs locally. The demonstration was recorded with Loom and edited with CapCut. A private live screen-share is the intended judge-access route, subject to organizer confirmation.
 
 ## Three roles. One catalogue.
 
@@ -152,4 +152,4 @@ Private databases, credentials, reference photos, masks, vectors, model weights,
 
 NVIDIA models/TAO, SigLIP2, optional Ultralytics code and uploaded photographs retain their own terms. Check those terms before redistribution; no checkpoints are shipped here. See [third-party and publication notes](docs/security.md).
 
-This entry targets the **OpenCV AI Competition 2026, powered by AWS**. No COOL or Agentic Vision special-award claim is made. The [demo checklist](docs/demo.md) distinguishes completed local work from pending private screen-share scheduling, final team/video checks and submission. [Official requirements](https://opencv26.devpost.com/).
+This entry targets the **OpenCV AI Competition 2026, powered by AWS**. No COOL or Agentic Vision special-award claim is made. The [demo guide](docs/demo.md) describes the recorded workflow and live demonstration access. [Official requirements](https://opencv26.devpost.com/).
