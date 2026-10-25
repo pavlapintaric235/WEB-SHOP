@@ -13,7 +13,7 @@
 
 The existing AWS Lambda service runs OpenCV 5 image-quality checks. NVIDIA DINO detection runs on RunPod; SigLIP2 matching runs locally against the current shop's references. The shared database stores product registrations and confirmed inventory transactions.
 
-See [architecture](architecture.md), [evaluation and limitations](evaluation.md), and [build and deployment instructions](deployment.md).
+See the [technical report](webshop_opencv_2026_technical_report_20261020.md), [architecture](architecture.md), [evaluation and limitations](evaluation.md), and [build and deployment instructions](deployment.md).
 
 ## Live demonstration access
 

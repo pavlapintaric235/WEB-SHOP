@@ -1,0 +1,89 @@
+{
+  "prepared": "2026-10-26",
+  "purpose": "Extracted evidence for the consolidated technical report; no new training or inference",
+  "training_log": {
+    "name": "status.json",
+    "sha256": "884cb8826ea1a2e8bcc3c1c90560f7ba7ff089319bf56a7e4bbae3c600841acb",
+    "validation_evaluations": 12,
+    "successful_completion": true,
+    "validation_history": [
+      {
+        "val_mAP": "0.903653216184956",
+        "val_mAP50": "0.9275029109846248",
+        "val_loss": 2.104513168334961
+      },
+      {
+        "val_mAP": "0.9205101227996373",
+        "val_mAP50": "0.9371066665885472",
+        "val_loss": 1.8212814331054688
+      },
+      {
+        "val_mAP": "0.9229619569707626",
+        "val_mAP50": "0.9404842918462092",
+        "val_loss": 1.755680799484253
+      },
+      {
+        "val_mAP": "0.9165738840504448",
+        "val_mAP50": "0.9392243573571196",
+        "val_loss": 1.8415405750274658
+      },
+      {
+        "val_mAP": "0.9250886031306617",
+        "val_mAP50": "0.9450029748501164",
+        "val_loss": 1.7450625896453857
+      },
+      {
+        "val_mAP": "0.9192746663447654",
+        "val_mAP50": "0.9387999699257388",
+        "val_loss": 1.7539236545562744
+      },
+      {
+        "val_mAP": "0.9245928521203522",
+        "val_mAP50": "0.9452807348553497",
+        "val_loss": 1.7861194610595703
+      },
+      {
+        "val_mAP": "0.9173525795193002",
+        "val_mAP50": "0.9435158900105127",
+        "val_loss": 1.8035871982574463
+      },
+      {
+        "val_mAP": "0.9185537022824335",
+        "val_mAP50": "0.9424713900183687",
+        "val_loss": 1.7721927165985107
+      },
+      {
+        "val_mAP": "0.9174840440992081",
+        "val_mAP50": "0.9413562540960784",
+        "val_loss": 1.807485580444336
+      },
+      {
+        "val_mAP": "0.9230072901095494",
+        "val_mAP50": "0.9405940597010131",
+        "val_loss": 1.6675646305084229
+      },
+      {
+        "val_mAP": "0.9253672136528657",
+        "val_mAP50": "0.94485207536433",
+        "val_loss": 1.68233323097229
+      }
+    ]
+  },
+  "deployment_assets": [
+    {
+      "name": "model_epoch_011.pth",
+      "bytes": 390300806,
+      "sha256": "8bb11d6d63f26edfd480bdf1264467bd5c080f190fbb83a034b252d13ee20d27"
+    },
+    {
+      "name": "experiment.yaml",
+      "bytes": 4192,
+      "sha256": "5488840aafcd02038a5bf0f207e1543d95d5c152a01bf66c476487bec1d80d9c"
+    }
+  ],
+  "remote_comparison": "On 2026-10-25 local checkpoint, experiment.yaml and worker hashes matched the connected RunPod copies before shutdown; not a training-time attestation",
+  "limits": [
+    "Raw local training log and model weights are retained privately; this is an extracted summary.",
+    "Validation is five photographs; it is not final scene or SKU accuracy."
+  ]
+}

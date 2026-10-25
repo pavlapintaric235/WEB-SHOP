@@ -6,7 +6,7 @@
 
 Register a product from reference photos, review what the camera counted, and approve the stock change. Buyers use the same shop catalogue to plan quantities, estimate a budget and find assigned shelves.
 
-[Watch demonstration](https://www.loom.com/share/8596593e2eed45c59e453312c88de972) ? [Demo guide](docs/demo.md) · [Architecture](docs/architecture.md) · [Features](docs/features.md) · [Evaluation](docs/evaluation.md) · [Deployment](docs/deployment.md) · [Security & licensing](docs/security.md)
+[Watch demonstration](https://www.loom.com/share/8596593e2eed45c59e453312c88de972) ? [Demo guide](docs/demo.md) · [Technical report](docs/webshop_opencv_2026_technical_report_20261020.md) ? [Architecture](docs/architecture.md) · [Features](docs/features.md) · [Evaluation](docs/evaluation.md) · [Deployment](docs/deployment.md) · [Security & licensing](docs/security.md)
 
 > **Release status — October 25, 2026:** the owner → employee → buyer workflow is demonstrated locally on port **8509**, including registration of a new catalogue SKU, reference embeddings, scene detection, human corrections, approved stock removal and updated Excel exports. AWS runs the OpenCV 5 capture service; RunPod runs DINO; SigLIP2 matching runs locally. The demonstration was recorded with Loom and edited with CapCut. A private live screen-share is the intended judge-access route, subject to organizer confirmation.
 

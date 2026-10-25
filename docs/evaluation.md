@@ -1,6 +1,6 @@
 # Verified results and limits
 
-These are measured development observations, not broad deployment accuracy.
+These are measured development observations, not broad deployment accuracy. The [current technical report](webshop_opencv_2026_technical_report_20261020.md) consolidates the three datasets, completed DINO training, separate localization/retrieval evaluations, and final live demonstration.
 
 | Check | Actual evidence | Boundary |
 |---|---|---|
