@@ -3,12 +3,13 @@
 import csv
 import io
 import json
+import os
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
-DATA_DIR = Path(__file__).resolve().parent / "data"
+DATA_DIR = Path(os.environ.get("WEBSHOP_DATA_DIR", str(Path(__file__).resolve().parent / "data"))).resolve()
 DB_FILE = DATA_DIR / "inventorylens.sqlite3"
 CATALOG_FILE = DATA_DIR / "catalog.json"
 DEFAULT_BUSINESS_NAME = "Demo Business"
@@ -126,8 +127,32 @@ def init_db():
         )
         db.execute(
             "INSERT OR IGNORE INTO product_references (product_id, image_path, created_at) "
-            "SELECT id, image_path, created_at FROM products"
+            "SELECT id, image_path, created_at FROM products WHERE image_path != ''"
         )
+        # Additive migrations preserve existing catalogues and count history.
+        for table, column, declaration in (
+            ('businesses', 'is_demo', 'INTEGER NOT NULL DEFAULT 0'),
+            ('products', 'price', 'REAL'), ('products', 'unit', "TEXT DEFAULT 'pending'"),
+            ('products', 'shelf_id', 'TEXT'), ('products', 'registration_status', "TEXT DEFAULT 'pending'"),
+            ('products', 'brand_variant_size', 'TEXT'),
+            ('products', 'opening_stock', 'INTEGER'),
+            ('scan_sessions', 'operation', "TEXT NOT NULL DEFAULT 'audit'"),
+            ('scan_items', 'before_quantity', 'INTEGER'), ('scan_items', 'after_quantity', 'INTEGER'),
+        ):
+            if column not in {r['name'] for r in db.execute(f'PRAGMA table_info({table})')}:
+                db.execute(f'ALTER TABLE {table} ADD COLUMN {column} {declaration}')
+        db.executescript('''
+            CREATE TABLE IF NOT EXISTS shop_shelves (
+                business_id INTEGER NOT NULL REFERENCES businesses(id),
+                shelf_id TEXT NOT NULL, zone TEXT, aisle TEXT, map_x INTEGER, map_y INTEGER,
+                PRIMARY KEY (business_id, shelf_id));
+            CREATE TABLE IF NOT EXISTS shop_layouts (
+                business_id INTEGER PRIMARY KEY REFERENCES businesses(id), layout_json TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS product_registration_requests (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, business_id INTEGER NOT NULL REFERENCES businesses(id),
+                user_id INTEGER NOT NULL REFERENCES users(id), description TEXT NOT NULL,
+                evidence_id TEXT, created_at TEXT NOT NULL);
+        ''')
 
 
 def now():
@@ -156,7 +181,7 @@ def get_business_products(business_id):
         products = rows(
             db.execute(
                 """
-                SELECT id, sku, name, image_path
+                SELECT *
                 FROM products
                 WHERE business_id = ?
                 ORDER BY sku
@@ -225,6 +250,7 @@ def add_product_references(business_id, sku, paths):
             "INSERT INTO product_references (product_id, image_path, created_at) VALUES (?, ?, ?)",
             [(product["id"], path, now()) for path in paths],
         )
+        db.execute("UPDATE products SET image_path=? WHERE id=? AND image_path=''", (paths[0], product['id']))
 
 
 def remove_product_reference(business_id, sku, reference_id):
@@ -423,7 +449,7 @@ def get_inventory(business_id, location_id=None):
 
 def create_scan_session(
     business_id, user_id, location_id, photo_hash, approved_counts,
-    predicted_counts=None, notes="", submission_key=None, scope="partial"
+    predicted_counts=None, notes="", submission_key=None, scope="partial", operation="audit"
 ):
     predicted_counts = predicted_counts or {}
     products = {product["sku"]: product for product in get_business_products(business_id)}
@@ -434,6 +460,8 @@ def create_scan_session(
         raise ValueError("Select at least one SKU to approve.")
     if scope not in {"partial", "complete"}:
         raise ValueError("Invalid count scope.")
+    if operation not in {'audit', 'add', 'subtract'}:
+        raise ValueError('Invalid inventory operation.')
     if scope == "complete" and set(approved_counts) != set(products):
         raise ValueError("A complete location count must include every registered SKU.")
     if not submission_key or not photo_hash:
@@ -459,6 +487,7 @@ def create_scan_session(
             ))
             if (previous["user_id"] == user_id and previous["location_id"] == location_id
                     and previous["photo_hash"] == photo_hash and previous["scope"] == scope
+                    and previous['operation'] == operation
                     and {item["sku"]: item["approved_quantity"] for item in old_items}
                     == approved_counts):
                 return previous["id"]
@@ -474,8 +503,16 @@ def create_scan_session(
                 (business_id, user_id, location_id, photo_hash, submission_key, scope, notes, now()),
             )
         session_id = cursor.lastrowid
+        db.execute('UPDATE scan_sessions SET operation=? WHERE id=?', (operation, session_id))
         for sku, approved_quantity in approved_counts.items():
             product = products[sku]
+            prior = db.execute('SELECT quantity FROM inventory_counts WHERE business_id=? AND location_id=? AND product_id=?',
+                               (business_id, location_id, product['id'])).fetchone()
+            before = prior['quantity'] if prior else 0
+            after = (approved_quantity if operation == 'audit' else
+                     before + approved_quantity if operation == 'add' else before - approved_quantity)
+            if after < 0:
+                raise ValueError(f'Removal exceeds stock for {sku}; no changes saved.')
             predicted_quantity = int(predicted_counts.get(sku, 0))
             db.execute(
                 """
@@ -486,7 +523,9 @@ def create_scan_session(
                 """,
                 (session_id, product["id"], predicted_quantity, approved_quantity),
             )
-            _set_inventory_count(db, business_id, location_id, product["id"], approved_quantity)
+            db.execute('UPDATE scan_items SET before_quantity=?, after_quantity=? WHERE session_id=? AND product_id=?',
+                       (before, after, session_id, product['id']))
+            _set_inventory_count(db, business_id, location_id, product["id"], after)
         return session_id
 
 
@@ -499,6 +538,9 @@ def get_scan_history(business_id, limit=50):
                     s.id,
                     s.created_at,
                     s.scope,
+                    s.operation,
+                    s.photo_hash,
+                    s.submission_key,
                     s.notes,
                     u.username,
                     l.name AS location,
@@ -506,6 +548,7 @@ def get_scan_history(business_id, limit=50):
                     p.name AS product,
                     i.predicted_quantity,
                     i.approved_quantity
+                    ,i.before_quantity, i.after_quantity
                 FROM scan_sessions s
                 JOIN users u ON u.id = s.user_id
                 JOIN inventory_locations l ON l.id = s.location_id

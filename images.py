@@ -8,7 +8,7 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 def product_references(product):
     """Preserve compatibility with single-photo catalogue entries."""
     references = product.get("references") or [{"id": None, "image_path": product["image_path"]}]
-    return list(references)
+    return [r for r in references if r.get('image_path')]
 
 
 def read_image(upload):
