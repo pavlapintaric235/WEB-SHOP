@@ -1,0 +1,11 @@
+candidate_id,product_identity_from_pack,gtin,barcode_type,source_photo,verification_status,evidence
+IL-NEW-001,dmBio coconut water natural 1 L,,,,not_exact_sku_verified,"Front label identifies product and 1 L size; no readable code in owner reference photos."
+IL-NEW-002,Nescafe Classic 3-in-1 sachet 16.5 g,59945383,EAN-8,IMG_4817.jpeg,photo_gtin_and_pack_match,"Barcode decoded from hash-verified owner photo; package is Nescafe 3-in-1 Classic 16.5 g. Independent product listings match this EAN."
+IL-NEW-003,K-Classic tuna salad Mexican Style 220 g,,,,not_exact_sku_verified,"Front/package text identifies variant and net weight; no readable code in owner reference photos."
+IL-NEW-004,Pink tealight candle,,,,generic_item_unidentified,"No unique brand, scent, pack size, or retail identifier visible."
+IL-NEW-005,Dobra Mogador oatmeal with chocolate 65 g,8595054904258,EAN-13,IMG_4831.jpeg,photo_gtin_pack_and_external_listing_match,"Barcode decoded from hash-verified owner photo; back label states oatmeal with chocolate 65 g and Mogador manufacturer. Independent listings match the EAN and product."
+IL-NEW-006,Dobra Mogador rice porridge with chocolate and banana 50 g,8595054909086,EAN-13,IMG_4835.jpeg,photo_gtin_and_pack_match,"Barcode decoded from hash-verified owner photo; back label states rice mash with chocolate and banana 50 g and Mogador manufacturer."
+IL-NEW-007,Einhorn glue stick 9 g,,,,not_exact_sku_verified,"Packaging identifies brand and 9 g size; no readable code in owner reference photos, and exact retail SKU remains unverified."
+IL-NEW-008,EDEKA cylindrical battery; likely AA 1.5 V,,,,not_exact_sku_verified,"Brand and likely size/voltage are visible, but chemistry, multipack identity, and GTIN are unresolved."
+IL-NEW-009,Red disposable cup,,,,generic_item_unidentified,"No unique brand, capacity, material, pack size, or retail identifier visible."
+IL-NEW-010,Gold crown-shaped object,,,,generic_item_unidentified,"Exact product type, manufacturer, and retail identifier are not visible."

@@ -5,6 +5,7 @@ from judge_release import user_error
 from images import product_references
 from visual_8509 import hero,thumbnail,photo_placeholder
 from registration_8509 import export_catalog, update_details
+from catalog_workbook import workbook_panel
 
 
 def dashboard(service, read_image=None):
@@ -23,6 +24,7 @@ def dashboard(service, read_image=None):
         stats[0].metric('Products',len(products))
         stats[1].metric('With reference photos',registered)
         stats[2].metric('Awaiting photos',len(products)-registered)
+        workbook_panel(service, 'products_workbook')
         from catalog_import_ui import catalog_import
         catalog_import(service)
         search=st.text_input('Find a product',placeholder='Name, brand or SKU').casefold()
@@ -82,13 +84,14 @@ def dashboard(service, read_image=None):
     elif section=='Employees':
         st.dataframe(service.employees(),hide_index=True,width='stretch')
         with st.form('employee_8509'):
-            name=st.text_input('Employee username');password=st.text_input('Initial password',type='password')
+            name=st.text_input('Employee email or username');password=st.text_input('Initial password',type='password')
             if st.form_submit_button('Add employee'):
                 try:service.add_employee(name,password);st.rerun()
                 except (ValueError,PermissionError) as error:st.error(user_error(error))
         st.subheader('Product registration requests')
         st.dataframe(service.registration_requests(),hide_index=True,width='stretch')
     elif section=='Reports':
+        workbook_panel(service, 'reports_workbook')
         st.download_button('Export current product catalogue CSV',export_catalog(service),'webshop_current_catalogue.csv',mime='text/csv')
         st.caption('Export is generated from the authoritative database. Your imported workbook is preserved.')
         st.dataframe(service.history(),hide_index=True,width='stretch')

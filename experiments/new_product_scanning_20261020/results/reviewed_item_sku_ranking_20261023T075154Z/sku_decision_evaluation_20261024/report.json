@@ -1,0 +1,118 @@
+{
+  "status": "PROVISIONAL_CONFIRMED_LABEL_SUBSET_EVALUATION",
+  "decision_export_created_at": "2026-10-24T13:49:28.720Z",
+  "source_decisions": "experiments\\new_product_scanning_20261020\\annotations\\inventorylens_sku_decisions_20261024.json",
+  "source_decisions_sha256": "91fc624c444f572c09e5a4cbb4f40c196395008f56208c3afeca1a44a6684a2c",
+  "source_rank_report": "experiments\\new_product_scanning_20261020\\results\\reviewed_item_sku_ranking_20261023T075154Z\\report.json",
+  "source_rank_report_sha256": "327385e280ff5a7f964d3de4305fdd92b0743d5bec399c8736fdab9bf00aa9a9",
+  "candidate_product_identities_confirmed": 0,
+  "decision_coverage": {
+    "expected_items": 291,
+    "exported_rows": 281,
+    "unique_exported_items": 281,
+    "missing_items": [
+      "IMG_4874.jpeg#14",
+      "IMG_4874.jpeg#15",
+      "IMG_4874.jpeg#16",
+      "IMG_4874.jpeg#17",
+      "IMG_4874.jpeg#18",
+      "IMG_4874.jpeg#19",
+      "IMG_4876.jpeg#9",
+      "IMG_4892.jpeg#5",
+      "IMG_4902.jpeg#17",
+      "IMG_4902.jpeg#4"
+    ],
+    "review_states": {
+      "confirmed": 279,
+      "missing_state": 1,
+      "uncertain": 1
+    },
+    "confirmed_rows_with_candidate_id": 276,
+    "rows_not_scored": 5
+  },
+  "metrics": {
+    "top1_correct": 260,
+    "top1_accuracy": 0.9420289855072463,
+    "top3_correct": 270,
+    "top3_accuracy": 0.9782608695652174
+  },
+  "per_candidate": {
+    "IL-NEW-001": {
+      "n": 17,
+      "top1_correct": 12,
+      "top3_correct": 12,
+      "top1_accuracy": 0.7058823529411765,
+      "top3_accuracy": 0.7058823529411765
+    },
+    "IL-NEW-002": {
+      "n": 21,
+      "top1_correct": 21,
+      "top3_correct": 21,
+      "top1_accuracy": 1.0,
+      "top3_accuracy": 1.0
+    },
+    "IL-NEW-003": {
+      "n": 24,
+      "top1_correct": 18,
+      "top3_correct": 24,
+      "top1_accuracy": 0.75,
+      "top3_accuracy": 1.0
+    },
+    "IL-NEW-004": {
+      "n": 53,
+      "top1_correct": 52,
+      "top3_correct": 53,
+      "top1_accuracy": 0.9811320754716981,
+      "top3_accuracy": 1.0
+    },
+    "IL-NEW-005": {
+      "n": 11,
+      "top1_correct": 10,
+      "top3_correct": 11,
+      "top1_accuracy": 0.9090909090909091,
+      "top3_accuracy": 1.0
+    },
+    "IL-NEW-006": {
+      "n": 7,
+      "top1_correct": 7,
+      "top3_correct": 7,
+      "top1_accuracy": 1.0,
+      "top3_accuracy": 1.0
+    },
+    "IL-NEW-007": {
+      "n": 50,
+      "top1_correct": 47,
+      "top3_correct": 49,
+      "top1_accuracy": 0.94,
+      "top3_accuracy": 0.98
+    },
+    "IL-NEW-008": {
+      "n": 27,
+      "top1_correct": 27,
+      "top3_correct": 27,
+      "top1_accuracy": 1.0,
+      "top3_accuracy": 1.0
+    },
+    "IL-NEW-009": {
+      "n": 39,
+      "top1_correct": 39,
+      "top3_correct": 39,
+      "top1_accuracy": 1.0,
+      "top3_accuracy": 1.0
+    },
+    "IL-NEW-010": {
+      "n": 27,
+      "top1_correct": 27,
+      "top3_correct": 27,
+      "top1_accuracy": 1.0,
+      "top3_accuracy": 1.0
+    }
+  },
+  "limitations": [
+    "This scores only human decisions marked confirmed with a selected candidate ID.",
+    "The ten candidate IDs still map to unconfirmed product/SKU identities; results are candidate-group agreement, not verified sellable-SKU accuracy.",
+    "The human decision subset is not a blinded test set because reviewers saw model suggestions.",
+    "This evaluates manually cropped item boxes and does not measure automatic DINO detection or end-to-end inventory counting.",
+    "No confirmed unknown/not-listed decisions were present, so unknown rejection cannot be evaluated."
+  ]
+}

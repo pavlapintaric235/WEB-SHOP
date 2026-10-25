@@ -8,7 +8,7 @@ Register a product from reference photos, review what the camera counted, and ap
 
 [Demo guide](docs/demo.md) · [Architecture](docs/architecture.md) · [Features](docs/features.md) · [Evaluation](docs/evaluation.md) · [Deployment](docs/deployment.md) · [Security & licensing](docs/security.md)
 
-> **Release status — October 25, 2026:** the integrated Streamlit application works locally. AWS OpenCV capture and RunPod DINO have genuine measured execution evidence. An isolated sandbox's temporary HTTPS gateway reaches email sign-in for the allowlisted operator; **judge access and authenticated external workflows remain unverified**. Video upload and final submission are not claimed complete.
+> **Release status — October 25, 2026:** the owner → employee → buyer workflow is demonstrated locally on port **8509**, including registration of a new catalogue SKU, reference embeddings, scene detection, human corrections, approved stock removal and updated Excel exports. AWS runs the OpenCV 5 capture service; RunPod runs DINO; SigLIP2 matching runs locally. Public hosting, authenticated external judge workflows, video upload and final submission remain unverified.
 
 ## Three roles. One catalogue.
 
@@ -36,8 +36,8 @@ Products, shopping list, budget and cart preview use the current shop's prices. 
 
 ## Register a new SKU without per-SKU retraining
 
-1. **Owner → + Add Product:** name, brand, variant, size, unit, price, initial quantity, shelf and optional barcode.
-2. Upload **3–5 useful views**; inspect blur/exposure/framing guidance, label views and approve each image. Fewer views can be saved as an incomplete draft.
+1. **Owner → + Add Product:** upload **3–5 useful views**, then enter name, brand, variant, size, unit, price, initial quantity, shelf and optional barcode.
+2. Inspect blur/exposure/framing guidance, label the front view and approve each image. The front reference becomes the catalogue card image. Fewer views can be saved as an incomplete draft.
 3. Review the summary and explicitly register. Originals, normalized references, genuine SigLIP2 vectors, model revision and image hashes are persisted atomically.
 4. The shop gallery updates immediately. Test with a **different scene photo**, not a reference image.
 
@@ -64,13 +64,26 @@ flowchart LR
 
 OpenCV 5 performs substantive analysis: decode/dimensions, focus, exposure, retake/proceed decisions, and post-detection frame/overlap guidance. AWS is the existing private S3-triggered Lambda in **eu-north-1**. Neural detection runs on **RunPod**, not AWS; reference recognition runs locally in the application process. [Architecture and runtime boundaries](docs/architecture.md).
 
-LIVE, LOCAL capture, AWS capture and private archived REPLAY are distinct modes. AWS failure requires an explicit LOCAL selection. Failed GPU inference does not silently become replay. Private archived photos are disabled in the judge sandbox.
+LIVE, LOCAL capture, AWS capture and private archived REPLAY are distinct modes. AWS failure requires an explicit LOCAL selection. Failed GPU inference does not silently become replay. Private archived photos are disabled in the judge sandbox. An explicitly selected **RESUMED** review restores the same user's saved corrections for the exact photograph; it reuses earlier inference and is not a new LIVE measurement.
+
+## Review stock and update Excel
+
+1. In **Employee Scan**, upload a different photograph, check capture quality, then select **Find products in this photo**.
+2. Correct SKU assignments and quantities, remove false detections or add missed catalogue products. Review every included detection before approving stock.
+3. Open **Excel preview & stock approval**. **Review only** leaves stock unchanged. **Shelf audit** sets explicitly selected SKU counts at the selected shelf.
+4. For **ADD / SUBTRACT** on a mixed-shelf photo, keep **Use each product's assigned shelf** checked. The preview shows each SKU's actual shelf and balance. All shelf actions save together; insufficient stock, changed previews and repeated submissions are protected.
+5. Check the before/after quantities and explicitly select **Approve inventory action**. Receipts and correction history are retained.
+
+In **Owner → Products / Reports → Current Excel sheets**, **Opening stock** is the original starting quantity; **Current stock** is the confirmed balance at the product's assigned shelf. The XLSX export contains **Products**, **Shelves**, **Inventory** and **Readme** sheets. Download a fresh workbook after changes: previously downloaded Excel files are snapshots and do not synchronize themselves. Downloading a scan review or stock preview never applies a transaction.
+
+Stock is scoped to a shop and shelf. A zero or uncounted balance on A1 does not imply a product stored on A2 is out of stock. Opening quantities from an imported workbook require explicit initialization; the importer does not silently overwrite existing balances.
 
 ## Measured, with limits
 
 | Observation | Verified result |
 |---|---|
 | Actual new-product acceptance | Five real references registered; distinct scene assigned the new SKU to the front can; employee explicitly approved one isolated demo unit |
+| Recorded additional registration | Four references registered for Erbsen Eintopf; the scene review includes SKU suggestions, unknowns and manual corrections; approved removal changes its demo balance from **10 to 8** |
 | Genuine AWS quality feedback | Reference PROCEED; intentionally blurred control RETAKE; distinct scene PROCEED, with matching image hashes and OpenCV 5.0.0 |
 | Matching ten actual crops | Serial **14.37 s** → batch-four **7.57 s**, with the same SKU decisions |
 | Prepared LIVE recognition | **27.59 s**, including **20.02 s** DINO request; upload, AWS check, cold preparation and rendering are additional |
@@ -110,11 +123,13 @@ For the existing full local shop, the operator uses `./tools/start_webshop_ux_de
 ## Verify without a GPU benchmark
 
 ```powershell
-.venv\Scripts\python.exe -m unittest tests.test_judge_release tests.test_registration_8509 tests.test_practical_ux
+.venv\Scripts\python.exe -m unittest tests.test_catalog_stock tests.test_catalog_workbook tests.test_employee_scan_controls tests.test_registration_8509
 .venv\Scripts\python.exe tools\check_publication.py --tracked
 ```
 
 Local tests cover isolation, atomic registration, drafts, duplicates, quality gates, cached-vector freshness, grouped corrections, prices, map state, confirmation, idempotency and buyer no-write behavior. Cloud/model failures are explicitly mocked; actual inference evidence is separate. Pinned dependencies are in `requirements-live-scan.txt` and `requirements-judge.txt`; optional legacy dependencies are separate.
+
+Publication verification on October 25: **69 targeted application checks passed**, including registration, Excel snapshots, mixed-shelf transaction rollback, duplicate protection, saved-review recovery and judge isolation. The publication scan found no credentials or private artifacts in the reviewed files. These checks do not rerun a live GPU benchmark or establish recognition accuracy.
 
 ## Repository guide
 
@@ -125,17 +140,16 @@ Local tests cover isolation, atomic registration, drafts, duplicates, quality ga
 | `scanner_8509.py`, `review_8509.py`, `live_scan.py` | Inference adapter, interactive review and evidence |
 | `gallery_8509.py`, `siglip_8509.py` | Content-bound vector cache and safe pinned image-tower loading |
 | `inventory.py`, `db.py`, `auth.py` | Existing shop authorization, catalogue and ledger |
+| `catalog_stock.py`, `catalog_workbook.py` | Atomic actions across assigned shelves and current Excel snapshots |
 | `buyer_8509.py`, `shop_catalog.py`, `shop_map.py` | Shared prices, importer, buyer tools and layout |
 | `experiments/opencv5_guided_scan/` | Existing OpenCV/AWS capture component; historical experiments remain separate |
 | `demo_data/` | Fictional import workbook; not verified live inventory |
 | `docs/`, `tests/`, `tools/` | Current judge documentation, targeted checks and reproducible setup |
 
-The existing `graphipy-out-animation/` is a historical interactive project/research graph. It is not the buyer map, a deployed endpoint or a benchmark result.
-
 ## Privacy, licensing and submission
 
 Private databases, credentials, reference photos, masks, vectors, model weights, videos and connection files stay out of Git. Existing private photos require explicit approval before appearing in public screenshots/video. Whole-host authentication must protect Streamlit media and WebSocket routes; a UI password alone is insufficient. [Security and third-party terms](docs/security.md).
 
-Original project code retains its [MIT license](LICENSE). NVIDIA models/TAO, SigLIP2, optional Ultralytics code and uploaded photographs retain their own terms. Check those terms before redistribution; no checkpoints are shipped here.
+NVIDIA models/TAO, SigLIP2, optional Ultralytics code and uploaded photographs retain their own terms. Check those terms before redistribution; no checkpoints are shipped here. See [third-party and publication notes](docs/security.md).
 
 This entry targets the **OpenCV AI Competition 2026, powered by AWS**. No COOL or Agentic Vision special-award claim is made. The [demo checklist](docs/demo.md) distinguishes completed local work from pending HTTPS verification, final team/video footage, upload and submission. [Official requirements](https://opencv26.devpost.com/).

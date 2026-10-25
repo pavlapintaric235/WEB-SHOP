@@ -134,7 +134,7 @@ class InventoryService:
         try:
             auth.create_user(user["business_id"], username, password, "employee")
         except sqlite3.IntegrityError as error:
-            raise ValueError("Username is already taken.") from error
+            raise ValueError("Email or username is already taken.") from error
 
     def employees(self):
         user = self.user(owner=True)
@@ -183,6 +183,14 @@ class InventoryService:
         self._location(user, location_id)
         from scan_review import stock_preview
         return stock_preview(db.get_inventory(user['business_id'], location_id), counts, operation)
+
+    def preview_catalog_action(self, counts, operation):
+        from catalog_stock import preview
+        return preview(self, counts, operation)
+
+    def approve_catalog_action(self, photo_hash, submission_key, counts, predicted=None, notes='', operation='subtract', expected_preview=None):
+        from catalog_stock import approve
+        return approve(self,photo_hash,submission_key,counts,predicted,notes,operation,expected_preview)
 
     def request_registration(self, description, evidence_id):
         user = self.user()

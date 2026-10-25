@@ -11,6 +11,15 @@ from PIL import Image
 
 from quality_8509 import analyze, aws_analyze, accepts, diagnostics
 from registration_8509 import register, details_checked, assets_for
+from catalog_workbook import workbook_panel
+
+
+def collect_photos(state, uploads):
+    for upload in uploads or []:
+        data=upload.getvalue();digest=hashlib.sha256(data).hexdigest()
+        if digest not in state['photos'] and digest not in state['ignored']:
+            try:state['photos'][digest]=dict(data=data,name=upload.name,quality=analyze(data),angle='unknown',approved=False,override='')
+            except (ValueError,OSError) as error:st.error(f'{upload.name}: {user_error(error)}')
 
 
 def wizard(service, product=None):
@@ -32,11 +41,17 @@ def wizard(service, product=None):
         r=state['result']
         st.success(f"{r['sku']} saved. " + ('References embedded and available to this shop’s retrieval gallery.' if r['ready'] else 'Incomplete draft — not in the active recognition gallery.'))
         st.info('Embedding generation is not proof of recognition. Open this product’s Test Recognition action with a distinct new photo.')
+        workbook_panel(service, key+'_workbook')
         if st.button('Register another product',key=key+'_reset'):
             del st.session_state[key];st.rerun()
         return
     defaults=product or {}
     if state['step']==0:
+        uploads=st.file_uploader('Reference photographs',type=['png','jpg','jpeg'],accept_multiple_files=True,key=key+'_upload')
+        collect_photos(state, uploads)
+        if state['photos']:
+            st.image([p['data'] for p in state['photos'].values()],width=110)
+        st.caption('Upload 3–5 views of a new product, enter its details below, then review image quality. Existing models are reused without retraining.')
         with st.form(key+'_details'):
             left,right=st.columns(2)
             with left:
@@ -64,17 +79,14 @@ def wizard(service, product=None):
     st.caption(f"{details['name']} · {details['sku']} · €{details['price']:.2f} · {details['shelf_id']}")
     if state['step']==1:
         st.markdown('### Upload 3–5 photographs of this product')
+        st.caption('Mark the clearest front photograph as “front”; it becomes the first catalogue reference and product card image.')
         existing_count=len(product.get('references',[])) if product else 0
         st.caption(f'Recommendation: front, side and back/angled. Existing registered views: {existing_count}. No polygons or model training required.')
         uploads=st.file_uploader('Reference photographs',type=['png','jpg','jpeg'],accept_multiple_files=True,key=key+'_upload')
         with st.expander('Use camera capture'):
             shot=st.camera_input('Capture a product reference',key=key+'_camera')
             if st.button('Add camera photo',key=key+'_camera_add',disabled=shot is None):uploads=list(uploads or [])+[shot]
-        for upload in uploads or []:
-            data=upload.getvalue();digest=hashlib.sha256(data).hexdigest()
-            if digest not in state['photos'] and digest not in state['ignored']:
-                try:state['photos'][digest]=dict(data=data,name=upload.name,quality=analyze(data),angle='unknown',approved=False,override='')
-                except (ValueError,OSError) as error:st.error(f'{upload.name}: {user_error(error)}')
+        collect_photos(state, uploads)
         columns=st.columns(2)
         for index,(digest,photo) in enumerate(list(state['photos'].items())):
             with columns[index%2],st.container(border=True):

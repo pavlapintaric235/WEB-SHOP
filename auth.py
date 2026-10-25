@@ -40,8 +40,24 @@ def verify_password(password, stored_hash):
 
 def create_user(business_id, username, password, role):
     username = username.strip().lower()
-    if not re.fullmatch(r"[a-z0-9_.-]{3,40}", username):
-        raise ValueError("Username must be 3-40 letters, numbers, '.', '_' or '-'.")
+    if "@" in username:
+        local, _, domain = username.partition("@")
+        labels = domain.split(".")
+        valid_email = (
+            len(username) <= 254
+            and 1 <= len(local) <= 64
+            and re.fullmatch(r"[a-z0-9.!#$%&'*+/=?^_`{|}~-]+", local)
+            and not local.startswith(".")
+            and not local.endswith(".")
+            and ".." not in local
+            and len(labels) >= 2
+            and all(re.fullmatch(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?", label) for label in labels)
+            and re.fullmatch(r"[a-z]{2,63}|xn--[a-z0-9-]+", labels[-1])
+        )
+        if not valid_email:
+            raise ValueError("Enter a valid email address.")
+    elif not re.fullmatch(r"[a-z0-9_.-]{3,40}", username):
+        raise ValueError("Enter an email address or a username with 3-40 letters, numbers, '.', '_' or '-'.")
     if len(password) < 8:
         raise ValueError("Password must contain at least 8 characters.")
     if role not in {"owner", "employee"}:

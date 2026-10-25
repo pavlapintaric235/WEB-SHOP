@@ -162,7 +162,7 @@ def dashboard(service, read_image):
     with team_tab:
         st.dataframe(local_times(service.employees()), hide_index=True, use_container_width=True)
         with st.form("add_employee", clear_on_submit=True):
-            username = st.text_input("Employee username")
+            username = st.text_input("Employee email or username")
             password = st.text_input("Initial password", type="password")
             if st.form_submit_button("Add employee"):
                 try:

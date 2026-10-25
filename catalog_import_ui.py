@@ -16,6 +16,9 @@ def catalog_import(service):
     with st.expander('Import catalogue workbook / CSV'):
         upload = st.file_uploader('Products / Products_Import XLSX or catalogue CSV', type=['xlsx', 'csv'], key='catalog_import')
         sample = Path(__file__).resolve().parent / 'demo_data/WEB_SHOP_mock_catalog_prices_shelves_map.xlsx'
+        if sample.exists():
+            st.download_button('Download supplied example workbook', sample.read_bytes(), sample.name,
+                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', key='sample_workbook')
         use_sample = st.checkbox('Preview supplied fictional workbook', disabled=not sample.exists())
         if not upload and not use_sample:
             return

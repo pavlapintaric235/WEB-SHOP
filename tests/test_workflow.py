@@ -145,6 +145,14 @@ class WorkflowTests(unittest.TestCase):
             self.assertEqual(item["image_path"], originals[item["sku"]])
             self.assertEqual([view["image_path"] for view in item["references"]], [originals[item["sku"]]])
 
+    def test_existing_startup_preserves_database_bytes_and_sequences(self):
+        before = db.DB_FILE.read_bytes()
+        db.init_db()
+        db.default_location(self.business['id'])
+        db.get_or_create_business(self.business['name'])
+        auth.seed_demo_users()
+        self.assertEqual(db.DB_FILE.read_bytes(), before)
+
     def test_failed_reference_batch_rolls_back_database_and_new_files(self):
         product_id = self.owner.products()[0]["id"]
         with db.connect() as connection:
@@ -175,6 +183,31 @@ class WorkflowTests(unittest.TestCase):
         employee = auth.authenticate("new.employee", "password123")
         self.assertEqual(employee["role"], "employee")
         self.assertEqual(employee["business_id"], self.business["id"])
+
+    def test_employee_email_login_normalization_and_duplicates(self):
+        address = "Demo.Employee+video@Example.org"
+        self.owner.add_employee("  " + address + "  ", "password123")
+        employee = auth.authenticate("  " + address.upper() + "  ", "password123")
+        self.assertEqual(employee["username"], address.lower())
+        self.assertEqual(employee["role"], "employee")
+        self.assertEqual(employee["business_id"], self.business["id"])
+        self.assertIsNone(auth.authenticate(address, "wrong-password"))
+        with self.assertRaisesRegex(ValueError, "already taken"):
+            self.owner.add_employee(address.lower(), "password123")
+        long_address = "long." + "a" * 55 + "@example.org"
+        self.owner.add_employee(long_address, "password123")
+        self.assertIsNotNone(auth.authenticate(long_address, "password123"))
+
+    def test_invalid_employee_emails_do_not_create_users(self):
+        before = self.owner.employees()
+        for address in ("a@@example.org", "a@localhost", "a b@example.org",
+                        ".a@example.org", "a.@example.org", "a..b@example.org",
+                        "a@-example.org", "a@example-.org", "a@example..org",
+                        "a\n@example.org", "a" * 65 + "@example.org",
+                        "a@" + "b" * 64 + ".org"):
+            with self.subTest(address=address), self.assertRaises(ValueError):
+                self.owner.add_employee(address, "password123")
+        self.assertEqual(self.owner.employees(), before)
 
     def test_employee_cannot_perform_owner_actions(self):
         actions = [

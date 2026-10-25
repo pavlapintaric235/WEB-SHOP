@@ -1,0 +1,19 @@
+{
+  "status": "data_audit_only_no_training",
+  "first_two_source_paths": 121,
+  "first_two_scene_paths": 100,
+  "first_two_distinct_scenes": 83,
+  "first_two_distinct_references": 21,
+  "approved_grocery_scene_images": 26,
+  "approved_grocery_instances": 163,
+  "train_images": 21,
+  "validation_images": 5,
+  "first_two_scenes_needing_instance_labels": 57,
+  "early_distinct_scenes_needing_instance_labels": 4,
+  "newest_owner_references_reserved_for_gallery": 42,
+  "newest_scenes_reserved_for_evaluation": 30,
+  "newest_employee_scenes": 25,
+  "newest_customer_scenes": 5,
+  "scene_hash_overlap_between_training_pool_and_newest": 0,
+  "approved_grocery_group_leakage": false
+}

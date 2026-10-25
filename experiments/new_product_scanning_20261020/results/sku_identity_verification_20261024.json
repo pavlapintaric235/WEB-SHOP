@@ -1,0 +1,46 @@
+{
+  "created_utc": "2026-10-24T15:07:35.598093+00:00",
+  "method": "OpenCV 5 BarcodeDetector on original, EXIF-corrected owner reference photos at original resolution and 1.5x upscaled resolution; visual package-label cross-check",
+  "photo_manifest": "../audit/photo_manifest.csv",
+  "decoded_codes": [
+    {
+      "candidate_id": "IL-NEW-002",
+      "photo": "IMG_4817.jpeg",
+      "photo_sha256": "3354c02189b30b1b4439de8babe61033aa8c801f8ba7279c10eaf804ee876fbc",
+      "barcode_type": "EAN_8",
+      "gtin": "59945383",
+      "package_text": "Nescafe 3-in-1 Classic; 16.5 g",
+      "external_cross_check": "https://zakupy.bydgoszcz.pl/nescafe-3in1-classic-rozpuszczalny-napoj-kawowy-1/105"
+    },
+    {
+      "candidate_id": "IL-NEW-005",
+      "photo": "IMG_4831.jpeg",
+      "photo_sha256": "b5a0ea9ca2b423abd9d210b82c7ad474873565717d36aa8ee93ef10713a8f7f6",
+      "barcode_type": "EAN_13",
+      "gtin": "8595054904258",
+      "package_text": "Dobra Mogador oatmeal with chocolate; 65 g",
+      "external_cross_check": "https://cenik.rs/cena/dobra-zobena-ovsena-kasa-cokolada-8595054904258/"
+    },
+    {
+      "candidate_id": "IL-NEW-006",
+      "photo": "IMG_4835.jpeg",
+      "photo_sha256": "7a99861a03bb3a531d28744d89415a4ad5d447f059207001d705ed1e2467d366",
+      "barcode_type": "EAN_13",
+      "gtin": "8595054909086",
+      "package_text": "Dobra Mogador rice porridge with chocolate and banana; 50 g",
+      "external_cross_check": null
+    }
+  ],
+  "scan_summary": {
+    "owner_reference_photos_checked": 42,
+    "photos_with_decoded_codes": 3,
+    "additional_codes_found_at_higher_resolution": 0,
+    "candidates_with_photo_gtin_and_matching_pack_text": 3,
+    "candidates_remaining_unverified": 7
+  },
+  "limitations": [
+    "A barcode not decoded from a photo may be absent, out of frame, blurred, distorted, or unreadable; this does not prove the product has no GTIN.",
+    "External product listings corroborate the first two codes; the third is supported by the decoded source-photo barcode and visible package text only.",
+    "Candidate IDs remain experiment-local IDs. No production registry or inventory record was changed."
+  ]
+}

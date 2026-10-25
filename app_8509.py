@@ -29,12 +29,12 @@ if 'user_id' not in st.session_state:
     with st.container(border=True):
         st.subheader('Welcome to your shop')
         with st.form('login_8509'):
-            name=st.text_input('Username',key='login_username')
+            name=st.text_input('Email or username',key='login_username')
             password=st.text_input('Password',type='password',key='login_password')
             if st.form_submit_button('Sign in',type='primary'):
                 user=auth.authenticate(name,password)
                 if user:st.session_state['user_id']=user['id'];st.rerun()
-                else:st.error('Incorrect username or password.')
+                else:st.error('Incorrect email, username or password.')
     st.stop()
 service=InventoryService(st.session_state['user_id'])
 try:user=service.user()

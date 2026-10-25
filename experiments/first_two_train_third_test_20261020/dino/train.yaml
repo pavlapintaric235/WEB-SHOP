@@ -1,0 +1,46 @@
+# TAO Toolkit 5.5 DINO fine-tune from NVIDIA Retail DINO v2.2.2.3.
+# This experiment has one foreground class; TAO reserves class id 0 for background.
+results_dir: /workspace/inventorylens-dino/results
+encryption_key: nvidia_tao
+
+model:
+  backbone: fan_base
+  num_feature_levels: 4
+  dec_layers: 6
+  enc_layers: 6
+  num_queries: 900
+  num_select: 100
+  dropout_ratio: 0.0
+  dim_feedforward: 2048
+
+dataset:
+  train_data_sources:
+    - image_dir: /workspace/inventorylens-dino/data/images/train
+      json_file: /workspace/inventorylens-dino/data/annotations/instances_train.json
+  val_data_sources:
+    - image_dir: /workspace/inventorylens-dino/data/images/val
+      json_file: /workspace/inventorylens-dino/data/annotations/instances_val.json
+  num_classes: 2
+  batch_size: 2
+  workers: 2
+  augmentation:
+    fixed_padding: false
+
+train:
+  pretrained_model_path: /workspace/inventorylens-dino/models/dino_model_epoch=011.pth
+  freeze: [backbone, transformer.encoder]
+  num_gpus: 1
+  num_nodes: 1
+  num_epochs: 12
+  validation_interval: 1
+  checkpoint_interval: 1
+  seed: 20261020
+  precision: fp16
+  activation_checkpoint: true
+  optim:
+    optimizer: AdamW
+    lr: 1.0e-5
+    lr_backbone: 1.0e-6
+    lr_steps: [8, 10]
+    momentum: 0.9
+    weight_decay: 1.0e-4

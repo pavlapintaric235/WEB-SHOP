@@ -5,7 +5,7 @@ import io
 import json
 import os
 import sqlite3
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -125,10 +125,16 @@ def init_db():
             );
             """
         )
-        db.execute(
-            "INSERT OR IGNORE INTO product_references (product_id, image_path, created_at) "
-            "SELECT id, image_path, created_at FROM products WHERE image_path != ''"
-        )
+        missing_references = db.execute(
+            "SELECT p.id, p.image_path, p.created_at FROM products p "
+            "WHERE p.image_path != '' AND NOT EXISTS ("
+            "SELECT 1 FROM product_references r WHERE r.product_id = p.id AND r.image_path = p.image_path)"
+        ).fetchall()
+        if missing_references:
+            db.executemany(
+                "INSERT OR IGNORE INTO product_references (product_id, image_path, created_at) VALUES (?, ?, ?)",
+                missing_references,
+            )
         # Additive migrations preserve existing catalogues and count history.
         for table, column, declaration in (
             ('businesses', 'is_demo', 'INTEGER NOT NULL DEFAULT 0'),
@@ -161,6 +167,9 @@ def now():
 
 def get_or_create_business(name=DEFAULT_BUSINESS_NAME):
     with connect() as db:
+        existing = db.execute("SELECT * FROM businesses WHERE name = ?", (name,)).fetchone()
+        if existing:
+            return dict(existing)
         db.execute(
             "INSERT OR IGNORE INTO businesses (name, created_at) VALUES (?, ?)",
             (name, now()),
@@ -191,7 +200,8 @@ def get_business_products(business_id):
         )
         references = rows(db.execute(
             "SELECT r.id, r.product_id, r.image_path FROM product_references r "
-            "JOIN products p ON p.id = r.product_id WHERE p.business_id = ? ORDER BY r.id",
+            "JOIN products p ON p.id = r.product_id WHERE p.business_id = ? "
+            "ORDER BY CASE WHEN r.image_path = p.image_path THEN 0 ELSE 1 END, r.id",
             (business_id,),
         ))
         by_product = {}
@@ -312,6 +322,10 @@ def add_location(business_id, name):
 
 
 def default_location(business_id):
+    existing = next((location for location in get_locations(business_id)
+                     if location["name"] == "Main Shelf"), None)
+    if existing:
+        return existing
     add_location(business_id, "Main Shelf")
     return next(location for location in get_locations(business_id)
                 if location["name"] == "Main Shelf")
@@ -449,7 +463,7 @@ def get_inventory(business_id, location_id=None):
 
 def create_scan_session(
     business_id, user_id, location_id, photo_hash, approved_counts,
-    predicted_counts=None, notes="", submission_key=None, scope="partial", operation="audit"
+    predicted_counts=None, notes="", submission_key=None, scope="partial", operation="audit", _connection=None
 ):
     predicted_counts = predicted_counts or {}
     products = {product["sku"]: product for product in get_business_products(business_id)}
@@ -469,8 +483,9 @@ def create_scan_session(
     for sku, value in approved_counts.items():
         validate_quantity(value)
         validate_quantity(predicted_counts.get(sku, 0))
-    with connect() as db:
-        db.execute("BEGIN IMMEDIATE")
+    with (connect() if _connection is None else nullcontext(_connection)) as db:
+        if _connection is None:
+            db.execute("BEGIN IMMEDIATE")
         require_location(db, business_id, location_id)
         if not db.execute("SELECT id FROM users WHERE id = ? AND business_id = ?",
                           (user_id, business_id)).fetchone():

@@ -196,7 +196,7 @@ if "user_id" not in st.session_state:
         buyer_view()
         st.stop()
     with st.form("login"):
-        username = st.text_input("Username", key="login_username")
+        username = st.text_input("Email or username", key="login_username")
         password = st.text_input("Password", type="password", key="login_password")
         if st.form_submit_button("Sign in", type="primary"):
             user = auth.authenticate(username, password)
@@ -204,7 +204,7 @@ if "user_id" not in st.session_state:
                 st.session_state["user_id"] = user["id"]
                 st.rerun()
             else:
-                st.error("Incorrect username or password.")
+                st.error("Incorrect email, username or password.")
     st.stop()
 
 service = InventoryService(st.session_state["user_id"])

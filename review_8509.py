@@ -35,6 +35,7 @@ def review_panel(image, products, draft, actor, prefix, locked=False):
             st.caption('Manual quantity additions have no detected box: ' + ', '.join(r['item_id'] for r in unlocalized))
     with right:
         st.subheader('Products in this photo')
+        st.caption('Correct quantities below. Use Change SKU / inspect boxes to assign a catalogue product. Mark each group reviewed when correct.')
         if not locked:
             with st.expander('Add missed product', expanded=True):
                 sku = st.selectbox('Search current catalogue', list(names), format_func=label, key=f'{prefix}_miss_sku')
@@ -71,7 +72,7 @@ def review_panel(image, products, draft, actor, prefix, locked=False):
                     for row in group['rows']:
                         edit_item(draft, row['item_id'], {'confirmed': True}, actor)
                     st.rerun()
-            with st.expander(f"Inspect / correct {label(sku)} boxes"):
+            with st.expander(f"Change SKU / inspect boxes: {label(sku)}", expanded=not bool(sku)):
                 for row in group['rows']:
                     key = f'{prefix}_item_{row["item_id"]}_{row.get("revision", 0)}'
                     st.markdown(f"**Box {row['item_id']}** · {row['origin']}" + (f" · split from {row['parent_id']}" if row['parent_id'] else ''))

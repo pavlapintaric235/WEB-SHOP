@@ -89,6 +89,24 @@ def _save_scan_evidence(folder, original, normalized, annotated, evidence):
     _atomic_write(folder / 'analysis.json', serialized)
 
 
+def saved_review(user, source_hash, upright_hash, allowed_skus):
+    folder=db.DATA_DIR/'fresh_scans'/str(user['business_id'])
+    if not folder.exists():return None
+    for path in sorted(folder.glob('*/analysis.json'),key=lambda p:p.stat().st_mtime,reverse=True):
+        try:
+            if path.stat().st_size>10*1024*1024:continue
+            record=json.loads(path.read_text(encoding='utf-8'))
+            if (record.get('business_id')==user['business_id'] and record.get('user',{}).get('id')==user['id']
+                    and record.get('source_photo',{}).get('sha256')==source_hash
+                    and record.get('upright_photo',{}).get('sha256')==upright_hash
+                    and record.get('draft',{}).get('rows')
+                    and all(not r.get('sku') or r['sku'] in allowed_skus for r in record['draft']['rows'])
+                    and record.get('detector') is not None and record.get('sku_suggestions') is not None):
+                return record
+        except (OSError,ValueError,KeyError,TypeError):continue
+    return None
+
+
 def fresh_scan(service, buyer=False):
     user, products, locations = service.user(), service.products(), service.locations()
     st.header('Scan and review products')
@@ -151,7 +169,7 @@ def fresh_scan(service, buyer=False):
     signature = hashlib.sha256(data + catalog_json.encode() +
         str((user['id'], location, references_sha256, model_signature, replay, buyer)).encode()).hexdigest()
     if st.session_state.get('fresh_signature') != signature:
-        for key in ['fresh_capture', 'fresh_result', 'fresh_approval', 'fresh_saved', 'fresh_capture_error']:
+        for key in ['fresh_capture', 'fresh_result', 'fresh_approval', 'fresh_saved', 'fresh_receipts', 'fresh_capture_error']:
             st.session_state.pop(key, None)
         st.session_state['fresh_signature'] = signature
     if st.session_state.get('fresh_result'):
@@ -217,12 +235,30 @@ def fresh_scan(service, buyer=False):
             return
         capture['override'] = {'reason': override, 'user_id': user['id'], 'at_utc': datetime.now(timezone.utc).isoformat()}
     st.success(decision['reason'])
+    if not buyer and not replay and not st.session_state.get('fresh_result'):
+        saved=saved_review(user,hashlib.sha256(data).hexdigest(),hashlib.sha256(normalized).hexdigest(),{p['sku'] for p in products})
+        if saved:
+            st.info('A saved review exists for this exact photograph. Resume it to keep your corrections and earlier inference results.')
+            if st.button('Resume saved review for this photo',key='resume_saved_review'):
+                timings=saved.get('timings_seconds',{})
+                st.session_state['fresh_result']=dict(detector=saved['detector'],items=saved['sku_suggestions'],
+                    elapsed_seconds=timings.get('recognition_total',0),preprocessing_seconds=timings.get('preprocessing',0),
+                    detector_request_seconds=timings.get('detector_request',0),matching_seconds=timings.get('matching',0),
+                    source_sha256=hashlib.sha256(data).hexdigest(),coordinate_space=saved['coordinate_space'],
+                    catalog_sha256=saved['catalog_sha256'],mode='RESUMED',original_inference_mode=saved.get('original_inference_mode',saved['mode']),
+                    evidence_id=saved['scan_id'],created_at_utc=saved['created_at_utc'],box_quality=saved.get('box_quality'))
+                st.session_state['fresh_approval']=saved.get('submission_key') or 'resume-'+saved['scan_id']
+                if saved.get('inventory_receipt_id'):
+                    st.session_state['fresh_saved']=saved['inventory_receipt_id']
+                    st.session_state['fresh_receipts']=saved.get('inventory_receipt_ids') or [saved['inventory_receipt_id']]
+                st.rerun()
     connected = bool(os.environ.get('WEBSHOP_DINO_URL') and os.environ.get('WEBSHOP_DINO_TOKEN'))
     if not connected and not replay:
         st.warning('Live product detection is not connected yet. This photo has no model predictions.')
     if st.button('Find products in this photo', disabled=not (connected or replay), key='fresh_detect'):
         st.session_state.pop('fresh_result', None)
         st.session_state.pop('fresh_saved', None)
+        st.session_state.pop('fresh_receipts', None)
         try:
             started = time.perf_counter()
             with st.spinner('Finding products and comparing shop references…'):
@@ -263,6 +299,7 @@ def fresh_scan(service, buyer=False):
         'user': {'id': user['id'], 'username': user.get('username', 'buyer'), 'role': user['role']},
         'location': {'id': location, 'name': next(r['name'] for r in locations if r['id'] == location)},
         'mode': result['mode'],
+        'original_inference_mode':result.get('original_inference_mode',result['mode']),
         'original_filename': original_filename,
         'source_photo': {'file': original_filename, 'sha256': result['source_sha256']},
         'upright_photo': {'file': 'upright.png', 'sha256': hashlib.sha256(normalized).hexdigest(),
@@ -301,6 +338,7 @@ def fresh_scan(service, buyer=False):
     from grouped_scan_ui import overlay_rows
     from scan_review import new_draft, grouped, reviewed_counts
     approval_id = st.session_state['fresh_approval']
+    evidence['submission_key']=approval_id
     draft_key = f'fresh_draft_{approval_id}'
     if draft_key not in st.session_state:
         saved_evidence = json.loads((archive_folder / 'analysis.json').read_text(encoding='utf-8')) if (archive_folder / 'analysis.json').exists() else {}
@@ -308,9 +346,12 @@ def fresh_scan(service, buyer=False):
     draft = st.session_state[draft_key]
     locked = bool(st.session_state.get('fresh_saved'))
     st.caption(f"{result.get('mode', 'LIVE')} · {result['elapsed_seconds']} seconds · {len(result['items'])} model proposals")
+    if not buyer:
+        st.markdown('[Go to Excel preview and approval](#scan-approval)')
+    st.subheader('2. Review detected products')
     review_panel(image, products, draft, str(user.get('username', user['id'])), approval_id, locked=locked)
     if result.get('box_quality'):
-        with st.expander('OpenCV box guidance', expanded=True):
+        with st.expander('OpenCV box guidance', expanded=False):
             for guidance in result['box_quality']['guidance']: st.info(guidance)
             st.caption(result['box_quality']['limitation'])
             flagged = [r for r in result['box_quality']['boxes'] if r['near_frame'] or r['overlaps']]
@@ -343,6 +384,7 @@ def fresh_scan(service, buyer=False):
         review_error = user_error(error)
     def persist():
         evidence['inventory_receipt_id'] = st.session_state.get('fresh_saved')
+        evidence['inventory_receipt_ids'] = st.session_state.get('fresh_receipts',[])
         evidence['stock_actions'] = [e for e in draft['events'] if e['action'] == 'inventory_action']
         try:
             _save_scan_evidence(archive_folder, data, normalized, render_items(image, overlay_rows(draft)), evidence)
@@ -352,48 +394,88 @@ def fresh_scan(service, buyer=False):
     st.download_button('Download scan evidence', json.dumps(shareable_evidence(evidence), indent=2, default=_json_default),
                        file_name=f'webshop_scan_{result["evidence_id"]}.json', mime='application/json')
     if locked:
-        st.success(f"Saved inventory receipt #{st.session_state['fresh_saved']}. This draft is locked.")
-        return
-    if review_error:
-        st.info('Confirm or exclude every item before action confirmation. ' + review_error)
+        receipt_labels=', '.join(str(r) for r in st.session_state.get('fresh_receipts',[st.session_state['fresh_saved']]))
+        st.success(f"Saved inventory receipt(s) #{receipt_labels}. This draft is locked.")
+        saved_action=next((e for e in reversed(draft['events']) if e['action']=='inventory_action'),{})
+        st.dataframe(saved_action.get('preview',[]),hide_index=True,width='stretch')
+        from catalog_workbook import export_scan_workbook
+        st.download_button('Download scan review Excel',export_scan_workbook(service,draft,saved_action.get('preview',[]),saved_action.get('operation','review')),
+            file_name='webshop_saved_scan.xlsx',mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',key=f'saved_excel_{approval_id}')
         return
     if buyer:
+        if review_error:
+            st.info('Confirm or exclude every item before action confirmation. ' + review_error)
+            return
         st.success('Reviewed cart preview. Customer actions never change stock.')
         st.download_button('Download reviewed cart', json.dumps(approved), 'cart_preview.json')
         return
-    st.subheader('Confirmation')
-    st.dataframe([{'SKU': sku, 'Product': next(p['name'] for p in products if p['sku'] == sku), 'Units': n}
-                  for sku, n in approved.items()], hide_index=True, width='stretch')
+    st.markdown('<div id="scan-approval"></div>', unsafe_allow_html=True)
+    st.subheader('3. Excel preview & stock approval')
     operation = st.radio('What should happen next?', ['review', 'audit', 'add', 'subtract'],
-        format_func=lambda v: {'review':'Review only ? save analysis, no stock changes',
-            'audit':'Shelf audit ? set counts for explicit scope', 'add':'Receiving / ADD', 'subtract':'Removal / SUBTRACT'}[v],
-        key=f'action_{approval_id}')
+        format_func=lambda v: {'review':'Review only (no stock changes)',
+            'audit':'Shelf audit (set stock)', 'add':'Receiving / ADD', 'subtract':'Removal / SUBTRACT'}[v],
+        key=f'action_{approval_id}', horizontal=True)
+    assigned_possible=bool(counts) and all(p.get('shelf_id') in {l['name'] for l in locations} for p in products if p['sku'] in counts)
+    use_assigned=False
+    if operation in ('add','subtract'):
+        use_assigned=st.checkbox("Use each product's assigned shelf",value=assigned_possible,key=f'assigned_shelves_{approval_id}')
+        if use_assigned:st.caption('Mixed-shelf photo: each SKU uses its own catalogue shelf. All shelf changes save together after approval.')
+    zero_counts={sku:0 for sku in counts if sku}
+    stock_error=None
+    try:
+        stock_rows=(service.preview_catalog_action(zero_counts,'add') if use_assigned and zero_counts else service.preview_action(location,zero_counts,'add'))
+    except (ValueError,PermissionError) as error:
+        stock_rows=[];stock_error=user_error(error)
+    stock = {r['sku']:r['before'] for r in stock_rows}
+    stock_shelves={r['sku']:r.get('shelf_id',next(l['name'] for l in locations if l['id']==location)) for r in stock_rows}
+    st.dataframe([{'SKU':sku or 'Unknown',
+                   'Product':next((p['name'] for p in products if p['sku']==sku),'Assign a SKU above'),
+                   'Scanned units':group['quantity'],'Stock shelf':stock_shelves.get(sku),'Current stock':stock.get(sku),
+                   'Review status':'Reviewed' if group['reviewed'] else 'Needs review'}
+                  for sku,group in grouped(draft).items()], hide_index=True, width='stretch')
+    from catalog_workbook import export_scan_workbook
+    st.download_button('Download scan review Excel',export_scan_workbook(service,draft,[],operation),
+        file_name='webshop_scan_review.xlsx',mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',key=f'scan_excel_{approval_id}')
+    st.caption('Excel is a preview. Stock changes only after you approve an inventory action below.')
+    def blocked_approval(message):
+        st.warning(message)
+        st.button('Approve inventory action', type='primary',disabled=True,key=f'blocked_approval_{approval_id}')
+    if stock_error:
+        blocked_approval(stock_error)
+        return
+    if review_error:
+        blocked_approval('Approval is locked: assign a SKU to each unknown item, then mark every group reviewed or remove false detections. '+review_error)
+        return
     if operation == 'review':
         if st.button('Save reviewed analysis', type='primary'):
             from scan_review import event
             event(draft, 'review_only', user['id'])
             persist()
             st.success('Reviewed analysis saved. Stock was not changed.')
+        blocked_approval('Choose Receiving / ADD, Removal / SUBTRACT or Shelf audit to update stock.')
         return
     action_counts = dict(approved)
     if operation == 'audit':
         scope = st.multiselect('Explicit audit scope (selected absent products will be set to zero)',
                                [p['sku'] for p in products], key=f'audit_scope_{approval_id}')
         if not scope:
-            st.info('Choose the exact SKU scope for this shelf audit.')
+            blocked_approval('Choose the exact SKU scope for this shelf audit.')
             return
         action_counts = {sku: approved.get(sku, 0) for sku in scope}
     if not action_counts:
-        st.info('Choose at least one reviewed product for a stock action.')
+        blocked_approval('Choose at least one reviewed product for a stock action.')
         return
     notes = st.text_input('Transaction notes / prior receipt for a correction', key=f'fresh_notes_{approval_id}')
     try:
-        preview = service.preview_action(location, action_counts, operation)
+        preview = service.preview_catalog_action(action_counts,operation) if use_assigned else service.preview_action(location, action_counts, operation)
     except (ValueError, PermissionError) as error:
-        st.error(user_error(error))
+        blocked_approval(user_error(error))
         return
+    st.markdown('**Stock before → after approval**')
     st.dataframe(preview, hide_index=True, width='stretch')
-    evidence['stock_action_preview'] = {'operation': operation, 'counts': action_counts, 'preview': preview, 'notes': notes}
+    st.download_button('Download stock change Excel',export_scan_workbook(service,draft,preview,operation),
+        file_name='webshop_stock_preview.xlsx',mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',key=f'stock_excel_{approval_id}')
+    evidence['stock_action_preview'] = {'operation': operation, 'counts': action_counts, 'preview': preview, 'notes': notes,'assigned_shelves':use_assigned}
     persist()
     decision_hash = hashlib.sha256(json.dumps([operation, action_counts, notes, preview], sort_keys=True).encode()).hexdigest()[:12]
     confirmed = st.checkbox('I checked the scope and before/after stock; apply this inventory action', key=f'fresh_confirm_{approval_id}_{decision_hash}')
@@ -406,12 +488,20 @@ def fresh_scan(service, buyer=False):
             for item in result['items']:
                 if item['sku']:
                     proposed[item['sku']] = proposed.get(item['sku'], 0) + 1
-            saved = service.approve(location, result['source_sha256'], approval_id, action_counts, proposed,
-                'partial', f"{result.get('mode', 'LIVE')} DINO/SigLIP2 reviewed scan. Evidence {result['evidence_id']}. {notes}", operation=operation)
+            action_notes=f"{result.get('mode', 'LIVE')} DINO/SigLIP2 reviewed scan. Evidence {result['evidence_id']}. {notes}"
+            if use_assigned:
+                receipt_ids=service.approve_catalog_action(result['source_sha256'],approval_id,action_counts,proposed,
+                    action_notes,operation,expected_preview=preview)
+                saved=receipt_ids[0]
+            else:
+                saved=service.approve(location, result['source_sha256'], approval_id, action_counts, proposed,
+                    'partial', action_notes, operation=operation)
+                receipt_ids=[saved]
             st.session_state['fresh_saved'] = saved
+            st.session_state['fresh_receipts'] = receipt_ids
             from scan_review import event
             event(draft, 'inventory_action', user['id'], receipt_id=saved, operation=operation,
-                  counts=action_counts, preview=preview, notes=notes)
+                  counts=action_counts, preview=preview, notes=notes,receipt_ids=receipt_ids)
             persist()
             st.rerun()
         except (ValueError, PermissionError) as error:

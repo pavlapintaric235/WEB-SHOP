@@ -22,6 +22,27 @@ from shop_catalog import BuyerCatalog
 class RegistrationTests(unittest.TestCase):
     setUp=workflow.WorkflowTests.setUp
 
+    def test_owner_adds_email_employee_and_employee_signs_in(self):
+        with patch.dict('os.environ', {'WEBSHOP_DATA_DIR': str(self.root)}):
+            app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app_8509.py'), default_timeout=60).run()
+            app.text_input(key='login_username').input('owner')
+            app.text_input(key='login_password').input('owner123')
+            next(b for b in app.button if b.label == 'Sign in').click().run()
+            app.radio(key='owner_section_8509').set_value('Employees').run()
+            next(t for t in app.text_input if t.label == 'Employee email or username').input('Video+staff@Example.org')
+            next(t for t in app.text_input if t.label == 'Initial password').input('password123')
+            next(b for b in app.button if b.label == 'Add employee').click().run()
+            self.assertFalse(app.exception)
+            self.assertFalse(app.error)
+            next(b for b in app.button if b.label == 'Sign out').click().run()
+            app.text_input(key='login_username').input(' VIDEO+STAFF@example.org ')
+            app.text_input(key='login_password').input('password123')
+            next(b for b in app.button if b.label == 'Sign in').click().run()
+            self.assertFalse(app.exception)
+            self.assertFalse(app.error)
+            self.assertTrue(any('video+staff@example.org' in c.value for c in app.caption))
+            self.assertEqual(next(r for r in app.radio if r.label == 'Workspace').value, 'Employee Scan')
+
     def prepare(self):
         init_registration()
         data=[]
@@ -35,12 +56,16 @@ class RegistrationTests(unittest.TestCase):
 
     def test_five_references_persist_unique_export_gallery_and_edit(self):
         details,photos,encoder=self.prepare()
+        photos[0]['angle']='back'
+        photos[3]['angle']='front'
         result=register(self.owner,details,photos,confirmed=True,image_encoder=encoder)
         self.assertTrue(result['ready']);self.assertTrue(result['sku'].startswith('P-'))
         db.init_db();init_registration()
         product=db.get_product_by_sku(self.business['id'],result['sku'])
         full=next(p for p in self.owner.products() if p['id']==result['id'])
         self.assertEqual(len(full['references']),5)
+        self.assertEqual(Path(full['image_path']).read_bytes(),photos[3]['data'])
+        self.assertEqual(full['references'][0]['image_path'],full['image_path'])
         self.assertEqual(len(assets_for(self.owner,result['id'])),5)
         matcher=CachedShopMatcher([full],image_encoder=encoder)
         self.assertEqual(matcher.features.shape,(5,768))
@@ -49,6 +74,12 @@ class RegistrationTests(unittest.TestCase):
         update_details(self.owner,result['id'],2.25,'Main Shelf')
         self.assertEqual(next(p for p in BuyerCatalog(self.business['id']).products() if p['id']==result['id'])['price'],2.25)
         self.assertIn(result['sku'],export_catalog(self.owner))
+        from catalog_workbook import export_workbook
+        from shop_catalog import read_catalog_bundle
+        sheet=read_catalog_bundle(export_workbook(self.owner),'current.xlsx')['products']
+        exported=next(p for p in sheet if p['sku']==result['sku'])
+        self.assertEqual(exported['reference_count'],'5')
+        self.assertEqual(exported['price'],'2.25')
         self.assertEqual(db.get_inventory(self.business['id'],self.location)[-1]['quantity'],0)
 
     def test_incomplete_draft_is_not_an_active_gallery_and_can_resume(self):
@@ -111,6 +142,7 @@ class RegistrationTests(unittest.TestCase):
             next(b for b in app.button if b.label=='Sign in').click().run()
             next(b for b in app.button if b.label=='+ Add Product').click().run()
             self.assertEqual(len(app.exception),0)
+            self.assertEqual(len(app.session_state['wizard_new']['photos']),5)
             for label,value in [('Product name','Brand new package'),('Brand','Demo brand'),('Package size','400 g')]:
                 next(x for x in app.text_input if x.label==label).input(value)
             next(x for x in app.number_input if x.label=='Price in EUR').set_value(1.49)
@@ -122,6 +154,7 @@ class RegistrationTests(unittest.TestCase):
             next(b for b in app.button if b.label=='Register Product').click().run()
             self.assertEqual(len(app.exception),0);self.assertFalse(app.error)
             self.assertTrue(any('embedded' in m.value for m in app.success))
+            self.assertTrue(any(b.label=='Download current Excel workbook' for b in app.get('download_button')))
             self.assertEqual(len(BuyerCatalog(self.business['id']).products()),3)
 
     def test_image_tower_matches_full_model_image_feature_math(self):

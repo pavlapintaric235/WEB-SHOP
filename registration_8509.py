@@ -90,6 +90,7 @@ def register(service, details, photos, *, confirmed=False, incomplete=False, exi
         if not photo.get('approved') or record.get('image_sha256')!=digest or not accepts(record,photo.get('override','')):
             raise ValueError('Replace unusable photographs and approve each eligible image-quality result.')
         approved.append((photo,digest))
+    approved.sort(key=lambda item: item[0].get('angle')!='front')
     count=len(active)+len(approved)
     if count>5 or (not incomplete and count<3): raise ValueError('Recognition registration needs 3–5 approved reference photographs.')
     ready=count>=3 and not incomplete
@@ -125,7 +126,8 @@ def register(service, details, photos, *, confirmed=False, incomplete=False, exi
                      'full_reference_photo',photo.get('angle','unknown'),json.dumps({'analysis':photo['quality'],'override':photo.get('override',''),'approved_by':user['id']}),SIGLIP_REVISION,int(ready),db.now()))
                 if ready: c.execute('INSERT INTO product_references(product_id,image_path,created_at) VALUES (?,?,?)',(product_id,str(saved_photo['original']),db.now()))
             if ready:
-                primary=active[0]['image_path'] if active else str(saved[0]['original'])
+                front=next((p for p in saved if p['photo'].get('angle')=='front'),None)
+                primary=str(front['original']) if front else active[0]['image_path'] if active else str(saved[0]['original'])
                 c.execute('UPDATE products SET image_path=? WHERE id=?',(primary,product_id))
                 if not active and not c.execute('SELECT 1 FROM inventory_counts WHERE business_id=? AND location_id=? AND product_id=?',(user['business_id'],location['id'],product_id)).fetchone():
                     receipt=c.execute("INSERT INTO scan_sessions(business_id,user_id,location_id,photo_hash,submission_key,scope,status,notes,created_at,operation) VALUES (?,?,?,?,?,'partial','approved',?,?,'audit')",
