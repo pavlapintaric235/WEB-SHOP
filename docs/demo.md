@@ -46,7 +46,7 @@ Repository: [pavlapintaric235/WEB-SHOP](https://github.com/pavlapintaric235/WEB-
 
 ## Private live screen-share request
 
-Status: selected by the entrant; organizer contact and scheduling have not been completed. No message has been sent from this session because no organizer messaging or email tool is connected. Entrant availability is still needed.
+Status: selected by the entrant; organizer contact and scheduling have not been completed. No message has been sent from this session because no organizer messaging or email tool is connected. Entrant availability: **27 October?10 November 2026, 08:00?16:00 Europe/Zagreb (CET, UTC+1)**. The organizers must confirm a slot within their judging schedule.
 
 Use **Email the hackathon manager** on the [official competition page](https://opencv26.devpost.com/) to send:
 
@@ -58,7 +58,7 @@ Use **Email the hackathon manager** on the [official competition page](https://o
 >
 > Video: https://www.loom.com/share/8596593e2eed45c59e453312c88de972
 >
-> Please confirm the scheduling process, available judging slots and meeting platform. My time zone is Europe/Zagreb. I will provide my availability privately. The application runs on my computer; no public localhost link or credentials are required for viewers.
+> Please confirm the scheduling process, available judging slots and meeting platform. I am available 27 October?10 November 2026, 08:00?16:00 Europe/Zagreb (CET, UTC+1). Please select a slot within your judging schedule. The application runs on my computer; no public localhost link or credentials are required for viewers.
 >
 > Thank you.
 
