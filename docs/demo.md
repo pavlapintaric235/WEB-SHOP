@@ -16,13 +16,13 @@ Use the conservative October 26, 2026 23:45 PDT cutoff supplied in the brief: **
 | 3:45–4:15 | Buyer quantity/price total and highlighted shelves | Buyer actions never write stock; progress is manual |
 | 4:15–4:50 | Architecture, one-scene timing and limitations | AWS capture, RunPod detection, local recognition; no broad accuracy or shortest-route claim |
 
-Photos are currently private unless explicitly approved for publication. The photo-free local preview captures actual sandbox screens and measured-result summaries; it is **not a substitute for final footage of actual registration/inference or the entrant's team introduction**. A public screenshot/video must not reveal gate codes, role passwords, private photos, server paths or connection details. The local sandbox starts without private references and without embeddings for provisional IDs.
+Recorded development footage now shows product registration, capture checking, detection and human review, approved stock changes, Excel balances and buyer tools. The latest reviewed local cut is approximately **3 minutes 5 seconds**. Its public/unlisted upload, real team introduction and public product-photo approval still need confirmation. The earlier photo-free sandbox preview is supplementary. A public screenshot/video must not reveal gate codes, role passwords, unapproved private photos, server paths or connection details. The local judge sandbox starts without private references and without embeddings for provisional IDs.
 
 ## Reviewer click path
 
 1. Open the operator-supplied email-restricted HTTPS URL, or attend an arranged screen-share. The operator's initial gateway reaches email sign-in; judge allowlisting and authenticated external acceptance tests remain pending.
 2. Enter the privately supplied sandbox access code. Owner and employee credentials are separate and are supplied privately.
-3. Owner → **+ Add Product**. Enter details, then upload 3–5 approved demonstration photos; check quality, approve each view, review the final summary and register. Use an unregistered product for a genuinely new catalogue test.
+3. Owner → **+ Add Product**. Upload 3–5 approved demonstration photos and enter details; check quality, label the front view, approve each view, review the final summary and register. Use an unregistered product for a genuinely new catalogue test.
 4. Employee Scan → optionally **Prepare live scanner** before recording → choose a distinct scene photo → AWS capture check or explicit LOCAL fallback → **Find products in this photo**. Correct quantities/boxes, add missed items, exclude false proposals, then approve an explicit action only if desired.
 5. Buyer → **Products**: select quantities → **Shopping list & map**: inspect estimated total and assigned shelves. Unknown/unpriced/unlocated products remain explicit.
 
@@ -32,7 +32,12 @@ Photos are currently private unless explicitly approved for publication. The pho
 - [x] Existing AWS capture and RunPod roles documented accurately.
 - [x] Isolated judge catalogue; generated credentials; private replay disabled.
 - [x] Photo-free actual interface screenshots and source/diagram assets.
-- [ ] Allowed judge emails and verified HTTPS gateway, including media/WebSocket access tests.
+- [x] Latest application fixes, tests and README pushed to `main`; 69 targeted checks and GitHub publication CI passed.
+- [x] Recorded application footage reviewed visually; latest local cut is under five minutes.
+- [ ] Choose and complete one judge-access route: restricted HTTPS with approved judge emails and authenticated media/WebSocket tests, **or an arranged private live screen-share**.
 - [ ] Approved public product-photo footage or arranged private live demonstration.
-- [ ] Real team introduction and final under-five-minute video review/upload.
-- [ ] Final GitHub push approval, then repository/URL/video links entered on Devpost.
+- [ ] Real entrant/team introduction and final video audio/content review.
+- [ ] Final public/unlisted video uploaded and playable without the operator's login.
+- [ ] Repository, video and verified access instructions entered on Devpost, followed by final submission.
+
+Repository: [pavlapintaric235/WEB-SHOP](https://github.com/pavlapintaric235/WEB-SHOP). The working development address `http://localhost:8509` is local to the operator's computer and must not be presented as a public judge endpoint. A proposed screen-share is not arranged until the organizers and entrant have agreed how to conduct it.
