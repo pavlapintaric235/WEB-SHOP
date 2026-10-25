@@ -429,8 +429,12 @@ def detect_products(model, photo, products, confidence=0.80, min_margin=0.05, pr
 
     Each prediction's class index maps to the same index in products.
     """
-    if isinstance(model, SAMRecognizer):
-        return model.recognize(photo, products, confidence, min_margin, progress=progress)
+    # Streamlit can retain a cached recognizer across source reloads. Checking the
+    # concrete class then fails if the class was re-imported, even though the
+    # cached object still exposes the SAM recognition API.
+    recognize = getattr(model, "recognize", None)
+    if callable(recognize):
+        return recognize(photo, products, confidence, min_margin, progress=progress)
 
     board, boxes = build_reference_board(products)
     image = photo.convert("RGB")

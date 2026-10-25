@@ -6,7 +6,7 @@ import os
 import re
 import sqlite3
 
-from db import connect, get_or_create_business, now
+from db import connect, get_business, get_or_create_business, now
 
 PBKDF2_ITERATIONS = 200_000
 
@@ -87,7 +87,8 @@ def require_user(user_id, owner=False):
 
 
 def seed_demo_users():
-    business = get_or_create_business()
+    existing = get_user('owner')
+    business = get_business(existing['business_id']) if existing else get_or_create_business()
     for username, password, role in (
         ("owner", "owner123", "owner"), ("employee", "employee123", "employee"),
     ):

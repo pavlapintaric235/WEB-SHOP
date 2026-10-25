@@ -1,0 +1,3 @@
+-r requirements-judge.txt
+# Optional installed-browser screenshot/video verification tools.
+websockets==17.2

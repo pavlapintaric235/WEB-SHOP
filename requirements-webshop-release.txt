@@ -1,0 +1,8 @@
+# Main application and fresh scan, verified installed versions on 24 October 2026.
+-r requirements-live-scan.txt
+requests==2.34.2
+huggingface-hub==0.36.2
+boto3==1.43.97
+botocore==1.43.115
+# Optional legacy Scanner engines; no weights are downloaded at application startup.
+ultralytics==8.4.177

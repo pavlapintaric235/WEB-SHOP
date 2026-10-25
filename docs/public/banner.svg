@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="400" viewBox="0 0 1440 400" role="img" aria-labelledby="title desc">
+  <title id="title">WEB&amp;SHOP — Intelligent Shopping and Inventory Management</title>
+  <desc id="desc">InventoryLens visual intelligence. Owners register, employees review, buyers plan.</desc>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0b302a"/><stop offset="1" stop-color="#196750"/></linearGradient><pattern id="grid" width="42" height="42" patternUnits="userSpaceOnUse"><path d="M42 0H0V42" fill="none" stroke="#ffffff" stroke-opacity=".04"/></pattern></defs>
+  <rect width="1440" height="400" rx="28" fill="url(#bg)"/><rect width="1440" height="400" rx="28" fill="url(#grid)"/>
+  <g font-family="Arial,Helvetica,sans-serif"><text x="64" y="66" fill="#a9d9c6" font-size="14" font-weight="700" letter-spacing="4">INVENTORYLENS VISUAL INTELLIGENCE</text>
+  <text x="60" y="155" fill="white" font-size="76" font-weight="700" letter-spacing="-4">WEB&amp;SHOP</text>
+  <text x="64" y="217" fill="#e4f5ed" font-size="32">From shelf photos to reviewed stock.</text>
+  <text x="64" y="264" fill="#b4d9c9" font-size="19">Owners register. Employees review. Buyers plan.</text>
+  <text x="64" y="343" fill="#cde9dc" font-size="15" letter-spacing="1">OPENCV 5   /   AWS CAPTURE   /   DINO + SIGLIP2   /   HUMAN APPROVAL</text>
+  <g transform="translate(1090 82)"><rect width="220" height="210" rx="22" fill="#ffffff" fill-opacity=".07" stroke="#8ed2b4" stroke-opacity=".35"/><rect x="26" y="28" width="68" height="66" rx="8" fill="#8cd4ad"/><rect x="110" y="28" width="82" height="66" rx="8" fill="#d8ae64"/><rect x="26" y="110" width="166" height="66" rx="8" fill="#e1efe5" fill-opacity=".8"/><path d="m143 143 12 12 22-28" stroke="#126552" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></g>
+</svg>

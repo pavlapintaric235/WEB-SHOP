@@ -165,10 +165,34 @@ class InventoryService:
         return db.get_scan_history(self.user(owner=True)["business_id"])
 
     def approve(self, location_id, photo_hash, submission_key, approved_counts,
-                predicted_counts=None, scope="partial", notes=""):
+                predicted_counts=None, scope="partial", notes="", operation="audit"):
         user = self.user()
         self._location(user, location_id)
         return db.create_scan_session(
             user["business_id"], user["id"], location_id, photo_hash,
-            approved_counts, predicted_counts, notes, submission_key, scope,
+            approved_counts, predicted_counts, notes, submission_key, scope, operation,
         )
+
+    def import_catalog(self, records, confirmed=False, opening=False, shelves=(), fictional=False):
+        user = self.user(owner=True)
+        from shop_catalog import import_catalog
+        return import_catalog(user['business_id'], records, confirmed, opening, shelves, fictional)
+
+    def preview_action(self, location_id, counts, operation):
+        user = self.user()
+        self._location(user, location_id)
+        from scan_review import stock_preview
+        return stock_preview(db.get_inventory(user['business_id'], location_id), counts, operation)
+
+    def request_registration(self, description, evidence_id):
+        user = self.user()
+        if not description.strip() or len(description) > 2000:
+            raise ValueError('Describe the unknown product (at most 2000 characters).')
+        with db.connect() as connection:
+            connection.execute('INSERT INTO product_registration_requests (business_id,user_id,description,evidence_id,created_at) VALUES (?,?,?,?,?)',
+                               (user['business_id'], user['id'], description.strip(), evidence_id, db.now()))
+
+    def registration_requests(self):
+        user = self.user(owner=True)
+        with db.connect() as connection:
+            return db.rows(connection.execute('SELECT * FROM product_registration_requests WHERE business_id=? ORDER BY id DESC', (user['business_id'],)))
